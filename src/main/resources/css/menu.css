@@ -1,0 +1,21 @@
+.startButton {
+	-fx-background-color: #FFFFFF;
+}
+.instructionsButton {
+	-fx-background-color: #FFFFFF;
+}
+.exitButton {
+	-fx-background-color: #FFFFFF;
+}
+.startButton:hover {
+	-fx-background-color: #000000;
+	-fx-text-fill: #FFFFFF;
+}
+.instructionsButton:hover {
+	-fx-background-color: #000000;
+	-fx-text-fill: #FFFFFF;
+}
+.exitButton:hover {
+	-fx-background-color: #000000;	
+	-fx-text-fill: #FFFFFF;
+}

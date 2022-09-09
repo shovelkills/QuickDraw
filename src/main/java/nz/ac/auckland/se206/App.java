@@ -6,6 +6,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import nz.ac.auckland.se206.SceneManager.AppUi;
 
 /**
  * This is the entry point of the JavaFX application, while you can change this class, it should
@@ -36,8 +37,16 @@ public class App extends Application {
    */
   @Override
   public void start(final Stage stage) throws IOException {
-    final Scene scene = new Scene(loadFxml("canvas"), 840, 680);
-
+    // Adds the menu and canvas UI to the scene manager
+    SceneManager.addUi(AppUi.MAIN_MENU, loadFxml("menu"));
+    SceneManager.addUi(AppUi.GAME, loadFxml("canvas"));
+    // Creates a new scene that starts on the main menu
+    final Scene scene = new Scene(SceneManager.getUiRoot(AppUi.MAIN_MENU), 900, 760);
+    // Adds the css formatting to the scenes
+    scene.getStylesheets().add("/css/menu.css");
+    scene.getStylesheets().add("/css/canvas.css");
+    // Set the scene and then show
+    stage.setTitle("Draw Game");
     stage.setScene(scene);
     stage.show();
   }
