@@ -51,10 +51,11 @@ public class DoodlePrediction {
    * @param predictions The list of predictions to print.
    */
   public static void printPredictions(final List<Classifications.Classification> predictions) {
+    // Create a string builder
     final StringBuilder sb = new StringBuilder();
 
     int i = 1;
-
+    // Loop through all the predictions and build the string
     for (final Classifications.Classification classification : predictions) {
       sb.append("TOP ")
           .append(i)
@@ -66,7 +67,7 @@ public class DoodlePrediction {
 
       i++;
     }
-
+    // Print out the string at the end
     System.out.println(sb);
   }
 
