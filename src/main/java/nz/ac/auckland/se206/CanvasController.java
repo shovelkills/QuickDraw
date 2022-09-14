@@ -33,6 +33,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Background;
@@ -83,6 +84,8 @@ public class CanvasController {
 	private Pane canvasPane;
 	@FXML
 	private Button clearButton;
+	@FXML
+	private ChoiceBox<String> difficultyMenu;
 	// Define fields and variables used in the controller
 	private String currentWord;
 	private GraphicsContext graphic;
@@ -94,6 +97,8 @@ public class CanvasController {
 	private boolean spoken = false;
 	private double currentX;
 	private double currentY;
+
+	protected Difficulty difficulty = Difficulty.E;
 
 	private Task<Void> speechTask = new Task<Void>() {
 		@Override
@@ -232,17 +237,81 @@ public class CanvasController {
 		Font font = Font.loadFont("file:src/main/resources/fonts/somethingwild-Regular.ttf", 150);
 		// Update title's font
 		titleLabel.setFont(font);
+		// Adding the difficulties to the drop down
+		difficultyMenu.getItems().addAll("EASY", "MEDIUM", "HARD");
+		// Setting the default difficulty to easy
+		difficultyMenu.setValue(getDifficultyString());
+		// Get a new model
+		model = new DoodlePrediction();
 		// Get a random word
 		getRandomWord();
 	}
 
-	private void getRandomWord() throws IOException, URISyntaxException, CsvException, ModelException {
-		// Get a new model
-		model = new DoodlePrediction();
+	/**
+	 * setDifficulty will set the game's difficulty and affect the word choice
+	 */
+	private void setDifficulty() {
+		// Gets the current difficulty selected in the choice box
+		switch (difficultyMenu.getValue()) {
+		// Sets the difficulty to easy
+		case "EASY":
+			difficulty = Difficulty.E;
+			break;
+		// Sets the difficulty to medium
+		case "MEDIUM":
+			difficulty = Difficulty.M;
+			break;
+		// Sets the difficulty to hard
+		case "HARD":
+			difficulty = Difficulty.H;
+			break;
+		// By default set the difficulty to easy
+		default:
+			difficulty = Difficulty.E;
+		}
+
+	}
+
+	/*
+	 * Gets the difficulty choice box's string
+	 */
+	private String getDifficultyString() {
+		String difficultyString;
+		// Get the current difficulty and switch accordingly
+		switch (difficulty) {
+		case E:
+			// Set the difficulty string text to easy
+			difficultyString = "EASY";
+		case M:
+			// Set the difficulty string text to medium
+			difficultyString = "MEDIUM";
+		case H:
+			// Set the difficulty string text to hard
+			difficultyString = "HARD";
+		default:
+			// By default set the difficulty string to easy
+			difficultyString = "EASY";
+		}
+		return difficultyString;
+	}
+
+	/*
+	 * getChoice gets the new difficulty selected from the choice box and then
+	 * updates the random word for the player to draw
+	 */
+	@FXML
+	private void getChoice() throws IOException, URISyntaxException, CsvException, ModelException {
+		// Changes the difficulty
+		setDifficulty();
+		// Set a new random word
+		getRandomWord();
+	}
+
+	private void getRandomWord() throws IOException, URISyntaxException, CsvException {
 		// Instantiate a category selector object
 		CategorySelector categorySelector = new CategorySelector();
 		// Choose a random with from the easy category
-		String randomWord = categorySelector.getRandomCategory(Difficulty.E);
+		String randomWord = categorySelector.getRandomCategory(difficulty);
 		// Set the label in the GUI to display the random word
 		wordLabel.setText(randomWord);
 		// set the target word to the random word generated
@@ -254,7 +323,7 @@ public class CanvasController {
 	private void onClear() {
 		// Clear the canvas
 		graphic.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-		// Remove the text in the label that dispalys the random word
+		// Remove the text in the label that displays the random word
 		predictionsLabel.setText("");
 		startedDrawing = false;
 	}
@@ -280,8 +349,10 @@ public class CanvasController {
 		startButton.setVisible(true);
 		restartButton.setVisible(false);
 		brushButton.setVisible(false);
+		difficultyMenu.setVisible(true);
 		service.cancel();
 		canvas.setDisable(true);
+
 	}
 
 	/**
@@ -490,6 +561,7 @@ public class CanvasController {
 	@FXML
 	private void onStartGame() {
 		canvas.setDisable(false);
+		difficultyMenu.setVisible(false);
 		// Turn on to brush mode regardless of what it was
 		brush = true;
 		brushButton.setText("Eraser");
