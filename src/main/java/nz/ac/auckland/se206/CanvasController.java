@@ -36,6 +36,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Background;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
@@ -72,7 +73,7 @@ public class CanvasController {
 	@FXML
 	private Label wordLabel;
 	@FXML
-	private Label predictionsLabel;
+	private GridPane predictionGrid;
 	@FXML
 	private Button startButton;
 	@FXML
@@ -254,8 +255,6 @@ public class CanvasController {
 	private void onClear() {
 		// Clear the canvas
 		graphic.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-		// Remove the text in the label that dispalys the random word
-		predictionsLabel.setText("");
 		startedDrawing = false;
 	}
 
@@ -306,8 +305,11 @@ public class CanvasController {
 			counter++;
 		}
 
-		// Update that predictions label
-		predictionsLabel.setText(sb.toString());
+		//TODO Update the predictions grid
+	}
+	
+	private void updatePredictionGridDisplay(List<Classification> predictions) {
+		
 	}
 
 	/**
@@ -334,8 +336,6 @@ public class CanvasController {
 		System.out.println(isWin(predictionResults) ? "WIN" : "LOST");
 		// Print how long the prediction took
 		System.out.println("prediction performed in " + (System.currentTimeMillis() - start) + " ms");
-		// Print the prediction results
-		predictText(predictionResults);
 	}
 
 	/**
