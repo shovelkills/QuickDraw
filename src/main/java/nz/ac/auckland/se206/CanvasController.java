@@ -16,7 +16,6 @@ import javax.imageio.ImageIO;
 import com.opencsv.exceptions.CsvException;
 
 import ai.djl.ModelException;
-import ai.djl.modality.Classifications;
 import ai.djl.modality.Classifications.Classification;
 import ai.djl.translate.TranslateException;
 import javafx.animation.Animation;
@@ -28,6 +27,7 @@ import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Alert;
@@ -37,10 +37,13 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.FileChooser;
 import javafx.util.Duration;
 import nz.ac.auckland.se206.ml.DoodlePrediction;
@@ -65,6 +68,7 @@ import nz.ac.auckland.se206.words.CategorySelector.Difficulty;
  * brush sizes, make sure that the prediction works fine.
  */
 public class CanvasController {
+
 	// Define FXML fields
 	@FXML
 	private Canvas canvas;
@@ -73,7 +77,7 @@ public class CanvasController {
 	@FXML
 	private Label wordLabel;
 	@FXML
-	private Label predictionsLabel;
+	private GridPane predictionGrid;
 	@FXML
 	private Button startButton;
 	@FXML
@@ -87,6 +91,8 @@ public class CanvasController {
 	@FXML
 	private ChoiceBox<String> difficultyMenu;
 	// Define fields and variables used in the controller
+	private static Difficulty difficulty = Difficulty.E;
+
 	private String currentWord;
 	private GraphicsContext graphic;
 	private DoodlePrediction model;
@@ -97,8 +103,9 @@ public class CanvasController {
 	private boolean spoken = false;
 	private double currentX;
 	private double currentY;
-
-	private static Difficulty difficulty = Difficulty.E;
+	private Color predictionListColor = Color.DARKSLATEBLUE;
+	private Color predictionHighlightColor = Color.web("#008079");
+	private Color predictionTextColor = Color.WHITE;
 
 	private Task<Void> speechTask = new Task<Void>() {
 		@Override
@@ -155,7 +162,7 @@ public class CanvasController {
 								// Check if the user has started drawing
 								if (startedDrawing) {
 									// Display the top 10 predictions
-									predictText(predictionResults);
+									updatePredictionGridDisplay(predictionResults);
 									// Check if the player has won
 									if (isWin(model.getPredictions(getCurrentSnapshot(), 3))) {
 										wordLabel.setText("YOU WIN!");
@@ -314,11 +321,11 @@ public class CanvasController {
 		getRandomWord();
 	}
 
-	private void getRandomWord() throws IOException, URISyntaxException, CsvException {
+	private void getRandomWord() throws IOException, URISyntaxException, CsvException, ModelException {
 		// Instantiate a category selector object
 		CategorySelector categorySelector = new CategorySelector();
 		// Choose a random with from the easy category
-		String randomWord = categorySelector.getRandomCategory(difficulty);
+		String randomWord = categorySelector.getRandomCategory(getDifficulty());
 		// Set the label in the GUI to display the random word
 		wordLabel.setText(randomWord);
 		// set the target word to the random word generated
@@ -330,8 +337,7 @@ public class CanvasController {
 	private void onClear() {
 		// Clear the canvas
 		graphic.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-		// Remove the text in the label that displays the random word
-		predictionsLabel.setText("");
+		clearPredictionGrid();
 		startedDrawing = false;
 	}
 
@@ -359,33 +365,64 @@ public class CanvasController {
 		difficultyMenu.setVisible(true);
 		service.cancel();
 		canvas.setDisable(true);
-
+		clearPredictionGrid();
 	}
 
 	/**
-	 * This method predicts the text that will be displayed in the GUI
+	 * Updates the prediction grid display to show the top 10 entries of the input
+	 * List.
 	 *
-	 * @param predictions
-	 * @throws TranslateException
+	 * @param predictionList List of classifications from the machine learning model
 	 */
-	private void predictText(List<Classification> predictions) throws TranslateException {
-		// Creates a new string builder
-		final StringBuilder sb = new StringBuilder();
-		// Appends a line separator
-		sb.append(System.lineSeparator());
-		int counter = 1;
-		// Loops through all the predictions given
-		for (final Classifications.Classification classification : predictions) {
-			// Appends the predictions into the string builder
-			String className = classification.getClassName();
-			sb.append(String.format("%d. %s", counter,
-					className.contains("_") ? className.replace("_", " ") : className));
-			sb.append(System.lineSeparator());
-			counter++;
+	private void updatePredictionGridDisplay(List<Classification> predictionList) {
+		clearPredictionGrid();
+		for (int i = 0; i < predictionList.size(); i++) {
+			String prediction = predictionList.get(i).getClassName();
+			// Check if the prediction is the prompt word to determine label color
+			boolean isPrompt = prediction.equals(currentWord) ? true : false;
+			// Create a formatted String for the prediction label
+			String predictionEntry = (i + 1) + ". " + predictionList.get(i).getClassName().replaceAll("_", " ");
+			// Create and add the prediction label to its cell in the grid, row order is top
+			// to bottom :
+			// highest to lowest rank
+			predictionGrid.add(createPredictionLabel(predictionEntry, isPrompt), 0, i);
 		}
+	}
 
-		// Update that predictions label
-		predictionsLabel.setText(sb.toString());
+	/**
+	 * Creates a label for the prediction grid. The background of the label will
+	 * fill the whole cell of the grid.
+	 *
+	 * @param labelText  The text value for the label
+	 * @param labelColor The color for the label background
+	 * @return Label object
+	 */
+	private Label createPredictionLabel(String labelText, boolean isPrompt) {
+		// Set color for label depending on whether it is the prompt word
+		Color labelColor = isPrompt ? predictionHighlightColor : predictionListColor;
+		// Create new label and configure formatting
+		Label label = new Label();
+		label.setText(labelText);
+		label.setTextFill(predictionTextColor);
+		label.setFont(Font.font(Font.getDefault().getFamily(), isPrompt ? FontWeight.BOLD : FontWeight.MEDIUM, 16));
+		label.setPadding(new Insets(0, 0, 0, 10));
+		// Ensure the label background fills the entire cell
+		label.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+
+		label.setBackground(new Background(new BackgroundFill(labelColor, null, null)));
+		return label;
+	}
+
+	/**
+	 * Clears the prediction grid of entries and fills it with empty string entries.
+	 */
+	private void clearPredictionGrid() {
+		// Remove all child nodes from the GridPane
+		predictionGrid.getChildren().clear();
+		// Fill the GridPane with empty Label nodes
+		for (int i = 0; i < predictionGrid.getRowCount(); i++) {
+			predictionGrid.add(createPredictionLabel(" ", false), 0, i);
+		}
 	}
 
 	/**
@@ -412,8 +449,6 @@ public class CanvasController {
 		System.out.println(isWin(predictionResults) ? "WIN" : "LOST");
 		// Print how long the prediction took
 		System.out.println("prediction performed in " + (System.currentTimeMillis() - start) + " ms");
-		// Print the prediction results
-		predictText(predictionResults);
 	}
 
 	/**
@@ -553,22 +588,12 @@ public class CanvasController {
 	private void onBrushChange() {
 		// Toggle the brush
 		brush = !brush;
-
-		Platform.runLater(() -> {
-			// Change the text for the brush button
-			if (!brush) {
-				brushButton.setText("Brush");
-			} else {
-				brushButton.setText("Eraser");
-			}
-		});
 	}
 
 	/** This method sets up a new game to be started */
 	@FXML
 	private void onStartGame() {
 		canvas.setDisable(false);
-		difficultyMenu.setVisible(false);
 		// Turn on to brush mode regardless of what it was
 		brush = true;
 		brushButton.setText("Eraser");
@@ -576,6 +601,7 @@ public class CanvasController {
 		clearButton.setVisible(true);
 		startButton.setVisible(false);
 		brushButton.setVisible(true);
+		difficultyMenu.setVisible(false);
 
 		// Reset and start the service
 		service.reset();
