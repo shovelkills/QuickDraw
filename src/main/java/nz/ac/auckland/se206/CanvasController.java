@@ -97,8 +97,10 @@ public class CanvasController {
 	private String randomWordEasy;
 	private String randomWordMedium;
 	private String randomWordHard;
+	private String randomWordMaster;
 	private GraphicsContext graphic;
 	private DoodlePrediction model;
+	private CategorySelector categorySelector;
 	private int timerCount;
 	private boolean brush;
 	private List<Classification> predictionResults = null;
@@ -248,13 +250,15 @@ public class CanvasController {
 		// Update title's font
 		titleLabel.setFont(font);
 		// Adding the difficulties to the drop down
-		difficultyMenu.getItems().addAll("EASY", "MEDIUM", "HARD");
+		difficultyMenu.getItems().addAll("EASY", "MEDIUM", "HARD", "MASTER");
 		// Setting the default difficulty to easy
 		difficultyMenu.setValue(getDifficultyString());
 		// Get a new model
 		model = new DoodlePrediction();
+		// Instantiate a category selector object
+		categorySelector = new CategorySelector();
 		// Get a random word
-		getRandomWord();
+		getRandomWord(categorySelector);
 	}
 
 	/**
@@ -274,6 +278,10 @@ public class CanvasController {
 		// Sets the difficulty to hard
 		case "HARD":
 			difficulty = Difficulty.H;
+			break;
+		// Sets the difficulty to master
+		case "MASTER":
+			difficulty = Difficulty.MS;
 			break;
 		// By default set the difficulty to easy
 		default:
@@ -299,12 +307,19 @@ public class CanvasController {
 		case E:
 			// Set the difficulty string text to easy
 			difficultyString = "EASY";
+			break;
 		case M:
 			// Set the difficulty string text to medium
 			difficultyString = "MEDIUM";
+			break;
 		case H:
 			// Set the difficulty string text to hard
 			difficultyString = "HARD";
+			break;
+		case MS:
+			// Set the difficulty string text to master
+			difficultyString = "MASTER";
+			break;
 		default:
 			// By default set the difficulty string to easy
 			difficultyString = "EASY";
@@ -321,7 +336,7 @@ public class CanvasController {
 		// Changes the difficulty
 		setDifficulty();
 		// displays the current difficulty's word
-		displayWord(randomWordEasy, randomWordMedium, randomWordHard);
+		displayWord(randomWordEasy, randomWordMedium, randomWordHard, randomWordMaster);
 	}
 
 	/**
@@ -332,7 +347,8 @@ public class CanvasController {
 	 * @param randomWordHard   the random word chosen for hard difficulty
 	 * @return
 	 */
-	private void displayWord(String randomWordEasy, String randomWordMedium, String randomWordHard) {
+	private void displayWord(String randomWordEasy, String randomWordMedium, String randomWordHard,
+			String randomWordMaster) {
 		String randomWord;
 		// Get the current difficulty and switch accordingly
 		switch (getDifficulty()) {
@@ -346,6 +362,9 @@ public class CanvasController {
 		case H:
 			randomWord = randomWordHard;
 			break;
+		case MS:
+			randomWord = randomWordMaster;
+			break;
 		// By default use the easy word
 		default:
 			randomWord = randomWordEasy;
@@ -356,14 +375,15 @@ public class CanvasController {
 		wordLabel.setText(randomWord);
 	}
 
-	private void getRandomWord() throws IOException, URISyntaxException, CsvException, ModelException {
-		// Instantiate a category selector object
-		CategorySelector categorySelector = new CategorySelector();
+	private void getRandomWord(CategorySelector categorySelector)
+			throws IOException, URISyntaxException, CsvException, ModelException {
+
 		// Choose a random with from the different categories
-		randomWordEasy = categorySelector.getRandomCategory(Difficulty.E);
-		randomWordMedium = categorySelector.getRandomCategory(Difficulty.M);
-		randomWordHard = categorySelector.getRandomCategory(Difficulty.H);
-		displayWord(randomWordEasy, randomWordMedium, randomWordHard);
+		randomWordEasy = categorySelector.getEasyCategory();
+		randomWordMedium = categorySelector.getEasyMediumCategory();
+		randomWordHard = categorySelector.getEasyMediumHardCategory();
+		randomWordMaster = categorySelector.getMasterCategory();
+		displayWord(randomWordEasy, randomWordMedium, randomWordHard, randomWordMaster);
 	}
 
 	/** This method is called when the "Clear" button is pressed. */
@@ -390,7 +410,7 @@ public class CanvasController {
 		// Reset the started Drawing boolean
 		startedDrawing = false;
 		// Call the getRandomWord method that will generate a random word
-		getRandomWord();
+		getRandomWord(categorySelector);
 		// Reset all the visibilities of the buttons
 		clearButton.setVisible(false);
 		startButton.setVisible(true);
