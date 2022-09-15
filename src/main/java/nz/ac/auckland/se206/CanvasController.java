@@ -94,6 +94,9 @@ public class CanvasController {
 	private static Difficulty difficulty = Difficulty.E;
 
 	private String currentWord;
+	private String randomWordEasy;
+	private String randomWordMedium;
+	private String randomWordHard;
 	private GraphicsContext graphic;
 	private DoodlePrediction model;
 	private int timerCount;
@@ -317,19 +320,50 @@ public class CanvasController {
 	private void onDifficultySelect() throws IOException, URISyntaxException, CsvException, ModelException {
 		// Changes the difficulty
 		setDifficulty();
-		// Set a new random word
-		getRandomWord();
+		// displays the current difficulty's word
+		displayWord(randomWordEasy, randomWordMedium, randomWordHard);
+	}
+
+	/**
+	 * displayWord will display the current difficulty's word on the UI
+	 * 
+	 * @param randomWordEasy   the random word chosen for easy difficulty
+	 * @param randomWordMedium the random word chosen for medium difficulty
+	 * @param randomWordHard   the random word chosen for hard difficulty
+	 * @return
+	 */
+	private void displayWord(String randomWordEasy, String randomWordMedium, String randomWordHard) {
+		String randomWord;
+		// Get the current difficulty and switch accordingly
+		switch (getDifficulty()) {
+		// Change the words based on case
+		case E:
+			randomWord = randomWordEasy;
+			break;
+		case M:
+			randomWord = randomWordMedium;
+			break;
+		case H:
+			randomWord = randomWordHard;
+			break;
+		// By default use the easy word
+		default:
+			randomWord = randomWordEasy;
+			break;
+		}
+		// set the target word to the random word generated
+		currentWord = randomWord;
+		wordLabel.setText(randomWord);
 	}
 
 	private void getRandomWord() throws IOException, URISyntaxException, CsvException, ModelException {
 		// Instantiate a category selector object
 		CategorySelector categorySelector = new CategorySelector();
-		// Choose a random with from the easy category
-		String randomWord = categorySelector.getRandomCategory(getDifficulty());
-		// Set the label in the GUI to display the random word
-		wordLabel.setText(randomWord);
-		// set the target word to the random word generated
-		currentWord = randomWord;
+		// Choose a random with from the different categories
+		randomWordEasy = categorySelector.getRandomCategory(Difficulty.E);
+		randomWordMedium = categorySelector.getRandomCategory(Difficulty.M);
+		randomWordHard = categorySelector.getRandomCategory(Difficulty.H);
+		displayWord(randomWordEasy, randomWordMedium, randomWordHard);
 	}
 
 	/** This method is called when the "Clear" button is pressed. */
