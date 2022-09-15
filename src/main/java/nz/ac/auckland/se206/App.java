@@ -45,6 +45,8 @@ public class App extends Application {
     // Adds the css formatting to the scenes
     scene.getStylesheets().add("/css/menu.css");
     scene.getStylesheets().add("/css/canvas.css");
+
+
     // Set the scene and then show
     stage.setTitle("Draw Game");
     stage.setScene(scene);
