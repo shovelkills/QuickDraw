@@ -98,7 +98,7 @@ public class CanvasController {
 	private double currentX;
 	private double currentY;
 
-	protected Difficulty difficulty = Difficulty.E;
+	private static Difficulty difficulty = Difficulty.E;
 
 	private Task<Void> speechTask = new Task<Void>() {
 		@Override
@@ -273,12 +273,19 @@ public class CanvasController {
 	}
 
 	/*
+	 * getDifficulty will get the game's difficulty
+	 */
+	private Difficulty getDifficulty() {
+		return difficulty;
+	}
+
+	/*
 	 * Gets the difficulty choice box's string
 	 */
 	private String getDifficultyString() {
 		String difficultyString;
 		// Get the current difficulty and switch accordingly
-		switch (difficulty) {
+		switch (getDifficulty()) {
 		case E:
 			// Set the difficulty string text to easy
 			difficultyString = "EASY";
@@ -300,7 +307,7 @@ public class CanvasController {
 	 * updates the random word for the player to draw
 	 */
 	@FXML
-	private void getChoice() throws IOException, URISyntaxException, CsvException, ModelException {
+	private void onDifficultySelect() throws IOException, URISyntaxException, CsvException, ModelException {
 		// Changes the difficulty
 		setDifficulty();
 		// Set a new random word

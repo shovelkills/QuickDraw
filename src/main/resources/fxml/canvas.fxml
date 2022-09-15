@@ -67,7 +67,7 @@
                   <Insets right="25.0" />
                </HBox.margin></Button>
         <Button fx:id="clearButton" mnemonicParsing="false" onAction="#onClear" text="Clear" visible="false" />
-            <ChoiceBox fx:id="difficultyMenu" onAction="#getChoice" prefWidth="150.0" />
+            <ChoiceBox fx:id="difficultyMenu" onAction="#onDifficultySelect" prefWidth="150.0" />
          </children>
       </HBox>
 
