@@ -13,26 +13,28 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="760.0" prefWidth="900.0" spacing="20.0" style="-fx-background-color: #96e7ff;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nz.ac.auckland.se206.CanvasController">
+<VBox alignment="BOTTOM_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" nodeOrientation="LEFT_TO_RIGHT" prefHeight="760.0" prefWidth="900.0" spacing="20.0" style="-fx-background-color: #96e7ff;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nz.ac.auckland.se206.CanvasController">
   <children>
-    <Label fx:id="titleLabel" alignment="CENTER" layoutX="124.0" layoutY="14.0" prefHeight="23.0" prefWidth="502.0" text="Quick, Draw!" textAlignment="CENTER" VBox.vgrow="NEVER">
-      <font>
-        <Font size="34.0" />
-      </font>
-         <VBox.margin>
-            <Insets bottom="75.0" top="-50.0" />
-         </VBox.margin>
-    </Label>
-      <Label fx:id="wordLabel" alignment="CENTER" prefHeight="362.0" prefWidth="472.0" textAlignment="CENTER">
+      <Label fx:id="titleLabel" alignment="CENTER" prefHeight="37.0" prefWidth="472.0" text="Quick, Draw!" textAlignment="CENTER">
          <font>
             <Font size="40.0" />
          </font>
          <VBox.margin>
             <Insets top="-150.0" />
          </VBox.margin></Label>
+      <Label fx:id="wordLabel" text="WORD">
+         <font>
+            <Font size="26.0" />
+         </font>
+      </Label>
+      <Label fx:id="timerLabel" alignment="CENTER" prefHeight="56.0" prefWidth="196.0" text="TIMER" textAlignment="CENTER">
+         <font>
+            <Font size="30.0" />
+         </font>
+      </Label>
       <HBox fx:id="canvasPane" maxWidth="-Infinity" prefHeight="358.0" prefWidth="800.0" style="-fx-background-color: #cffffc; -fx-border-color: white; -fx-border-width: 5;">
          <children>
-          <Canvas fx:id="canvas" height="320.0" width="504.0">
+          <Canvas fx:id="canvas" height="350.0" width="504.0">
             <cursor>
               <Cursor fx:constant="HAND" />
             </cursor>
@@ -61,7 +63,7 @@
       </HBox>
     <HBox alignment="TOP_CENTER" prefHeight="0.0" prefWidth="400.0">
       <children>
-        <Button fx:id="predictButton" mnemonicParsing="false" onAction="#onPredict" text="Predict" visible="false" />
+        <Button fx:id="predictButton" mnemonicParsing="false" text="Predict" visible="false" />
             <Button fx:id="startButton" alignment="CENTER" mnemonicParsing="false" onAction="#onStartGame" prefHeight="25.0" prefWidth="63.0" text="Start">
                <HBox.margin>
                   <Insets right="25.0" />
