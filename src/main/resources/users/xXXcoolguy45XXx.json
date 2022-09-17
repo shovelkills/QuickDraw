@@ -1,9 +1,9 @@
 {
-	"user":{
        "username": "xXXcoolguy45XXx",
        "gamesWon": 1,
        "gamesLost": 15,
        "wordHistory": ["peas", "clarinet"],
-       "fastestGame": 56
-       }      
+       "fastestGame": 56,
+      "fastestWord": "peas", 
+       "timeHistory" : [43, 33]    
 }
