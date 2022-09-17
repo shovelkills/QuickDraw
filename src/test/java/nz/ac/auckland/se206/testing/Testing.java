@@ -6,8 +6,8 @@ public class Testing {
 
   public static void main(String[] args) {
 
-    // testLoadingJSONFile();
-    testCreatingJSONFile();
+    testLoadingJSONFile();
+    // testCreatingJSONFile();
     // testDoesItContainSpecialCharacters();
   }
 
@@ -24,6 +24,9 @@ public class Testing {
     System.out.println("Username " + Users.getUserName());
     System.out.println("Losses " + Users.getLosses());
     System.out.println("Word History " + Users.getWordHistory());
+    System.out.println("Fastest word " + Users.getFastestWord());
+    System.out.println("Time History" + Users.getTimeHistory());
+    System.out.println("Average Time " + Users.getAverageTime());
 
   }
 

@@ -1,9 +1,9 @@
 {
-	"user":{
        "username": "blank",
        "gamesWon": 0,
        "gamesLost": 0,
        "wordHistory": [],
-       "fastestGame": 0
-       }
+       "fastestGame": 0,
+       "fastestWord": "", 
+       "timeHistory" : []
 }

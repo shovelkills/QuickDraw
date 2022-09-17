@@ -25,9 +25,11 @@ public class Users {
 
 
   private static List<String> wordHistory;
+  private static List<Double> timeHistory;
 
   private static Map<?, ?> userInfo;
 
+  private static String fastestWord;
   private static String folderDirectory;// Gets the current directory of the folder
   private static String userName;
 
@@ -56,13 +58,17 @@ public class Users {
       // Add the information from JSON file to variables through casting
       userName = (String) userInfo.get("username");
 
+      fastestWord = (String) userInfo.get("fastestWord");
+
       wins = (int) (double) userInfo.get("gamesWon");
 
       losses = (int) (double) userInfo.get("gamesLost");
 
+      fastestTime = (int) (double) userInfo.get("fastestGame");
+
       wordHistory = (List<String>) userInfo.get("wordHistory");
 
-      fastestTime = (int) (double) userInfo.get("fastestGame");
+      timeHistory = (List<Double>) userInfo.get("timeHistory");
 
       reader.close();
 
@@ -102,6 +108,8 @@ public class Users {
       userMap.put("gamesLost", 0);
       userMap.put("wordHistory", new ArrayList<String>());
       userMap.put("fastestGame", 0);
+      userMap.put("fastestWord", " ");
+      userMap.put("timeHistory", new ArrayList<Double>());
 
       // Gets the file directory to save to and runs the load user method
       File dir = new File(folderDirectory + "/src/main/resources/users/");
@@ -121,7 +129,6 @@ public class Users {
       e.printStackTrace();
     }
 
-
   }
 
   /**
@@ -129,7 +136,7 @@ public class Users {
    * 
    * @param username the username the user inputted
    * @return boolean of if there are special characters in the username. True means there are
-   *         special characters
+   *         special characters in the string
    */
   public static boolean isValidUsername(String username) {
     Pattern validCharacters = Pattern.compile("[^a-z0-9]", Pattern.CASE_INSENSITIVE);
@@ -138,22 +145,42 @@ public class Users {
 
   }
 
+  /**
+   * Gets the sum of the remain time that the user has to draw each word
+   * 
+   * @return the average time remaining that it user has when the game recognizes the word
+   */
+  public static double getAverageTime() {
+    double sum = 0;
+    // Checks if the list is empty and finds the average time
+    if (!timeHistory.isEmpty()) {
+      for (Double time : timeHistory) {
+        sum += time;
+      }
+      return sum / timeHistory.size();
+    }
+    return sum;
 
-  // Getters and setter methods below
+  }
+
+
+
+  // Getters and setter methods below. Note that the setters for wins and losses are just increasing
+  // the value by 1.
   public static int getWins() {
     return wins;
   }
 
-  public static void setWins(int wins) {
-    Users.wins = wins;
+  public static void increaseWins() {
+    Users.wins++;
   }
 
   public static int getLosses() {
     return losses;
   }
 
-  public static void setLosses(int losses) {
-    Users.losses = losses;
+  public static void increaseLosses() {
+    Users.losses++;
   }
 
   public static List<String> getWordHistory() {
@@ -175,6 +202,22 @@ public class Users {
 
   public static String getUserName() {
     return userName;
+  }
+
+  public static List<Double> getTimeHistory() {
+    return timeHistory;
+  }
+
+  public static void setTimeHistory(List<Double> timeHistory) {
+    Users.timeHistory = timeHistory;
+  }
+
+  public static String getFastestWord() {
+    return fastestWord;
+  }
+
+  public static void setFastestWord(String fastestWord) {
+    Users.fastestWord = fastestWord;
   }
 
 
