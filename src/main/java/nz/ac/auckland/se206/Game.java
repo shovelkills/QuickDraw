@@ -2,6 +2,7 @@ package nz.ac.auckland.se206;
 
 import ai.djl.ModelException;
 import ai.djl.modality.Classifications;
+import ai.djl.modality.Classifications.Classification;
 import ai.djl.translate.TranslateException;
 import com.opencsv.exceptions.CsvException;
 import java.io.IOException;
@@ -23,6 +24,7 @@ public class Game {
   private String currentPrompt;
   private int timer = 60;
   private CategorySelector cs;
+  private boolean isWin;
 
   public Game(CanvasController canvas)
       throws IOException, URISyntaxException, CsvException, ModelException {
@@ -58,8 +60,8 @@ public class Game {
   }
 
   public void startGame() {
-    service.reset();
-    service.start();
+	  service.reset();
+	  service.start();
   }
 
   public void refreshSelection() {
@@ -71,8 +73,8 @@ public class Game {
         protected Task<Void> createTask() {
           return new Task<Void>() {
             protected Void call() throws InterruptedException {
-              timer = 60;
-              while (timer > 0) {
+              timer = 1;
+              while (timer >= 0) {
                 Platform.runLater(
                     () -> {
                       try {
@@ -81,8 +83,9 @@ public class Game {
                               model.getPredictions(canvas.getCurrentSnapshot(), 10);
                           canvas.updatePredictionGridDisplay(currentPredictions);
                           for (int i = 0; i < 3; i++) {
-                            if (currentPrompt.equals(currentPredictions.get(i).getClassName())) {
+                            if (currentPrompt.equals(currentPredictions.get(i).getClassName().replace("_", " "))) {
                               endGame(true);
+                              return;
                             }
                           }
                         }
@@ -103,7 +106,7 @@ public class Game {
       };
 
   private void endGame(boolean isWin) throws InterruptedException {
-    service.cancel();
-    canvas.onEnd();
+	service.cancel();
+	canvas.onEndGame(isWin);
   }
 }

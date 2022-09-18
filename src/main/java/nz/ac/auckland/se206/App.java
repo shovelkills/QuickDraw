@@ -41,7 +41,8 @@ public class App extends Application {
     SceneManager.addUi(AppUi.MAIN_MENU, loadFxml("menu"));
     SceneManager.addUi(AppUi.GAME, loadFxml("canvas"));
     // Creates a new scene that starts on the main menu
-    final Scene scene = new Scene(SceneManager.getUiRoot(AppUi.MAIN_MENU), 900, 760);
+    final Scene scene = new Scene(SceneManager.getUiRoot(AppUi.MAIN_MENU),
+    		SceneManager.getMaxWindowWidth(), SceneManager.getMaxWindowHeight());
     // Adds the css formatting to the scenes
     scene.getStylesheets().add("/css/menu.css");
     scene.getStylesheets().add("/css/canvas.css");

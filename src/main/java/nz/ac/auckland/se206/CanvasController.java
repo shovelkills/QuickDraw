@@ -3,7 +3,10 @@ package nz.ac.auckland.se206;
 
 import ai.djl.ModelException;
 import ai.djl.modality.Classifications.Classification;
+import ai.djl.translate.TranslateException;
+
 import com.opencsv.exceptions.CsvException;
+
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -118,12 +121,13 @@ public class CanvasController {
     // Add the canvasPane's css styling to the object
     canvasPane.getStyleClass().add("canvasPane");
     // Load in the font
-    Font font = Font.loadFont("file:src/main/resources/fonts/somethingwild-Regular.ttf", 150);
+    Font font = Font.loadFont("file:src/main/resources/fonts/somethingwild-Regular.ttf", 100);
     // Update title's font
     titleLabel.setFont(font);
     // Adding the difficulties to the drop down
     difficultyMenu.setValue("EASY");
     onDifficultySelect();
+    updateTimerLabel();
   }
 
   /** Set the game difficulty through the UI dropdown, update the word label */
@@ -240,6 +244,8 @@ public class CanvasController {
     canvas.setDisable(true);
     clearPredictionGrid();
     game = new Game(this);
+    updateWordLabel();
+    updateTimerLabel();
   }
 
   /**
@@ -324,15 +330,20 @@ public class CanvasController {
    *
    * @throws InterruptedException
    */
-  @FXML
-  public void onEnd() throws InterruptedException {
+  public void onEndGame(boolean isWin) {
     canvas.setDisable(true);
     brushButton.setVisible(false);
+    clearButton.setVisible(false);
+    restartButton.setVisible(true);
+    // Update the word label to display a win or loss message for the user at the end of the game.
+    if(isWin) {
+    	wordLabel.setText(getWinMessage());
+    } else {
+    	wordLabel.setText(getLossMessage());
+    }
+    
     Platform.runLater(
         () -> {
-          // Turn off the visibility for the clear button
-          clearButton.setVisible(false);
-          restartButton.setVisible(true);
           // Create a new alert
           Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
           // Set up the alert accordingly
@@ -357,6 +368,15 @@ public class CanvasController {
           }
         });
   }
+  
+  private String getWinMessage(){
+	  return "You won! You drew " + game.getCurrentPrompt() + " in " + (60 - game.getTimeRemaining()) + " seconds!";
+	  
+  }
+  
+  private String getLossMessage(){
+	  return "You lost! Press restart to try another word!";
+  }
 
   /** This function toggles from brush to eraser */
   @FXML
@@ -378,6 +398,7 @@ public class CanvasController {
   /** This method sets up a new game to be started */
   @FXML
   private void onStartGame() {
+	game.startGame();
     canvas.setDisable(false);
     // Turn on to brush mode regardless of what it was
     brush = true;
@@ -421,6 +442,5 @@ public class CanvasController {
           currentX = x;
           currentY = y;
         });
-    game.startGame();
   }
 }
