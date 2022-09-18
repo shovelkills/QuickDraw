@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 
 
@@ -23,9 +24,8 @@ public class Users {
   private static int losses;
   private static int wins;
 
-
-  private static List<String> wordHistory;
   private static List<Double> timeHistory;
+  private static List<String> wordHistory;
 
   private static Map<?, ?> userInfo;
 
@@ -116,7 +116,9 @@ public class Users {
       try {
         // Creates a writer object to write and save the file
         Writer writer = new FileWriter(new File(dir, username + ".json"));
-        new Gson().toJson(userMap, writer);
+        // Makes the JSON file easier to read
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        gson.toJson(userMap, writer);
         writer.close();
         loadUser(username);
       } catch (IOException e1) {
@@ -163,33 +165,73 @@ public class Users {
 
   }
 
+  /**
+   * Saves the data of the user to a JSON file after a game finishes
+   */
 
+  public static void saveUser() {
+    File dir = new File(folderDirectory + "/src/main/resources/users/");
+    try {
+      // Creates a writer object to write and save the file
+      Writer writer = new FileWriter(new File(dir, userName + ".json"));
+      Gson gson = new GsonBuilder().setPrettyPrinting().create();
+      // Creates map to store user info
+      Map<String, Object> userMap = new HashMap<>();
+      userMap.put("username", userName);
+      userMap.put("gamesWon", wins);
+      userMap.put("gamesLost", losses);
+      userMap.put("wordHistory", wordHistory);
+      userMap.put("fastestGame", fastestTime);
+      userMap.put("fastestWord", fastestWord);
+      userMap.put("timeHistory", timeHistory);
 
-  // Getters and setter methods below. Note that the setters for wins and losses are just increasing
-  // the value by 1.
-  public static int getWins() {
-    return wins;
+      gson.toJson(userMap, writer);
+      writer.close();
+
+    } catch (IOException e1) {
+      // TODO Auto-generated catch block
+      e1.printStackTrace();
+    }
   }
+
+  // Increases the wins and losses
 
   public static void increaseWins() {
     Users.wins++;
-  }
-
-  public static int getLosses() {
-    return losses;
   }
 
   public static void increaseLosses() {
     Users.losses++;
   }
 
+
+  // Adds the word and time to the list
+  public static void addWordHistory(String word) {
+    Users.wordHistory.add(word);
+  }
+
+  public static void addTimeHistory(int time) {
+    Users.timeHistory.add((double) time);
+  }
+
+  // Getters and setter methods below.
+  public static int getWins() {
+    return wins;
+  }
+
+
+
+  public static int getLosses() {
+    return losses;
+  }
+
+
+
   public static List<String> getWordHistory() {
     return wordHistory;
   }
 
-  public static void setWordHistory(List<String> wordHistory) {
-    Users.wordHistory = wordHistory;
-  }
+
 
   public static int getFastestTime() {
     return fastestTime;
@@ -208,9 +250,6 @@ public class Users {
     return timeHistory;
   }
 
-  public static void setTimeHistory(List<Double> timeHistory) {
-    Users.timeHistory = timeHistory;
-  }
 
   public static String getFastestWord() {
     return fastestWord;

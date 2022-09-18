@@ -6,9 +6,10 @@ public class Testing {
 
   public static void main(String[] args) {
 
-    testLoadingJSONFile();
+    // testLoadingJSONFile();
     // testCreatingJSONFile();
     // testDoesItContainSpecialCharacters();
+    // testSavingToJSONFile();
   }
 
   public static void testLoadingJSONFile() {
@@ -47,6 +48,23 @@ public class Testing {
     // Comes up false as it does not contain special characters
     System.out.println(
         Users.isValidUsername("qwertyuiopasdfghjklzxcvbnm1234567890QWERTYUIOPASDFGHJKLZXCVBNM"));
+
+  }
+
+  public static void testSavingToJSONFile() {
+    // Loads users and increases the wins by 2
+    Users.loadUser("xXXcoolguy45XXx");
+    // Shows wins before increasing wins
+    System.out.println("Wins " + Users.getWins());
+    Users.increaseWins();
+    System.out.println("Wins " + Users.getWins());
+    // Check file to see if the wins have changed
+    Users.saveUser();
+    // Increases win again
+    Users.increaseWins();
+    System.out.println("Wins " + Users.getWins());
+    Users.saveUser();
+
 
   }
 
