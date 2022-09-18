@@ -1,18 +1,15 @@
 package nz.ac.auckland.se206;
 
-
 import ai.djl.ModelException;
 import ai.djl.modality.Classifications.Classification;
-import ai.djl.translate.TranslateException;
-
 import com.opencsv.exceptions.CsvException;
-
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import javafx.animation.Animation;
@@ -71,9 +68,14 @@ public class CanvasController {
   @FXML private Pane canvasPane;
   @FXML private Button clearButton;
   @FXML private ChoiceBox<String> difficultyMenu;
-  private final String[] difficultySettings = {"EASY", "MEDIUM", "HARD", "MASTER"};
+
+  // Define game object
   private Game game;
+
+  // Define other UI data
   private GraphicsContext graphic;
+  private final HashMap<Difficulty, String> difficultySettingsMap =
+      new HashMap<Difficulty, String>();
   private boolean brush;
   private boolean isDrawing;
   private double currentX;
@@ -82,7 +84,7 @@ public class CanvasController {
   private Color predictionHighlightColor = Color.web("#008079");
   private Color predictionTextColor = Color.WHITE;
 
-  // Create an alternating colour background task
+  // Task for alternating colour of the title and word label concurrently
   private Task<Void> alternateColoursTask =
       new Task<Void>() {
 
@@ -105,17 +107,18 @@ public class CanvasController {
    * @throws CsvException If the Csv cannot be found
    */
   public void initialize() throws IOException, URISyntaxException, CsvException, ModelException {
+    // Instantiate a new game object on first opening the scene
     game = new Game(this);
-    // Disable the canvas on start up and turn off game features
-    canvas.setDisable(true);
-    brushButton.setVisible(false);
-    difficultyMenu.getItems().addAll(difficultySettings);
-    // Create a new task that alternates between colours
-    Thread colourTask = new Thread(alternateColoursTask);
-    // Allow the task to be cancelled on closing of application
-    colourTask.setDaemon(true);
-    // Start the colour task
-    colourTask.start();
+    // Build difficulty settings map for the dropdown
+    difficultySettingsMap.put(Difficulty.E, "EASY");
+    difficultySettingsMap.put(Difficulty.M, "MEDIUM");
+    difficultySettingsMap.put(Difficulty.H, "HARD");
+    difficultySettingsMap.put(Difficulty.MS, "MASTER");
+    // Populate difficulty dropdown
+    difficultyMenu.getItems().add(difficultySettingsMap.get(Difficulty.E));
+    difficultyMenu.getItems().add(difficultySettingsMap.get(Difficulty.M));
+    difficultyMenu.getItems().add(difficultySettingsMap.get(Difficulty.H));
+    difficultyMenu.getItems().add(difficultySettingsMap.get(Difficulty.MS));
     // Get the graphic from the canvas
     graphic = canvas.getGraphicsContext2D();
     // Add the canvasPane's css styling to the object
@@ -124,10 +127,44 @@ public class CanvasController {
     Font font = Font.loadFont("file:src/main/resources/fonts/somethingwild-Regular.ttf", 100);
     // Update title's font
     titleLabel.setFont(font);
-    // Adding the difficulties to the drop down
-    difficultyMenu.setValue("EASY");
+
+    // Set up the pre-game UI elements that are in common with restarting the game
+    setPreGameUI();
+
+    // Create a new thread for the alternating colours task
+    Thread colourThread = new Thread(alternateColoursTask);
+    // Allow the task to be cancelled on closing of application
+    colourThread.setDaemon(true);
+    // Start the colour task
+    colourThread.start();
+  }
+
+  /**
+   * Sets UI elements which are common to the initialisation of the scene and restarting the game.
+   */
+  private void setPreGameUI() {
+    // Bind label properties to game properties
+    wordLabel.textProperty().bind(game.getCurrentPromptProperty());
+    timerLabel.textProperty().bind(game.getTimeRemainingAsStringBinding());
+    // Set UI elements for pre-game
+    canvas.setDisable(true);
+    restartButton.setVisible(false);
+    startButton.setVisible(true);
+    startButton.setDisable(false);
+    brushButton.setVisible(false);
+    difficultyMenu.setVisible(true);
+    // Select last played difficulty (default EASY if new game)
+    difficultyMenu.setValue(difficultySettingsMap.get(Game.getDifficulty()));
     onDifficultySelect();
-    updateTimerLabel();
+  }
+
+  /**
+   * Returns whether the user has started drawing.
+   *
+   * @return true if the canvas has been clicked since the game start or last onClear.
+   */
+  public boolean getIsDrawing() {
+    return isDrawing;
   }
 
   /** Set the game difficulty through the UI dropdown, update the word label */
@@ -149,19 +186,26 @@ public class CanvasController {
       default:
         game.setDifficulty(Difficulty.E);
     }
-    updateWordLabel();
   }
 
-  public boolean getIsDrawing() {
-    return isDrawing;
+  /** This function toggles from brush to eraser */
+  @FXML
+  private void onBrushChange() {
+    // Toggle the brush
+    brush = !brush;
+    brushButton.setText(brush ? "Eraser" : "Brush");
   }
 
-  private void updateWordLabel() {
-    wordLabel.setText(game.getCurrentPrompt());
-  }
-
-  public void updateTimerLabel() {
-    timerLabel.setText(Integer.toString(game.getTimeRemaining()));
+  /** This method is called when the "Clear" button is pressed. Resets brush to "Brush" mode. */
+  @FXML
+  private void onClear() {
+    // Clear the canvas
+    graphic.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+    clearPredictionGrid();
+    isDrawing = false;
+    if (brushButton.getText().equals("Brush")) {
+      onBrushChange();
+    }
   }
 
   /**
@@ -233,19 +277,15 @@ public class CanvasController {
   @FXML
   private void onRestartGame()
       throws IOException, URISyntaxException, CsvException, ModelException {
+
     // Clear the canvas
     onClear();
-    // Reset all the visibilities of the buttons
-    clearButton.setVisible(false);
-    startButton.setVisible(true);
-    restartButton.setVisible(false);
-    brushButton.setVisible(false);
-    difficultyMenu.setVisible(true);
-    canvas.setDisable(true);
+    // Clear the prediction grid
     clearPredictionGrid();
-    game = new Game(this);
-    updateWordLabel();
-    updateTimerLabel();
+    // Reset game variables and concurrent service
+    game.resetGame();
+    // Reset UI elements
+    setPreGameUI();
   }
 
   /**
@@ -325,25 +365,37 @@ public class CanvasController {
   }
 
   /**
-   * This method is called when the game ends and asks if they want to save their current canvas as
-   * a file
+   * Called when the game ends. <br>
+   * - Updates UI to give feedback to user on whether they won or lost, plus their time to draw if
+   * won <br>
+   * - Prompts user with a pop-up giving them the option to save their drawing
    *
+   * @return isWin The win flag from the game controller, is true if the game was won and false if
+   *     lost
    * @throws InterruptedException
    */
   public void onEndGame(boolean isWin) {
-    canvas.setDisable(true);
-    brushButton.setVisible(false);
-    clearButton.setVisible(false);
-    restartButton.setVisible(true);
-    // Update the word label to display a win or loss message for the user at the end of the game.
-    if(isWin) {
-    	wordLabel.setText(getWinMessage());
-    } else {
-    	wordLabel.setText(getLossMessage());
-    }
-    
     Platform.runLater(
         () -> {
+          // Set UI elements for post-game
+          canvas.setDisable(true);
+          brushButton.setVisible(false);
+          clearButton.setVisible(false);
+          restartButton.setVisible(true);
+
+          // Unbind label properties bound to game properties
+          wordLabel.textProperty().unbind();
+          timerLabel.textProperty().unbind();
+
+          // Update the word label to display a win or loss message for the user at the end of the
+          // game.
+          if (isWin) {
+            wordLabel.setText(getWinMessage());
+          } else {
+            System.out.println("LOST");
+            wordLabel.setText(getLossMessage());
+          }
+
           // Create a new alert
           Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
           // Set up the alert accordingly
@@ -368,46 +420,45 @@ public class CanvasController {
           }
         });
   }
-  
-  private String getWinMessage(){
-	  return "You won! You drew " + game.getCurrentPrompt() + " in " + (60 - game.getTimeRemaining()) + " seconds!";
-	  
-  }
-  
-  private String getLossMessage(){
-	  return "You lost! Press restart to try another word!";
+
+  /**
+   * Everyone loves a winner. Also calculates the time taken to draw the winning image.
+   *
+   * @return A string informing the user they have won and how much time they took.
+   */
+  private String getWinMessage() {
+    return "You won! You drew "
+        + game.getCurrentPrompt()
+        + " in "
+        + (60 - game.getTimeRemaining())
+        + " seconds!";
   }
 
-  /** This function toggles from brush to eraser */
-  @FXML
-  private void onBrushChange() {
-    // Toggle the brush
-    brush = !brush;
-    brushButton.setText(brush ? "Eraser" : "Brush");
-  }
-
-  /** This method is called when the "Clear" button is pressed. */
-  @FXML
-  private void onClear() {
-    // Clear the canvas
-    graphic.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-    clearPredictionGrid();
-    isDrawing = false;
+  /**
+   * Tells 'em to try again.
+   *
+   * @return A string that is polite, professional, and honest.
+   */
+  private String getLossMessage() {
+    return "You lost! Press restart to try another word!";
   }
 
   /** This method sets up a new game to be started */
   @FXML
   private void onStartGame() {
-	game.startGame();
+    game.startGame();
+
     canvas.setDisable(false);
     // Turn on to brush mode regardless of what it was
     brush = true;
     brushButton.setText("Eraser");
+
     // Change the visibilities of buttons according to brief
     clearButton.setVisible(true);
     startButton.setVisible(false);
     brushButton.setVisible(true);
     difficultyMenu.setVisible(false);
+
     // Get eraser colour
     Background currentBackground = canvasPane.getBackground();
     Paint eraserColour = currentBackground.getFills().get(0).getFill();

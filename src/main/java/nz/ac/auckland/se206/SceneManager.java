@@ -9,7 +9,7 @@ public class SceneManager {
     MAIN_MENU,
     GAME
   }
-  
+
   private static final double widthPadding = 200;
   private static final double heightPadding = 150;
 
@@ -22,12 +22,12 @@ public class SceneManager {
   public static Parent getUiRoot(AppUi appUi) {
     return sceneMap.get(appUi);
   }
-  
-  public static double getMaxWindowWidth() {
-	  return Toolkit.getDefaultToolkit().getScreenSize().getWidth() - widthPadding;
+
+  public static double getMaxWindowedWidth() {
+    return Toolkit.getDefaultToolkit().getScreenSize().getWidth() - widthPadding;
   }
-  
-  public static double getMaxWindowHeight() {
-	  return Toolkit.getDefaultToolkit().getScreenSize().getHeight() - heightPadding;
+
+  public static double getMaxWindowedHeight() {
+    return Toolkit.getDefaultToolkit().getScreenSize().getHeight() - heightPadding;
   }
 }

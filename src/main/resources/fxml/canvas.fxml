@@ -15,7 +15,7 @@
 
 <VBox alignment="BOTTOM_CENTER" nodeOrientation="LEFT_TO_RIGHT" prefHeight="593.0" prefWidth="900.0" style="-fx-background-color: #96e7ff;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nz.ac.auckland.se206.CanvasController">
   <children>
-      <Label fx:id="titleLabel" alignment="CENTER" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" prefHeight="58.0" prefWidth="500.0" text="Quick, Draw!" textAlignment="CENTER">
+      <Label fx:id="titleLabel" alignment="CENTER" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" prefHeight="58.0" prefWidth="500.0" text="Quick, Draw!" textAlignment="CENTER">
          <font>
             <Font size="40.0" />
          </font>
@@ -32,9 +32,9 @@
             <Font size="30.0" />
          </font>
       </Label>
-      <HBox fx:id="canvasPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="358.0" prefWidth="800.0" style="-fx-background-color: #cffffc; -fx-border-color: white; -fx-border-width: 5;">
+      <HBox fx:id="canvasPane" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="0.0" prefWidth="700.0" style="-fx-background-color: #cffffc; -fx-border-color: white; -fx-border-width: 5;" VBox.vgrow="NEVER">
          <children>
-          <Canvas fx:id="canvas" height="350.0" width="504.0">
+          <Canvas fx:id="canvas" height="400.0" width="500.0">
             <cursor>
               <Cursor fx:constant="HAND" />
             </cursor>

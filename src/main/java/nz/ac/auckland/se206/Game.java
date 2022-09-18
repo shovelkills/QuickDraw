@@ -2,7 +2,6 @@ package nz.ac.auckland.se206;
 
 import ai.djl.ModelException;
 import ai.djl.modality.Classifications;
-import ai.djl.modality.Classifications.Classification;
 import ai.djl.translate.TranslateException;
 import com.opencsv.exceptions.CsvException;
 import java.io.IOException;
@@ -10,21 +9,30 @@ import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.List;
 import javafx.application.Platform;
+import javafx.beans.binding.StringBinding;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import nz.ac.auckland.se206.ml.DoodlePrediction;
 import nz.ac.auckland.se206.words.CategorySelector;
 import nz.ac.auckland.se206.words.CategorySelector.Difficulty;
 
+/**
+ * Controls the game logic through a reusable service. <br>
+ * Keeps track of the timer, prompt, and difficulty variables of the game.<br>
+ * Runs the prediction model to determine win condition.
+ */
 public class Game {
   private static Difficulty difficulty;
   private DoodlePrediction model;
   private CanvasController canvas;
   private HashMap<Difficulty, String> currentSelection;
-  private String currentPrompt;
-  private int timer = 60;
+  private StringProperty currentPrompt = new SimpleStringProperty(" ");
+  private IntegerProperty timer = new SimpleIntegerProperty(60);
   private CategorySelector cs;
-  private boolean isWin;
 
   public Game(CanvasController canvas)
       throws IOException, URISyntaxException, CsvException, ModelException {
@@ -33,15 +41,11 @@ public class Game {
     cs = new CategorySelector();
     model = new DoodlePrediction();
     currentSelection = cs.getSelection();
-    currentPrompt = currentSelection.get(difficulty);
+    currentPrompt.setValue(currentSelection.get(difficulty));
   }
 
   public static Difficulty getDifficulty() {
     return difficulty;
-  }
-
-  public int getTimeRemaining() {
-    return timer;
   }
 
   /**
@@ -52,20 +56,44 @@ public class Game {
    */
   public void setDifficulty(Difficulty newDifficulty) {
     difficulty = newDifficulty;
-    currentPrompt = currentSelection.get(difficulty);
+    currentPrompt.setValue(currentSelection.get(difficulty));
   }
 
-  public String getCurrentPrompt() {
+  public StringProperty getCurrentPromptProperty() {
     return currentPrompt;
   }
 
-  public void startGame() {
-	  service.reset();
-	  service.start();
+  public String getCurrentPrompt() {
+    return currentPrompt.get();
   }
 
-  public void refreshSelection() {
+  public int getTimeRemaining() {
+    return timer.get();
+  }
+
+  public StringBinding getTimeRemainingAsStringBinding() {
+    return timer.asString();
+  }
+
+  public void startGame() {
+    service.start();
+  }
+
+  /**
+   * Useful for restarting the game without creating a new Game object. <br>
+   * Resets the concurrent game service. Resets the timer. Gets a new selection of prompts.
+   */
+  public void resetGame() {
+    service.reset();
+    resetTimer(difficulty);
     currentSelection = cs.getSelection();
+  }
+
+  /**
+   * @param difficulty
+   */
+  public void resetTimer(Difficulty difficulty) {
+    timer.set(60);
   }
 
   private Service<Void> service =
@@ -73,30 +101,32 @@ public class Game {
         protected Task<Void> createTask() {
           return new Task<Void>() {
             protected Void call() throws InterruptedException {
-              timer = 1;
-              while (timer >= 0) {
+              while (timer.intValue() > 1) {
+                Thread.sleep(1000);
                 Platform.runLater(
                     () -> {
+                      timer.set(timer.get() - 1);
+
                       try {
                         if (canvas.getIsDrawing()) {
                           List<Classifications.Classification> currentPredictions =
                               model.getPredictions(canvas.getCurrentSnapshot(), 10);
                           canvas.updatePredictionGridDisplay(currentPredictions);
                           for (int i = 0; i < 3; i++) {
-                            if (currentPrompt.equals(currentPredictions.get(i).getClassName().replace("_", " "))) {
+                            if (getCurrentPrompt()
+                                .equals(
+                                    currentPredictions.get(i).getClassName().replace("_", " "))) {
                               endGame(true);
                               return;
                             }
                           }
                         }
-                        canvas.updateTimerLabel();
                       } catch (TranslateException | InterruptedException e) {
                         e.printStackTrace();
                       }
                     });
-                Thread.sleep(1000);
-                timer--;
               }
+              System.out.println("LOST IN TASK");
               endGame(false);
               return null;
             }
@@ -106,7 +136,7 @@ public class Game {
       };
 
   private void endGame(boolean isWin) throws InterruptedException {
-	service.cancel();
-	canvas.onEndGame(isWin);
+    canvas.onEndGame(isWin);
+    service.cancel();
   }
 }
