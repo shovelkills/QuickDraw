@@ -1,7 +1,15 @@
 {
-		"username": "thelegend27",
-		"gamesWon": 3,
-		"gamesLost": 2,
-		"wordHistory": ["line", "finger"],
-		"fastestGame": 33
+  "gamesLost": 2,
+  "fastestWord": "line",
+  "wordHistory": [
+    "line",
+    "finger"
+  ],
+  "timeHistory": [
+    22.0,
+    45.0
+  ],
+  "fastestGame": 33,
+  "username": "thelegend27",
+  "gamesWon": 8
 }
