@@ -1,10 +1,7 @@
 package nz.ac.auckland.se206;
 
-import static nz.ac.auckland.se206.ml.DoodlePrediction.printPredictions;
-
 import ai.djl.ModelException;
 import ai.djl.modality.Classifications.Classification;
-import ai.djl.translate.TranslateException;
 import com.opencsv.exceptions.CsvException;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
@@ -12,6 +9,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import javafx.animation.Animation;
@@ -19,7 +17,6 @@ import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
-import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
@@ -43,9 +40,6 @@ import javafx.scene.text.FontWeight;
 import javafx.stage.FileChooser;
 import javafx.util.Duration;
 import javax.imageio.ImageIO;
-import nz.ac.auckland.se206.ml.DoodlePrediction;
-import nz.ac.auckland.se206.speech.TextToSpeech;
-import nz.ac.auckland.se206.words.CategorySelector;
 import nz.ac.auckland.se206.words.CategorySelector.Difficulty;
 
 /**
@@ -66,6 +60,7 @@ public class CanvasController {
   @FXML private Canvas canvas;
   @FXML private Label titleLabel;
   @FXML private Label wordLabel;
+  @FXML private Label timerLabel;
   @FXML private GridPane predictionGrid;
   @FXML private Button startButton;
   @FXML private Button restartButton;
@@ -73,127 +68,23 @@ public class CanvasController {
   @FXML private Pane canvasPane;
   @FXML private Button clearButton;
   @FXML private ChoiceBox<String> difficultyMenu;
-  // Define fields and variables used in the controller
-  private static Difficulty difficulty = Difficulty.E;
 
-  private String currentWord;
-  private String randomWordEasy;
-  private String randomWordMedium;
-  private String randomWordHard;
-  private String randomWordMaster;
+  // Define game object
+  private Game game;
+
+  // Define other UI data
   private GraphicsContext graphic;
-  private DoodlePrediction model;
-  private CategorySelector categorySelector;
-  private int timerCount;
+  private final HashMap<Difficulty, String> difficultySettingsMap =
+      new HashMap<Difficulty, String>();
   private boolean brush;
-  private List<Classification> predictionResults = null;
-  private boolean startedDrawing = false;
-  private boolean spoken = false;
+  private boolean isDrawing;
   private double currentX;
   private double currentY;
   private Color predictionListColor = Color.DARKSLATEBLUE;
   private Color predictionHighlightColor = Color.web("#008079");
   private Color predictionTextColor = Color.WHITE;
 
-  private Task<Void> speechTask =
-      new Task<Void>() {
-        @Override
-        protected Void call() throws Exception {
-          // Initialise a text to speech instance
-          TextToSpeech textToSpeech = new TextToSpeech();
-          // Run indefinitely
-          while (true) {
-            // When starting speak that its starting
-            if (timerCount == 59) {
-              textToSpeech.speak("Starting");
-            } else if (timerCount == 31) {
-              // When half way speak thats it is halfway
-              textToSpeech.speak("Thirty Seconds Remaining");
-            }
-            // Speak if the person has won
-            if (wordLabel.getText().equals("YOU WIN!") && !spoken) {
-              textToSpeech.speak("You Won!");
-              // Set that it has spoken
-              spoken = true;
-
-            } else if (wordLabel.getText().equals("YOU LOST!") && !spoken) {
-              // Speak if the person has lost
-              textToSpeech.speak("YOU LOST!");
-              // Set that it has spoken
-              spoken = true;
-            }
-            // Sleep for 10 ms
-            Thread.sleep(10);
-          }
-        }
-      };
-
-  // Create a reusable service
-  private Service<Void> service =
-      new Service<Void>() {
-        // Create a task method
-        protected Task<Void> createTask() {
-          // Create a new task
-          return new Task<Void>() {
-            @Override
-            protected Void call() throws Exception {
-              // Initialise a timer starting at 60
-              timerCount = 60;
-              while (timerCount != 0) {
-
-                Platform.runLater(
-                    () -> {
-                      try {
-                        // Get the current top 10 predictions
-                        predictionResults = model.getPredictions(getCurrentSnapshot(), 10);
-
-                        // Update the timer counter
-                        wordLabel.setText(
-                            String.format("%s\n%s", currentWord, Integer.toString(timerCount)));
-
-                        // Check if the user has started drawing
-                        if (startedDrawing) {
-                          // Display the top 10 predictions
-                          updatePredictionGridDisplay(predictionResults);
-                          // Check if the player has won
-                          if (isWin(model.getPredictions(getCurrentSnapshot(), 3))) {
-                            wordLabel.setText("YOU WIN!");
-                            // Handle the end game
-                            onEnd();
-                            return;
-                          }
-                        }
-                      } catch (InterruptedException | TranslateException e) {
-                        e.printStackTrace();
-                      }
-                    });
-                // Decrease timer count
-                timerCount--;
-                // Sleep for 1 second
-                Thread.sleep(1000);
-              }
-              // Check if player has lost
-              if (timerCount == 0) {
-
-                Platform.runLater(
-                    () -> {
-                      wordLabel.setText("YOU LOST!");
-                      try {
-                        // Handle the end game
-                        onEnd();
-                      } catch (InterruptedException e) {
-
-                        e.printStackTrace();
-                      }
-                    });
-              }
-              return null;
-            }
-          };
-        }
-      };
-
-  // Create an alternating colour background task
+  // Task for alternating colour of the title and word label concurrently
   private Task<Void> alternateColoursTask =
       new Task<Void>() {
 
@@ -202,7 +93,6 @@ public class CanvasController {
           // Set two labels to alternate between colours
           alternateColours(titleLabel, Color.BEIGE, Color.RED);
           alternateColours(wordLabel, Color.web("#56d6ff"), Color.web("b669ff"));
-
           return null;
         }
       };
@@ -216,200 +106,106 @@ public class CanvasController {
    * @throws URISyntaxException If the URI cannot be found
    * @throws CsvException If the Csv cannot be found
    */
-  public void initialize() throws ModelException, IOException, URISyntaxException, CsvException {
-    // Disable the canvas on start up and turn off game features
-    canvas.setDisable(true);
-    brushButton.setVisible(false);
-    // Create a new task that alternates between colours
-    Thread colourTask = new Thread(alternateColoursTask);
-    // Allow the task to be cancelled on closing of application
-    colourTask.setDaemon(true);
-    // Start the colour task
-    colourTask.start();
-    Thread speechBackgroundTask = new Thread(speechTask);
-    speechBackgroundTask.setDaemon(true);
-    speechBackgroundTask.start();
+  public void initialize() throws IOException, URISyntaxException, CsvException, ModelException {
+    // Instantiate a new game object on first opening the scene
+    game = new Game(this);
+    // Build difficulty settings map for the dropdown
+    difficultySettingsMap.put(Difficulty.E, "EASY");
+    difficultySettingsMap.put(Difficulty.M, "MEDIUM");
+    difficultySettingsMap.put(Difficulty.H, "HARD");
+    difficultySettingsMap.put(Difficulty.MS, "MASTER");
+    // Populate difficulty dropdown
+    difficultyMenu.getItems().add(difficultySettingsMap.get(Difficulty.E));
+    difficultyMenu.getItems().add(difficultySettingsMap.get(Difficulty.M));
+    difficultyMenu.getItems().add(difficultySettingsMap.get(Difficulty.H));
+    difficultyMenu.getItems().add(difficultySettingsMap.get(Difficulty.MS));
     // Get the graphic from the canvas
     graphic = canvas.getGraphicsContext2D();
     // Add the canvasPane's css styling to the object
     canvasPane.getStyleClass().add("canvasPane");
     // Load in the font
-    Font font = Font.loadFont("file:src/main/resources/fonts/somethingwild-Regular.ttf", 150);
+    Font font = Font.loadFont("file:src/main/resources/fonts/somethingwild-Regular.ttf", 100);
     // Update title's font
     titleLabel.setFont(font);
-    // Adding the difficulties to the drop down
-    difficultyMenu.getItems().addAll("EASY", "MEDIUM", "HARD", "MASTER");
-    // Setting the default difficulty to easy
-    difficultyMenu.setValue(getDifficultyString());
-    // Get a new model
-    model = new DoodlePrediction();
-    // Instantiate a category selector object
-    categorySelector = new CategorySelector();
-    // Get a random word
-    getRandomWord(categorySelector);
-  }
 
-  /** setDifficulty will set the game's difficulty and affect the word choice */
-  private void setDifficulty() {
-    // Gets the current difficulty selected in the choice box
-    switch (difficultyMenu.getValue()) {
-        // Sets the difficulty to easy
-      case "EASY":
-        difficulty = Difficulty.E;
-        break;
-        // Sets the difficulty to medium
-      case "MEDIUM":
-        difficulty = Difficulty.M;
-        break;
-        // Sets the difficulty to hard
-      case "HARD":
-        difficulty = Difficulty.H;
-        break;
-        // Sets the difficulty to master
-      case "MASTER":
-        difficulty = Difficulty.MS;
-        break;
-        // By default set the difficulty to easy
-      default:
-        difficulty = Difficulty.E;
-    }
-  }
+    // Set up the pre-game UI elements that are in common with restarting the game
+    setPreGameUI();
 
-  /*
-   * getDifficulty will get the game's difficulty
-   */
-  private Difficulty getDifficulty() {
-    return difficulty;
-  }
-
-  /*
-   * Gets the difficulty choice box's string
-   */
-  private String getDifficultyString() {
-    String difficultyString;
-    // Get the current difficulty and switch accordingly
-    switch (getDifficulty()) {
-      case E:
-        // Set the difficulty string text to easy
-        difficultyString = "EASY";
-        break;
-      case M:
-        // Set the difficulty string text to medium
-        difficultyString = "MEDIUM";
-        break;
-      case H:
-        // Set the difficulty string text to hard
-        difficultyString = "HARD";
-        break;
-      case MS:
-        // Set the difficulty string text to master
-        difficultyString = "MASTER";
-        break;
-      default:
-        // By default set the difficulty string to easy
-        difficultyString = "EASY";
-    }
-    return difficultyString;
-  }
-
-  /*
-   * getChoice gets the new difficulty selected from the choice box and then
-   * updates the random word for the player to draw
-   */
-  @FXML
-  private void onDifficultySelect()
-      throws IOException, URISyntaxException, CsvException, ModelException {
-    // Changes the difficulty
-    setDifficulty();
-    // displays the current difficulty's word
-    displayWord(randomWordEasy, randomWordMedium, randomWordHard, randomWordMaster);
+    // Create a new thread for the alternating colours task
+    Thread colourThread = new Thread(alternateColoursTask);
+    // Allow the task to be cancelled on closing of application
+    colourThread.setDaemon(true);
+    // Start the colour task
+    colourThread.start();
   }
 
   /**
-   * displayWord will display the current difficulty's word on the UI
-   *
-   * @param randomWordEasy the random word chosen for easy difficulty
-   * @param randomWordMedium the random word chosen for medium difficulty
-   * @param randomWordHard the random word chosen for hard difficulty
-   * @return
+   * Sets UI elements which are common to the initialisation of the scene and restarting the game.
    */
-  private void displayWord(
-      String randomWordEasy,
-      String randomWordMedium,
-      String randomWordHard,
-      String randomWordMaster) {
-    String randomWord;
-    // Get the current difficulty and switch accordingly
-    switch (getDifficulty()) {
-        // Change the words based on case
-      case E:
-        randomWord = randomWordEasy;
+  private void setPreGameUI() {
+    // Bind label properties to game properties
+    wordLabel.textProperty().bind(game.getCurrentPromptProperty());
+    timerLabel.textProperty().bind(game.getTimeRemainingAsStringBinding());
+    // Set UI elements for pre-game
+    canvas.setDisable(true);
+    restartButton.setVisible(false);
+    startButton.setVisible(true);
+    startButton.setDisable(false);
+    brushButton.setVisible(false);
+    difficultyMenu.setVisible(true);
+    // Select last played difficulty (default EASY if new game)
+    difficultyMenu.setValue(difficultySettingsMap.get(Game.getDifficulty()));
+    onDifficultySelect();
+  }
+
+  /**
+   * Returns whether the user has started drawing.
+   *
+   * @return true if the canvas has been clicked since the game start or last onClear.
+   */
+  public boolean getIsDrawing() {
+    return isDrawing;
+  }
+
+  /** Set the game difficulty through the UI dropdown, update the word label */
+  @FXML
+  private void onDifficultySelect() {
+    switch (difficultyMenu.getValue()) {
+      case "EASY":
+        game.setDifficulty(Difficulty.E);
         break;
-      case M:
-        randomWord = randomWordMedium;
+      case "MEDIUM":
+        game.setDifficulty(Difficulty.M);
         break;
-      case H:
-        randomWord = randomWordHard;
+      case "HARD":
+        game.setDifficulty(Difficulty.H);
         break;
-      case MS:
-        randomWord = randomWordMaster;
+      case "MASTER":
+        game.setDifficulty(Difficulty.MS);
         break;
-        // By default use the easy word
       default:
-        randomWord = randomWordEasy;
-        break;
+        game.setDifficulty(Difficulty.E);
     }
-    // set the target word to the random word generated
-    currentWord = randomWord;
-    wordLabel.setText(randomWord);
   }
 
-  private void getRandomWord(CategorySelector categorySelector)
-      throws IOException, URISyntaxException, CsvException, ModelException {
-
-    // Choose a random with from the different categories
-    randomWordEasy = categorySelector.getEasyCategory();
-    randomWordMedium = categorySelector.getEasyMediumCategory();
-    randomWordHard = categorySelector.getEasyMediumHardCategory();
-    randomWordMaster = categorySelector.getMasterCategory();
-    displayWord(randomWordEasy, randomWordMedium, randomWordHard, randomWordMaster);
+  /** This function toggles from brush to eraser */
+  @FXML
+  private void onBrushChange() {
+    // Toggle the brush
+    brush = !brush;
+    brushButton.setText(brush ? "Eraser" : "Brush");
   }
 
-  /** This method is called when the "Clear" button is pressed. */
+  /** This method is called when the "Clear" button is pressed. Resets brush to "Brush" mode. */
   @FXML
   private void onClear() {
     // Clear the canvas
     graphic.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
     clearPredictionGrid();
-    startedDrawing = false;
-  }
-
-  /**
-   * This method will restart the game once the player presses the button
-   *
-   * @throws ModelException
-   * @throws IOException
-   * @throws URISyntaxException
-   * @throws CsvException
-   */
-  @FXML
-  private void onRestartGame()
-      throws ModelException, IOException, URISyntaxException, CsvException {
-    // Clear the canvas
-    onClear();
-    // Reset the started Drawing boolean
-    startedDrawing = false;
-    // Call the getRandomWord method that will generate a random word
-    getRandomWord(categorySelector);
-    // Reset all the visibilities of the buttons
-    clearButton.setVisible(false);
-    startButton.setVisible(true);
-    restartButton.setVisible(false);
-    brushButton.setVisible(false);
-    difficultyMenu.setVisible(true);
-    service.cancel();
-    canvas.setDisable(true);
-    clearPredictionGrid();
+    isDrawing = false;
+    if (brushButton.getText().equals("Brush")) {
+      onBrushChange();
+    }
   }
 
   /**
@@ -417,12 +213,13 @@ public class CanvasController {
    *
    * @param predictionList List of classifications from the machine learning model
    */
-  private void updatePredictionGridDisplay(List<Classification> predictionList) {
+  public void updatePredictionGridDisplay(List<Classification> predictionList) {
     clearPredictionGrid();
     for (int i = 0; i < predictionList.size(); i++) {
       String prediction = predictionList.get(i).getClassName();
       // Check if the prediction is the prompt word to determine label color
-      boolean isPrompt = prediction.replaceAll("_", " ").equals(currentWord) ? true : false;
+      boolean isPrompt =
+          prediction.replaceAll("_", " ").equals(game.getCurrentPrompt()) ? true : false;
       // Create a formatted String for the prediction label
       String predictionEntry =
           (i + 1) + ". " + predictionList.get(i).getClassName().replaceAll("_", " ");
@@ -470,47 +267,25 @@ public class CanvasController {
   }
 
   /**
-   * This method executes when the user clicks the "Predict" button. It gets the current drawing,
-   * queries the DL model and prints on the console the top 5 predictions of the DL model and the
-   * elapsed time of the prediction in milliseconds.
+   * This method will restart the game once the player presses the button
    *
-   * @throws TranslateException If there is an error in reading the input/output of the DL model.
+   * @throws ModelException
+   * @throws CsvException
+   * @throws URISyntaxException
+   * @throws IOException
    */
   @FXML
-  private void onPredict() throws TranslateException {
-    // Print out the top 5 predictions
-    System.out.println("==== PREDICTION  ====");
-    System.out.println("Top 5 predictions");
-    // Get the start time
-    final long start = System.currentTimeMillis();
-    // Get the top 3 predictions
-    List<Classification> predictionResults = model.getPredictions(getCurrentSnapshot(), 3);
-    // Print the top 5 predictions
-    printPredictions(model.getPredictions(getCurrentSnapshot(), 5));
-    // Print win or lost
-    System.out.println(isWin(predictionResults) ? "WIN" : "LOST");
-    // Print how long the prediction took
-    System.out.println("prediction performed in " + (System.currentTimeMillis() - start) + " ms");
-  }
+  private void onRestartGame()
+      throws IOException, URISyntaxException, CsvException, ModelException {
 
-  /**
-   * Method that checks if the player has won the game
-   *
-   * @param classifications
-   * @return
-   */
-  private boolean isWin(List<Classification> classifications) {
-    // Loop through all the predictions
-    for (Classification classification : classifications) {
-      // Corrects word if it contains an underscore
-      String className = classification.getClassName();
-      className = className.contains("_") ? className.replace("_", " ") : className;
-      // Check if the current word is prediction
-      if (className.equals(currentWord)) {
-        return true;
-      }
-    }
-    return false;
+    // Clear the canvas
+    onClear();
+    // Clear the prediction grid
+    clearPredictionGrid();
+    // Reset game variables and concurrent service
+    game.resetGame();
+    // Reset UI elements
+    setPreGameUI();
   }
 
   /**
@@ -518,7 +293,7 @@ public class CanvasController {
    *
    * @return The BufferedImage corresponding to the current canvas content.
    */
-  private BufferedImage getCurrentSnapshot() {
+  public BufferedImage getCurrentSnapshot() {
     final Image snapshot = canvas.snapshot(null, null);
     final BufferedImage image = SwingFXUtils.fromFXImage(snapshot, null);
 
@@ -590,22 +365,37 @@ public class CanvasController {
   }
 
   /**
-   * This method is called when the game ends and asks if they want to save their current canvas as
-   * a file
+   * Called when the game ends. <br>
+   * - Updates UI to give feedback to user on whether they won or lost, plus their time to draw if
+   * won <br>
+   * - Prompts user with a pop-up giving them the option to save their drawing
    *
+   * @return isWin The win flag from the game controller, is true if the game was won and false if
+   *     lost
    * @throws InterruptedException
    */
-  @FXML
-  private void onEnd() throws InterruptedException {
-    canvas.setDisable(true);
-    service.cancel();
-    brushButton.setVisible(false);
-    spoken = false;
+  public void onEndGame(boolean isWin) {
     Platform.runLater(
         () -> {
-          // Turn off the visibility for the clear button
+          // Set UI elements for post-game
+          canvas.setDisable(true);
+          brushButton.setVisible(false);
           clearButton.setVisible(false);
           restartButton.setVisible(true);
+
+          // Unbind label properties bound to game properties
+          wordLabel.textProperty().unbind();
+          timerLabel.textProperty().unbind();
+
+          // Update the word label to display a win or loss message for the user at the end of the
+          // game.
+          if (isWin) {
+            wordLabel.setText(getWinMessage());
+          } else {
+            System.out.println("LOST");
+            wordLabel.setText(getLossMessage());
+          }
+
           // Create a new alert
           Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
           // Set up the alert accordingly
@@ -631,29 +421,44 @@ public class CanvasController {
         });
   }
 
-  /** This function toggles from brush to eraser */
-  @FXML
-  private void onBrushChange() {
-    // Toggle the brush
-    brush = !brush;
+  /**
+   * Everyone loves a winner. Also calculates the time taken to draw the winning image.
+   *
+   * @return A string informing the user they have won and how much time they took.
+   */
+  private String getWinMessage() {
+    return "You won! You drew "
+        + game.getCurrentPrompt()
+        + " in "
+        + (60 - game.getTimeRemaining())
+        + " seconds!";
+  }
+
+  /**
+   * Tells 'em to try again.
+   *
+   * @return A string that is polite, professional, and honest.
+   */
+  private String getLossMessage() {
+    return "You lost! Press restart to try another word!";
   }
 
   /** This method sets up a new game to be started */
   @FXML
   private void onStartGame() {
+    game.startGame();
+
     canvas.setDisable(false);
     // Turn on to brush mode regardless of what it was
     brush = true;
     brushButton.setText("Eraser");
+
     // Change the visibilities of buttons according to brief
     clearButton.setVisible(true);
     startButton.setVisible(false);
     brushButton.setVisible(true);
     difficultyMenu.setVisible(false);
 
-    // Reset and start the service
-    service.reset();
-    service.start();
     // Get eraser colour
     Background currentBackground = canvasPane.getBackground();
     Paint eraserColour = currentBackground.getFills().get(0).getFill();
@@ -661,10 +466,11 @@ public class CanvasController {
         e -> {
           currentX = e.getX();
           currentY = e.getY();
+          isDrawing = true;
         });
+
     canvas.setOnMouseDragged(
         e -> {
-          startedDrawing = true;
 
           // Brush size (you can change this, it should not be too small or too large).
           double size = 5.0;

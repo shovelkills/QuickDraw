@@ -13,29 +13,34 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="760.0" prefWidth="900.0" spacing="20.0" style="-fx-background-color: #96e7ff;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nz.ac.auckland.se206.CanvasController">
+<VBox alignment="BOTTOM_CENTER" nodeOrientation="LEFT_TO_RIGHT" prefHeight="593.0" prefWidth="900.0" style="-fx-background-color: #96e7ff;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nz.ac.auckland.se206.CanvasController">
   <children>
-    <Label fx:id="titleLabel" alignment="CENTER" layoutX="124.0" layoutY="14.0" prefHeight="23.0" prefWidth="502.0" text="Quick, Draw!" textAlignment="CENTER" VBox.vgrow="NEVER">
-      <font>
-        <Font size="34.0" />
-      </font>
-         <VBox.margin>
-            <Insets bottom="75.0" top="-50.0" />
-         </VBox.margin>
-    </Label>
-      <Label fx:id="wordLabel" alignment="CENTER" prefHeight="362.0" prefWidth="472.0" textAlignment="CENTER">
+      <Label fx:id="titleLabel" alignment="CENTER" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" prefHeight="58.0" prefWidth="500.0" text="Quick, Draw!" textAlignment="CENTER">
          <font>
             <Font size="40.0" />
          </font>
          <VBox.margin>
-            <Insets top="-150.0" />
+            <Insets />
          </VBox.margin></Label>
-      <HBox fx:id="canvasPane" maxWidth="-Infinity" prefHeight="358.0" prefWidth="800.0" style="-fx-background-color: #cffffc; -fx-border-color: white; -fx-border-width: 5;">
+      <Label fx:id="wordLabel" alignment="CENTER" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" prefHeight="0.0" prefWidth="260.0" text="WORD" textAlignment="CENTER" VBox.vgrow="ALWAYS">
+         <font>
+            <Font size="26.0" />
+         </font>
+      </Label>
+      <Label fx:id="timerLabel" alignment="CENTER" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" prefHeight="0.0" prefWidth="196.0" text="0" textAlignment="CENTER" VBox.vgrow="ALWAYS">
+         <font>
+            <Font size="30.0" />
+         </font>
+      </Label>
+      <HBox fx:id="canvasPane" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="0.0" prefWidth="700.0" style="-fx-background-color: #cffffc; -fx-border-color: white; -fx-border-width: 5;" VBox.vgrow="NEVER">
          <children>
-          <Canvas fx:id="canvas" height="320.0" width="504.0">
+          <Canvas fx:id="canvas" height="400.0" width="500.0">
             <cursor>
               <Cursor fx:constant="HAND" />
             </cursor>
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
           </Canvas>
             <GridPane fx:id="predictionGrid" alignment="TOP_RIGHT" prefHeight="430.0" prefWidth="180.0" style="-fx-background-color: #483D8B;" HBox.hgrow="ALWAYS">
               <columnConstraints>
@@ -58,27 +63,41 @@
                </opaqueInsets>
             </GridPane>
          </children>
+         <VBox.margin>
+            <Insets left="80.0" right="80.0" />
+         </VBox.margin>
       </HBox>
-    <HBox alignment="TOP_CENTER" prefHeight="0.0" prefWidth="400.0">
-      <children>
-        <Button fx:id="predictButton" mnemonicParsing="false" onAction="#onPredict" text="Predict" visible="false" />
-            <Button fx:id="startButton" alignment="CENTER" mnemonicParsing="false" onAction="#onStartGame" prefHeight="25.0" prefWidth="63.0" text="Start">
-               <HBox.margin>
-                  <Insets right="25.0" />
-               </HBox.margin></Button>
-      </children>
-    </HBox>
-      <HBox alignment="TOP_CENTER" prefHeight="0.0" prefWidth="400.0">
+      <VBox prefHeight="200.0" prefWidth="100.0" spacing="10.0">
          <children>
-            <Button fx:id="restartButton" alignment="CENTER" mnemonicParsing="false" onAction="#onRestartGame" prefHeight="25.0" prefWidth="96.0" text="Restart" visible="false" />
-            <Button fx:id="brushButton" mnemonicParsing="false" onAction="#onBrushChange" text="Eraser">
-               <HBox.margin>
-                  <Insets right="25.0" />
-               </HBox.margin></Button>
-        <Button fx:id="clearButton" mnemonicParsing="false" onAction="#onClear" text="Clear" visible="false" />
-            <ChoiceBox fx:id="difficultyMenu" onAction="#onDifficultySelect" prefWidth="150.0" />
+          <HBox alignment="TOP_CENTER" prefHeight="0.0" prefWidth="400.0" spacing="10.0">
+            <children>
+                  <ChoiceBox fx:id="difficultyMenu" onAction="#onDifficultySelect" prefWidth="150.0" />
+                  <Button fx:id="startButton" alignment="CENTER" mnemonicParsing="false" onAction="#onStartGame" prefHeight="25.0" prefWidth="63.0" text="Start">
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                  </Button>
+            </children>
+          </HBox>
+            <HBox alignment="TOP_CENTER" prefHeight="0.0" prefWidth="400.0" spacing="10.0">
+               <children>
+                  <Button fx:id="restartButton" alignment="CENTER" mnemonicParsing="false" onAction="#onRestartGame" prefHeight="25.0" prefWidth="96.0" text="Restart" visible="false" />
+                  <Button fx:id="brushButton" mnemonicParsing="false" onAction="#onBrushChange" text="Eraser">
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                  </Button>
+              <Button fx:id="clearButton" mnemonicParsing="false" onAction="#onClear" text="Clear" visible="false" />
+               </children>
+            </HBox>
          </children>
-      </HBox>
+         <VBox.margin>
+            <Insets />
+         </VBox.margin>
+         <padding>
+            <Insets top="10.0" />
+         </padding>
+      </VBox>
 
   </children>
   <padding>
