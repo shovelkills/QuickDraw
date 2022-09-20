@@ -10,6 +10,7 @@ public class Testing {
     // testCreatingJSONFile();
     // testDoesItContainSpecialCharacters();
     // testSavingToJSONFile();
+    testUserList();
   }
 
   public static void testLoadingJSONFile() {
@@ -64,6 +65,27 @@ public class Testing {
     Users.increaseWins();
     System.out.println("Wins " + Users.getWins());
     Users.saveUser();
+
+
+  }
+
+  public static void testUserList() {
+    // Lists to test on
+    // {
+    // "recentList": ["thelegend27", "widepeepoHappy", "xXXcoolguy45XXx", "", ""],
+    // "userList": ["sadge", "thelegend27", "widepeepoHappy", "xXXcoolguy45XXx", "blank"]
+    // }
+    Users.loadUsersFromList();
+    System.out.println("Users" + Users.getUserList());
+    System.out.println("Recent" + Users.getRecentList());
+    Users.loadUser("widepeepoHappy");
+    System.out.println("Recent" + Users.getRecentList());
+    Users.loadUser("sadge");
+    System.out.println("Recent" + Users.getRecentList());
+    // Makes sure to delete JSON file when testing again
+    Users.createUser("GIGACHAD");
+    System.out.println("Users" + Users.getUserList());
+    System.out.println("Recent" + Users.getRecentList());
 
 
   }
