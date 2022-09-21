@@ -1,5 +1,7 @@
 package nz.ac.auckland.se206;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -12,25 +14,27 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+
 
 
 
 public class Users {
   // Stores the information in the JSON file as individual variables
 
+
   private static int fastestTime;
   private static int losses;
   private static int wins;
 
   private static List<Double> timeHistory;
+  private static List<String> recentList;
+  private static List<String> userList;
   private static List<String> wordHistory;
 
   private static Map<?, ?> userInfo;
 
   private static String fastestWord;
-  private static String folderDirectory;// Gets the current directory of the folder
+  private static String folderDirectory;
   private static String userName;
 
   /**
@@ -69,6 +73,8 @@ public class Users {
       wordHistory = (List<String>) userInfo.get("wordHistory");
 
       timeHistory = (List<Double>) userInfo.get("timeHistory");
+
+      updateRecentUsers(username);
 
       reader.close();
 
@@ -120,6 +126,7 @@ public class Users {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         gson.toJson(userMap, writer);
         writer.close();
+        addUserList(username);
         loadUser(username);
       } catch (IOException e1) {
         // TODO Auto-generated catch block
@@ -171,10 +178,8 @@ public class Users {
 
   public static void saveUser() {
     File dir = new File(folderDirectory + "/src/main/resources/users/");
-    try {
-      // Creates a writer object to write and save the file
-      Writer writer = new FileWriter(new File(dir, userName + ".json"));
-      Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    try (Writer writer = new FileWriter(new File(dir, userName + ".json"))) {
+
       // Creates map to store user info
       Map<String, Object> userMap = new HashMap<>();
       userMap.put("username", userName);
@@ -185,6 +190,8 @@ public class Users {
       userMap.put("fastestWord", fastestWord);
       userMap.put("timeHistory", timeHistory);
 
+      // Creates a writer object to write and save the file
+      Gson gson = new GsonBuilder().setPrettyPrinting().create();
       gson.toJson(userMap, writer);
       writer.close();
 
@@ -193,6 +200,79 @@ public class Users {
       e1.printStackTrace();
     }
   }
+
+  /**
+   * Gets the userlist and recent user list from the JSON file
+   */
+  public static void loadUsersFromList() {
+    // Reads the userlist file
+    folderDirectory = System.getProperty("user.dir");
+    try (FileReader reader =
+        new FileReader(folderDirectory + "/src/main/resources/users/userlist.json")) {
+
+      Gson gson = new Gson();
+      Map<String, List<String>> listOfUsers = gson.fromJson(reader, Map.class);
+      recentList = (List<String>) listOfUsers.get("recentList");
+      userList = (List<String>) listOfUsers.get("userList");
+
+
+    } catch (FileNotFoundException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    } catch (IOException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+  }
+
+  /**
+   * Saves the List of Users and the recent lists
+   */
+  public static void saveUserList() {
+    File dir = new File(folderDirectory + "/src/main/resources/users/");
+    try (Writer writer = new FileWriter(new File(dir, "userlist.json"))) {
+      Map<String, List<String>> saveToJson = new HashMap<>();
+      saveToJson.put("recentList", recentList);
+      saveToJson.put("userList", userList);
+      // Creates a writer object to write and save the file
+      Gson gson = new GsonBuilder().setPrettyPrinting().create();
+      gson.toJson(saveToJson, writer);
+      writer.close();
+
+    } catch (IOException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+
+  }
+
+  /**
+   * Sorts the recent user list and also checks if it is an user that has already in the list
+   * 
+   * @param recentUser the most recent user
+   */
+  public static void updateRecentUsers(String recentUser) {
+    if (recentList.contains(recentUser)) {
+      recentList.remove(recentList.indexOf(recentUser));
+      recentList.add(0, recentUser);
+    } else {
+      recentList.set(4, recentList.get(3));
+      recentList.set(3, recentList.get(2));
+      recentList.set(2, recentList.get(1));
+      recentList.set(1, recentList.get(0));
+      recentList.set(0, recentUser);
+
+    }
+    saveUserList();
+
+  }
+
+  // updates the userList by adding new user to list
+  public static void addUserList(String user) {
+    userList.add(user);
+    saveUserList();
+  }
+
 
   // Increases the wins and losses
 
@@ -259,6 +339,13 @@ public class Users {
     Users.fastestWord = fastestWord;
   }
 
+  public static List<String> getRecentList() {
+    return recentList;
+  }
+
+  public static List<String> getUserList() {
+    return userList;
+  }
 
 
 }
