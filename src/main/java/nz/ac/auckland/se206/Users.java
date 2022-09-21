@@ -1,5 +1,6 @@
 package nz.ac.auckland.se206;
 
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.io.File;
@@ -27,7 +28,6 @@ public class Users {
   private static int wins;
 
   private static List<Double> timeHistory;
-  private static List<String> recentList;
   private static List<String> userList;
   private static List<String> wordHistory;
 
@@ -35,6 +35,7 @@ public class Users {
 
   private static String fastestWord;
   private static String folderDirectory;
+  private static String recentUser;
   private static String userName;
 
   /**
@@ -74,7 +75,7 @@ public class Users {
 
       timeHistory = (List<Double>) userInfo.get("timeHistory");
 
-      updateRecentUsers(username);
+      setRecentUser(username);
 
       reader.close();
 
@@ -211,8 +212,8 @@ public class Users {
         new FileReader(folderDirectory + "/src/main/resources/users/userlist.json")) {
 
       Gson gson = new Gson();
-      Map<String, List<String>> listOfUsers = gson.fromJson(reader, Map.class);
-      recentList = (List<String>) listOfUsers.get("recentList");
+      Map<String, ?> listOfUsers = gson.fromJson(reader, Map.class);
+      recentUser = (String) listOfUsers.get("recentUser");
       userList = (List<String>) listOfUsers.get("userList");
 
 
@@ -231,8 +232,8 @@ public class Users {
   public static void saveUserList() {
     File dir = new File(folderDirectory + "/src/main/resources/users/");
     try (Writer writer = new FileWriter(new File(dir, "userlist.json"))) {
-      Map<String, List<String>> saveToJson = new HashMap<>();
-      saveToJson.put("recentList", recentList);
+      Map<String, Object> saveToJson = new HashMap<>();
+      saveToJson.put("recentUser", recentUser);
       saveToJson.put("userList", userList);
       // Creates a writer object to write and save the file
       Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -246,26 +247,18 @@ public class Users {
 
   }
 
-  /**
-   * Sorts the recent user list and also checks if it is an user that has already in the list
-   * 
-   * @param recentUser the most recent user
-   */
-  public static void updateRecentUsers(String recentUser) {
-    if (recentList.contains(recentUser)) {
-      recentList.remove(recentList.indexOf(recentUser));
-      recentList.add(0, recentUser);
-    } else {
-      recentList.set(4, recentList.get(3));
-      recentList.set(3, recentList.get(2));
-      recentList.set(2, recentList.get(1));
-      recentList.set(1, recentList.get(0));
-      recentList.set(0, recentUser);
-
+  public static void deleteUser(String username) {
+    File userFile = new File(folderDirectory + "/src/main/resources/users/" + username + ".json");
+    userFile.delete();
+    userList.remove(userList.indexOf(username));
+    if (recentUser.equals(username)) {
+      recentUser = "";
     }
     saveUserList();
 
   }
+
+
 
   // updates the userList by adding new user to list
   public static void addUserList(String user) {
@@ -295,6 +288,12 @@ public class Users {
   }
 
   // Getters and setter methods below.
+
+  public static void setRecentUser(String recentuser) {
+    recentUser = recentuser;
+    saveUserList();
+  }
+
   public static int getWins() {
     return wins;
   }
@@ -339,8 +338,8 @@ public class Users {
     Users.fastestWord = fastestWord;
   }
 
-  public static List<String> getRecentList() {
-    return recentList;
+  public static String getRecentList() {
+    return recentUser;
   }
 
   public static List<String> getUserList() {
