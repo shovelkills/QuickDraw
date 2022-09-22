@@ -11,6 +11,7 @@ public class Testing {
     // testDoesItContainSpecialCharacters();
     // testSavingToJSONFile();
     testUserList();
+    // testDeletingUser();
   }
 
   public static void testLoadingJSONFile() {
@@ -87,7 +88,15 @@ public class Testing {
     System.out.println("Users" + Users.getUserList());
     System.out.println("Recent" + Users.getRecentList());
 
+  }
 
+  public static void testDeletingUser() {
+    Users.loadUsersFromList();
+    Users.createUser("BroBait");
+    System.out.println(Users.getUserList());
+    System.out.println(Users.getUserName());
+    Users.deleteUser("BroBait");
+    System.out.println(Users.getUserList());
   }
 
 }

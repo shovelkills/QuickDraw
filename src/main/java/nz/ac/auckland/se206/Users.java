@@ -1,5 +1,8 @@
 package nz.ac.auckland.se206;
 
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -13,8 +16,6 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 public class Users {
 	// Stores the information in the JSON file as individual variables
