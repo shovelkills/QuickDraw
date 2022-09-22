@@ -5,10 +5,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
 import nz.ac.auckland.se206.SceneManager.AppUi;
 
@@ -56,6 +59,11 @@ public class UsersController {
 		for (ProfileBuilder profile : profiles) {
 			profile.createProfileButton.setOnAction(e -> onUserButtonPress(e));
 			profile.deleteProfileButton.setOnAction(e -> onDeleteProfile(e));
+			profile.userNameInput.setOnKeyPressed(e -> {
+				if (e.getCode() == KeyCode.ENTER) {
+					onCreateProfile(e);
+				}
+			});
 		}
 		// Set the last profile to be the guest profile
 		updateGuestProfile();
@@ -92,12 +100,19 @@ public class UsersController {
 	 * @param event Takes in the FXML action event
 	 * @param type  Either a user profile or the guest profile
 	 */
-	private void onSelectProfile(ActionEvent event, String type) {
+	private void onSelectProfile(Event event, String type) {
 		// Initialise a variable
 		String username;
-		// Get the button pressed
-		Button button = (Button) event.getSource();
-		String string = button.getId().toString();
+		String string = null;
+
+		// Get the button pressed / text field entered
+		if (event.getEventType().equals(ActionEvent.ACTION)) {
+			Button button = (Button) event.getSource();
+			string = button.getId().toString();
+		} else {
+			TextField textfield = (TextField) event.getSource();
+			string = textfield.getId().toString();
+		}
 		// Find out which profile was clicked
 		int number = (Integer.parseInt(String.valueOf(string.charAt(string.length() - 1))));
 		// Check if the guest profile was selected
@@ -120,6 +135,7 @@ public class UsersController {
 		} else {
 			username = usersList.get(number);
 		}
+
 		// Load in the user
 		Users.loadUser(username);
 		// Update the menu page
@@ -135,23 +151,32 @@ public class UsersController {
 	 * @param event Takes in the FXML action event
 	 */
 	@FXML
-	private void onCreateProfile(ActionEvent event) {
-		// Find out which button was pressed
-		Button button = (Button) event.getSource();
-		String string = button.getId().toString();
+	private void onCreateProfile(Event event) {
+		String string = null;
+
+		// Get the button pressed / text field entered
+		if (event.getEventType().equals(ActionEvent.ACTION)) {
+			Button button = (Button) event.getSource();
+			string = button.getId().toString();
+		} else {
+			TextField textfield = (TextField) event.getSource();
+			string = textfield.getId().toString();
+		}
 		// Get the profile number
 		int number = (Integer.parseInt(String.valueOf(string.charAt(string.length() - 1))));
 		// Get the username inputted
 		String username = profiles.get(number).userNameInput.getText();
+		// Check if it was a valid username
 		// Store which index it was created in
 		ProfileBuilder.recentCreationIndex = number;
-		// Check if it was a valid username
-		if (username.equals("") || !Users.createUser(username)) {
+		if (username == null || username.equals("") || !Users.createUser(username)) {
 			// TODO Add an alert that will say invalid username in GUI
 			return;
 		}
+
 		// Load the profile FXML
 		profiles.get(number).loadProfiles(username);
+		usersList = Users.getUserList();
 		// Select the profile
 		onSelectProfile(event, null);
 	}
@@ -190,6 +215,9 @@ public class UsersController {
 		// Get the scene currently in
 		Button button = (Button) event.getSource();
 		Scene sceneButtonIsIn = button.getScene();
+		for (int i = 0; i < usersList.size(); i++) {
+			profiles.get(i).userNameInput.clear();
+		}
 		// Move to the next scene
 		sceneButtonIsIn.setRoot(SceneManager.getUiRoot(AppUi.MAIN_MENU));
 	}

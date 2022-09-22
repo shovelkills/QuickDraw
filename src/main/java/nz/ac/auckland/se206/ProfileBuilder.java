@@ -113,6 +113,7 @@ public class ProfileBuilder {
 		// Set a max size
 		// TODO Bind it to the grid
 		userNameInput.setMaxSize(110, 25);
+		userNameInput.setId(String.format("userNameTextField%d", col));
 	}
 
 	/**
