@@ -10,6 +10,7 @@ import javafx.animation.Timeline;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Alert;
@@ -18,8 +19,10 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 import nz.ac.auckland.se206.SceneManager.AppUi;
 
@@ -29,7 +32,7 @@ public class MenuController {
 	@FXML
 	private Label titleLabel;
 	@FXML
-	private Label authorLabel;
+	private StackPane stackPane;
 	@FXML
 	private Button startButton;
 	@FXML
@@ -38,8 +41,18 @@ public class MenuController {
 	private Button exitButton;
 	@FXML
 	private Button selectedUserButton;
-	@FXML
-	private ImageView selectedUserImage;
+
+	private static ImageView selectedUserImage;
+	private static Label selectedUserLabel;
+
+	private static void updateUserImage(Image image) {
+		selectedUserImage.setImage(image);
+	}
+
+	public static void updateUser(Image image) {
+		updateUserImage(image);
+		selectedUserLabel.setText(Users.getUserName());
+	}
 
 	/**
 	 * This method alternates alternates colours for a label
@@ -66,15 +79,28 @@ public class MenuController {
 		// Load in a new font and set it to the tile
 		Font font = Font.loadFont("file:src/main/resources/fonts/somethingwild-Regular.ttf", 200);
 		titleLabel.setFont(font);
-		// Load in default profile image
-		File defaultImageFile = new File("src/main/resources/users/default.png");
-		Image image = new Image(defaultImageFile.toURI().toString());
-		selectedUserImage.setImage(image);
+		// Create static user image and user label to know who we have selected
+		selectedUserLabel = new Label();
+		selectedUserImage = new ImageView();
+		// Set up the image and label in the UI
+		stackPane.getChildren().add(selectedUserLabel);
+		StackPane.setAlignment(selectedUserLabel, Pos.BOTTOM_CENTER);
+		selectedUserLabel.setTextAlignment(TextAlignment.CENTER);
+		selectedUserLabel.setText("Guest");
+		selectedUserLabel.setMaxHeight(60);
+		selectedUserImage.setFitHeight(80);
+		selectedUserImage.setFitWidth(108);
+		// Load in the guest image
+		File guestImageFile = new File("src/main/resources/users/guest.png");
+		Image guestImage = new Image(guestImageFile.toURI().toString());
+		selectedUserButton.setGraphic(selectedUserImage);
+		updateUserImage(guestImage);
 		// Create a new thread to alternate the background colours
 		Thread titleAnimation = new Thread(backgroundTask);
 		// Start the thread
 		titleAnimation.setDaemon(true);
 		titleAnimation.start();
+		// Load all the users from the user list
 		Users.loadUsersFromList();
 	}
 
@@ -127,4 +153,5 @@ public class MenuController {
 			return;
 		}
 	}
+
 }
