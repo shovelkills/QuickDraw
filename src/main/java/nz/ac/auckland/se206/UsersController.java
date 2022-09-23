@@ -19,7 +19,6 @@ public class UsersController {
 	// Declare the user grid from the FXML
 	@FXML
 	private GridPane userGrid;
-
 	// Get all the users
 	private List<String> usersList = Users.getUserList();
 	// Create an array to store the newly built profiles
@@ -169,6 +168,7 @@ public class UsersController {
 		// Check if it was a valid username
 		// Store which index it was created in
 		ProfileBuilder.recentCreationIndex = number;
+		// Check if it was a valid username
 		if (username == null || username.equals("") || !Users.createUser(username)) {
 			// TODO Add an alert that will say invalid username in GUI
 			return;
@@ -179,6 +179,7 @@ public class UsersController {
 		usersList = Users.getUserList();
 		// Select the profile
 		onSelectProfile(event, null);
+
 	}
 
 	/**

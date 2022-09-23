@@ -29,6 +29,11 @@ import nz.ac.auckland.se206.words.CategorySelector.Difficulty;
  */
 public class Game {
 	private static Difficulty difficulty;
+
+	public static Difficulty getDifficulty() {
+		return difficulty;
+	}
+
 	private DoodlePrediction model;
 	private CanvasController canvas;
 	private HashMap<Difficulty, String> currentSelection;
@@ -43,10 +48,6 @@ public class Game {
 		model = new DoodlePrediction();
 		currentSelection = cs.getSelection();
 		currentPrompt.setValue(currentSelection.get(difficulty));
-	}
-
-	public static Difficulty getDifficulty() {
-		return difficulty;
 	}
 
 	/**
@@ -87,31 +88,40 @@ public class Game {
 	 */
 	public void resetGame() {
 		service.reset();
-		resetTimer(difficulty);
+		resetTimer();
 		currentSelection = cs.getSelection();
 	}
 
 	/**
-	 * @param difficulty
+	 * resetTimer will reset the game's timer
 	 */
-	public void resetTimer(Difficulty difficulty) {
+	public void resetTimer() {
 		timer.set(60);
 	}
 
 	private Service<Void> service = new Service<Void>() {
+		// create the task to handle the game
 		protected Task<Void> createTask() {
 			return new Task<Void>() {
+				// Main game loop thread
 				protected Void call() throws InterruptedException {
+					// Check that the timer is running
 					while (timer.intValue() > 1) {
+						// Wait 1 second
 						Thread.sleep(1000);
 						Platform.runLater(() -> {
+							// Decrement timer
 							timer.set(timer.get() - 1);
 
 							try {
+								// Check if player is currently drawing
 								if (canvas.getIsDrawing()) {
+									// Get the top 10 predictions
 									List<Classifications.Classification> currentPredictions = model
 											.getPredictions(canvas.getCurrentSnapshot(), 10);
+									// Update the predictions
 									canvas.updatePredictionGridDisplay(currentPredictions);
+									// Check if the top 3 words are what we are drawing
 									for (int i = 0; i < 3; i++) {
 										if (getCurrentPrompt()
 												.equals(currentPredictions.get(i).getClassName().replace("_", " "))) {
@@ -133,7 +143,13 @@ public class Game {
 		};
 	};
 
+	/**
+	 * 
+	 * @param isWin checks if the user has won
+	 * @throws InterruptedException interrupt exception stops the function
+	 */
 	private void endGame(boolean isWin) throws InterruptedException {
+		// Cancel service and end game
 		canvas.onEndGame(isWin);
 		service.cancel();
 	}

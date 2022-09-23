@@ -15,18 +15,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 
 public class ProfileBuilder {
-	// Declare all fields that a user profile will have
-	protected ImageView imageView;
-	protected Label userNameLabel;
-	protected TextField userNameInput;
-	protected Button createProfileButton;
-	protected Label userSelectedLabel;
-	protected Button deleteProfileButton;
-
-	// Declare private variables
-	private int row;
-	private int col;
-	// Declare private static objects
+	// Declare the grid
 	private static GridPane grid;
 	// Load in the images
 	private static File defaultImageFile = new File("src/main/resources/users/default.png");
@@ -34,6 +23,26 @@ public class ProfileBuilder {
 	private static File userImageFile = new File("src/main/resources/users/happy.png");
 	private static Image userImage = new Image(userImageFile.toURI().toString());
 	protected static int recentCreationIndex;
+
+	/**
+	 * setGrid sets the grid we will be using
+	 * 
+	 * @param grid FXML GridPane object
+	 */
+	public static void setGrid(GridPane grid) {
+		ProfileBuilder.grid = grid;
+	}
+
+	// Declare all fields that a user profile will have
+	protected ImageView imageView;
+	protected Label userNameLabel;
+	protected TextField userNameInput;
+	protected Button createProfileButton;
+	protected Label userSelectedLabel;
+	protected Button deleteProfileButton;
+	// Declare private variables
+	private int row;
+	private int col;
 
 	/**
 	 * ProfileBuilder constructor will set up a profile inside the grid
@@ -52,15 +61,6 @@ public class ProfileBuilder {
 		createProfileButton();
 		createSelectedLabel();
 		createDeleteProfileButton();
-	}
-
-	/**
-	 * setGrid sets the grid we will be using
-	 * 
-	 * @param grid FXML GridPane object
-	 */
-	public static void setGrid(GridPane grid) {
-		ProfileBuilder.grid = grid;
 	}
 
 	/**
