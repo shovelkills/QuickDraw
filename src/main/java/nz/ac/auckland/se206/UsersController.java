@@ -16,7 +16,6 @@ public class UsersController {
 	// Declare the user grid from the FXML
 	@FXML
 	private GridPane userGrid;
-
 	// Get all the users
 	private List<String> usersList = Users.getUserList();
 	// Create an array to store the newly built profiles
