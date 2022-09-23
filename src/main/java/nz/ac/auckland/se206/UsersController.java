@@ -103,6 +103,7 @@ public class UsersController {
 		// Initialise a variable
 		String username;
 		String string = null;
+
 		// Get the button pressed / text field entered
 		if (event.getEventType().equals(ActionEvent.ACTION)) {
 			Button button = (Button) event.getSource();
@@ -133,6 +134,7 @@ public class UsersController {
 		} else {
 			username = usersList.get(number);
 		}
+
 		// Load in the user
 		Users.loadUser(username);
 		// Update the menu page
