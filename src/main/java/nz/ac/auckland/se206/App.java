@@ -43,14 +43,12 @@ public class App extends Application {
     SceneManager.addUi(AppUi.USERSELECT, loadFxml("users"));
     SceneManager.addUi(AppUi.USERCREATE, loadFxml("usercreation"));
     // Creates a new scene that starts on the main menu in windowed mode
-    final Scene scene =
-        new Scene(
-            SceneManager.getUiRoot(AppUi.MAIN_MENU),
-            SceneManager.getMaxWindowedWidth(),
-            SceneManager.getMaxWindowedHeight());
+    final Scene scene = new Scene(SceneManager.getUiRoot(AppUi.MAIN_MENU),
+        SceneManager.getMaxWindowedWidth(), SceneManager.getMaxWindowedHeight());
     // Adds the css formatting to the scenes
     scene.getStylesheets().add("/css/menu.css");
     scene.getStylesheets().add("/css/canvas.css");
+    scene.getStylesheets().add("/css/creation.css");
 
     // Set the scene and then show
     stage.setTitle("Draw Game");

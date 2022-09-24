@@ -16,12 +16,12 @@ public class ProfileBuilder {
   // Declare private static objects
   private static HBox hbox;
   // Load in the images for user profiles
-  private static File defaultImageFile = new File("src/main/resources/users/add.png");
-  private static Image defaultImage = new Image(defaultImageFile.toURI().toString());
-  private static File userImageFile = new File("src/main/resources/users/happy.png");
-  private static Image userImage = new Image(userImageFile.toURI().toString());
+  private static File addImageFile = new File("src/main/resources/users/add.png");
+  protected static Image addImage = new Image(addImageFile.toURI().toString());
   private static File guestImageFile = new File("src/main/resources/users/guest.png");
-  private static Image guestImage = new Image(guestImageFile.toURI().toString());
+  protected static Image guestImage = new Image(guestImageFile.toURI().toString());
+  private static File userImageFile = new File("src/main/resources/users/happy.png");
+  protected static Image userImage = new Image(userImageFile.toURI().toString());
   protected static int counter = 0;
 
   // Define the scaling in hovering
@@ -53,9 +53,7 @@ public class ProfileBuilder {
 
   // Define the types of users a profile can be
   public enum UserType {
-    PLAYER,
-    GUEST,
-    ADD
+    PLAYER, GUEST, ADD
   }
 
   // Declare all fields that a user profile will have
@@ -84,21 +82,22 @@ public class ProfileBuilder {
 
     // Set up profiles according to their type
     switch (this.type) {
-        // Set up according to player type
+      // Set up according to player type
       case PLAYER:
-        imageView.setImage(userImage);
         userNameLabel.setText(Users.getUserList().get(counter));
+        // Load in the user's profile picture
+        imageView.setImage(Users.loadProfilePicture(userNameLabel.getText()));
         break;
-        // Set up according to guest type
+      // Set up according to guest type
       case GUEST:
         imageView.setImage(guestImage);
         userNameLabel.setText("Guest");
         userSelectedLabel.setVisible(true);
         deleteProfileButton.setVisible(false);
         break;
-        // Set up according to add new player type
+      // Set up according to add new player type
       case ADD:
-        imageView.setImage(defaultImage);
+        imageView.setImage(addImage);
         userNameLabel.setText("Add New Player");
         deleteProfileButton.setVisible(false);
         counter = counter - 2;
@@ -133,20 +132,18 @@ public class ProfileBuilder {
     imageView.setId(String.format("image%d", counter));
 
     // Event for hovering on
-    imageView.setOnMouseEntered(
-        e -> {
-          imageView.setStyle(HOVERED_STYLE);
-          imageView.getScene().setCursor(Cursor.HAND);
-        });
+    imageView.setOnMouseEntered(e -> {
+      imageView.setStyle(HOVERED_STYLE);
+      imageView.getScene().setCursor(Cursor.HAND);
+    });
 
     // Event for hovering off
-    imageView.setOnMouseExited(
-        e -> {
-          imageView.setStyle(IDLE_STYLE);
-          if (imageView.getScene() != null) {
-            imageView.getScene().setCursor(Cursor.DEFAULT);
-          }
-        });
+    imageView.setOnMouseExited(e -> {
+      imageView.setStyle(IDLE_STYLE);
+      if (imageView.getScene() != null) {
+        imageView.getScene().setCursor(Cursor.DEFAULT);
+      }
+    });
   }
 
   /** createUserNameLabel will set up the username label to be displayed */

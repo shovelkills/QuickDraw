@@ -1,7 +1,6 @@
 package nz.ac.auckland.se206;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -15,8 +14,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javafx.scene.image.Image;
 import javax.imageio.ImageIO;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.image.Image;
 
 public class Users {
   // Stores the information in the JSON file as individual variables
@@ -37,6 +39,7 @@ public class Users {
 
   private static String recentUser;
   private static String userName;
+  protected static Image userImage = ProfileBuilder.userImage;
 
   /**
    * This method finds the local files stored for the users by inputting their username
@@ -127,8 +130,11 @@ public class Users {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         gson.toJson(userMap, writer);
         writer.close();
+        BufferedImage bufferedImage = SwingFXUtils.fromFXImage(userImage, null);
         addUserList(username);
         loadUser(username);
+        // Save the user's image selected
+        saveProfilePicture(bufferedImage);
       } catch (IOException e1) {
         // TODO Auto-generated catch block
         e1.printStackTrace();
@@ -138,6 +144,7 @@ public class Users {
       // TODO Auto-generated catch block
       e.printStackTrace();
     }
+
     return true;
   }
 
@@ -146,7 +153,7 @@ public class Users {
    *
    * @param username the username the user inputted
    * @return boolean of if there are special characters in the username. True means there are
-   *     special characters in the string
+   *         special characters in the string
    */
   public static boolean isValidUsername(String username) {
 
@@ -260,8 +267,9 @@ public class Users {
    *
    * @return the image of the profile picture
    */
-  public static Image loadProfilePicture() {
-    File profileFile = new File("src/main/resources/profilepictures/" + userName + ".bmp");
+  public static Image loadProfilePicture(String user) {
+    File profileFile =
+        new File(folderDirectory + "/src/main/resources/profilepictures/" + user + ".bmp");
     return new Image(profileFile.toURI().toString());
   }
 
@@ -271,9 +279,23 @@ public class Users {
    * @param snapshot the profile picture
    */
   public static void saveProfilePicture(BufferedImage snapshot) {
-    File file = new File("src/main/resources/profilepictures/" + userName + ".bmp");
+    // Convert into a binary image.
+    final BufferedImage imageBinary =
+        new BufferedImage(snapshot.getWidth(), snapshot.getHeight(), BufferedImage.TYPE_INT_RGB);
+
+    final Graphics2D graphics = imageBinary.createGraphics();
+
+    graphics.drawImage(snapshot, 0, 0, null);
+
+    // To release memory we dispose.
+    graphics.dispose();
+
+    // Write it to file
+    File file =
+        new File(folderDirectory + "/src/main/resources/profilepictures/" + userName + ".bmp");
     try {
-      ImageIO.write(snapshot, "bmp", file);
+      ImageIO.write(imageBinary, "bmp", file);
+
     } catch (IOException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
@@ -281,8 +303,8 @@ public class Users {
   }
 
   /** Deletes the profile picture of the user */
-  public static void deleteProfilePicture() {
-    File file = new File("src/main/resources/profilepictures/" + userName + ".bmp");
+  public static void deleteProfilePicture(String user) {
+    File file = new File(folderDirectory + "/src/main/resources/profilepictures/" + user + ".bmp");
     file.delete();
   }
 
