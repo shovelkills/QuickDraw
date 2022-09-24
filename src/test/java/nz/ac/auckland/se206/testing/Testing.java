@@ -10,8 +10,14 @@ public class Testing {
     // testCreatingJSONFile();
     // testDoesItContainSpecialCharacters();
     // testSavingToJSONFile();
-    testUserList();
+    // testUserList();
     // testDeletingUser();
+    // testDeleteProfilePicture();
+  }
+
+  private static void testDeleteProfilePicture() {
+    Users.loadUser("thelegend27");
+    Users.deleteProfilePicture();
   }
 
   public static void testLoadingJSONFile() {
@@ -30,18 +36,17 @@ public class Testing {
     System.out.println("Fastest word " + Users.getFastestWord());
     System.out.println("Time History" + Users.getTimeHistory());
     System.out.println("Average Time " + Users.getAverageTime());
-
   }
 
   public static void testCreatingJSONFile() {
 
     // Note - do not use special characters when testing
-    Users.createUser("//");// Error in creating due to special characters
-    Users.createUser("thelegend27");// Error for first one as there is already a file with same name
-    Users.createUser("thelegend28");// Note - must delete file after running, might have to refresh
-                                    // users folder to see new created file
+    Users.createUser("//"); // Error in creating due to special characters
+    Users.createUser(
+        "thelegend27"); // Error for first one as there is already a file with same name
+    Users.createUser("thelegend28"); // Note - must delete file after running, might have to refresh
+    // users folder to see new created file
     System.out.println("Username " + Users.getUserName());
-
   }
 
   public static void testDoesItContainSpecialCharacters() {
@@ -49,8 +54,7 @@ public class Testing {
     System.out.println(Users.isValidUsername(";./,'{}[]"));
     // Comes up false as it does not contain special characters
     System.out.println(
-        Users.isValidUsername("qwertyuiopasdfghjklzxcvbnm1234567890QWERTYUIOPASDFGHJKLZXCVBNM"));
-
+        Users.isValidUsername("qwertyuiopasdfghjklzxcvbnm1234567890QWERTYUIOPASDFGHJKLZXCVBNM-"));
   }
 
   public static void testSavingToJSONFile() {
@@ -66,8 +70,6 @@ public class Testing {
     Users.increaseWins();
     System.out.println("Wins " + Users.getWins());
     Users.saveUser();
-
-
   }
 
   public static void testUserList() {
@@ -87,7 +89,6 @@ public class Testing {
     Users.createUser("GIGACHAD");
     System.out.println("Users" + Users.getUserList());
     System.out.println("Recent" + Users.getRecentList());
-
   }
 
   public static void testDeletingUser() {
@@ -98,5 +99,4 @@ public class Testing {
     Users.deleteUser("BroBait");
     System.out.println(Users.getUserList());
   }
-
 }
