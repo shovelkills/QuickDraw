@@ -203,5 +203,4 @@ public class UsersController {
 
     sceneButtonIsIn.setRoot(SceneManager.getUiRoot(AppUi.MAIN_MENU));
   }
-
 }
