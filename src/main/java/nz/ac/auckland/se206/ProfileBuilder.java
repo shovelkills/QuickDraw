@@ -28,10 +28,9 @@ public class ProfileBuilder {
   private static final String IDLE_STYLE = "-fx-scale-x: 1; -fx-scale-y: 1";
   private static final String HOVERED_STYLE = "-fx-scale-x: 1.2; -fx-scale-y: 1.2";
 
-
   /**
    * setHBox sets the hbox's size and spacing
-   * 
+   *
    * @param hbox FXML HBox object
    */
   public static void setHbox(HBox hbox) {
@@ -50,11 +49,13 @@ public class ProfileBuilder {
       profile.imageView.setId(String.format("image%d", id));
       id++;
     }
-
   }
 
+  // Define the types of users a profile can be
   public enum UserType {
-    PLAYER, GUEST, ADD
+    PLAYER,
+    GUEST,
+    ADD
   }
 
   // Declare all fields that a user profile will have
@@ -65,10 +66,9 @@ public class ProfileBuilder {
   protected VBox vbox;
   protected UserType type;
 
-
   /**
    * ProfileBuilder constructor will set up a profile inside the grid
-   * 
+   *
    * @param row the row number in the grid
    * @param col the column number in the grid
    */
@@ -84,19 +84,19 @@ public class ProfileBuilder {
 
     // Set up profiles according to their type
     switch (this.type) {
-      // Set up according to player type
+        // Set up according to player type
       case PLAYER:
         imageView.setImage(userImage);
         userNameLabel.setText(Users.getUserList().get(counter));
         break;
-      // Set up according to guest type
+        // Set up according to guest type
       case GUEST:
         imageView.setImage(guestImage);
         userNameLabel.setText("Guest");
         userSelectedLabel.setVisible(true);
         deleteProfileButton.setVisible(false);
         break;
-      // Set up according to add new player type
+        // Set up according to add new player type
       case ADD:
         imageView.setImage(defaultImage);
         userNameLabel.setText("Add New Player");
@@ -108,9 +108,7 @@ public class ProfileBuilder {
     counter++;
   }
 
-  /**
-   * createVertBox will create a vertical box for the UI to be placed in
-   */
+  /** createVertBox will create a vertical box for the UI to be placed in */
   private void createVertBox() {
     // Initialise a vbox
     vbox = new VBox();
@@ -119,9 +117,7 @@ public class ProfileBuilder {
     vbox.setAlignment(Pos.CENTER);
   }
 
-  /**
-   * createImageView will set up the image in our profile
-   */
+  /** createImageView will set up the image in our profile */
   private void createImageView() {
     // Creates new Image View
     imageView = new ImageView();
@@ -137,24 +133,23 @@ public class ProfileBuilder {
     imageView.setId(String.format("image%d", counter));
 
     // Event for hovering on
-    imageView.setOnMouseEntered(e -> {
-      imageView.setStyle(HOVERED_STYLE);
-      imageView.getScene().setCursor(Cursor.HAND);
-    });
+    imageView.setOnMouseEntered(
+        e -> {
+          imageView.setStyle(HOVERED_STYLE);
+          imageView.getScene().setCursor(Cursor.HAND);
+        });
 
     // Event for hovering off
-    imageView.setOnMouseExited(e -> {
-      imageView.setStyle(IDLE_STYLE);
-      if (imageView.getScene() != null) {
-        imageView.getScene().setCursor(Cursor.DEFAULT);
-      }
-    });
-
+    imageView.setOnMouseExited(
+        e -> {
+          imageView.setStyle(IDLE_STYLE);
+          if (imageView.getScene() != null) {
+            imageView.getScene().setCursor(Cursor.DEFAULT);
+          }
+        });
   }
 
-  /**
-   * createUserNameLabel will set up the username label to be displayed
-   */
+  /** createUserNameLabel will set up the username label to be displayed */
   private void createUserNameLabel() {
     // Create a new label
     userNameLabel = new Label();
@@ -166,10 +161,7 @@ public class ProfileBuilder {
     userNameLabel.setVisible(true);
   }
 
-
-  /**
-   * createSelectedLabel creates the "selected" label to indicate which user is selected
-   */
+  /** createSelectedLabel creates the "selected" label to indicate which user is selected */
   private void createSelectedLabel() {
     userSelectedLabel = new Label();
     vbox.getChildren().add(userSelectedLabel);
@@ -177,12 +169,9 @@ public class ProfileBuilder {
     // Set the visibility off and the text to selected
     userSelectedLabel.setText("Selected");
     userSelectedLabel.setVisible(false);
-
   }
 
-  /**
-   * createDeleteProfileButton will create the delete button for users to delete their profile
-   */
+  /** createDeleteProfileButton will create the delete button for users to delete their profile */
   private void createDeleteProfileButton() {
     deleteProfileButton = new Button();
     vbox.getChildren().add(deleteProfileButton);
@@ -192,16 +181,10 @@ public class ProfileBuilder {
     deleteProfileButton.setId(String.format("deleteProfileButton%d", counter));
   }
 
-
-  /**
-   * deleteProfile will delete the user selected for deletion
-   */
+  /** deleteProfile will delete the user selected for deletion */
   public void deleteProfile() {
     // Remove's the vbox from the hbox
     vbox.getChildren().removeAll();
     hbox.getChildren().remove(vbox);
-
-
   }
-
 }

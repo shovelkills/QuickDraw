@@ -23,7 +23,7 @@
                            <children>
                               <ImageView fx:id="createImageView" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
                               <TextField fx:id="usernameField" alignment="CENTER" promptText="Username" />
-                              <Button fx:id="createButton" alignment="TOP_CENTER" mnemonicParsing="false" onAction="#onCreateProfile" text="Create">
+                              <Button fx:id="createButton" alignment="TOP_CENTER" mnemonicParsing="false" onAction="#onCreateProfile" style="-fx-cursor: hand;" text="Create">
                                  <VBox.margin>
                                     <Insets />
                                  </VBox.margin>
@@ -36,7 +36,7 @@
                         <Font name="System Bold" size="75.0" />
                      </font>
                   </Label>
-                  <Button fx:id="returnButton" mnemonicParsing="false" onAction="#onExitSelection" text="Go Back" StackPane.alignment="BOTTOM_CENTER">
+                  <Button fx:id="returnButton" mnemonicParsing="false" onAction="#onExitSelection" style="-fx-cursor: hand;" text="Go Back" StackPane.alignment="BOTTOM_CENTER">
                      <StackPane.margin>
                         <Insets bottom="50.0" />
                      </StackPane.margin>

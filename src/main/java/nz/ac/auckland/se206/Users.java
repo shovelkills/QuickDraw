@@ -1,5 +1,7 @@
 package nz.ac.auckland.se206;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -12,8 +14,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 public class Users {
   // Stores the information in the JSON file as individual variables
@@ -35,10 +35,9 @@ public class Users {
 
   /**
    * This method finds the local files stored for the users by inputting their username
-   * 
+   *
    * @param username the username of the user
    */
-
   public static void loadUser(String username) {
 
     if (isValidUsername(username)) {
@@ -82,15 +81,13 @@ public class Users {
       // TODO Auto-generated catch block
       e.printStackTrace();
     }
-
   }
 
   /**
    * Creates a json file with the user input of username so that it can store data
-   * 
+   *
    * @param username the username the user wants to use
    */
-
   public static boolean createUser(String username) {
     if (isValidUsername(username)) {
       // Change to show in GUI
@@ -141,21 +138,20 @@ public class Users {
 
   /**
    * Checks if there are any special characters in the username
-   * 
+   *
    * @param username the username the user inputted
    * @return boolean of if there are special characters in the username. True means there are
-   *         special characters in the string
+   *     special characters in the string
    */
   public static boolean isValidUsername(String username) {
     Pattern validCharacters = Pattern.compile("[^a-z0-9]", Pattern.CASE_INSENSITIVE);
     Matcher matchCharacters = validCharacters.matcher(username);
     return matchCharacters.find();
-
   }
 
   /**
    * Gets the sum of the remain time that the user has to draw each word
-   * 
+   *
    * @return the average time remaining that it user has when the game recognizes the word
    */
   public static double getAverageTime() {
@@ -168,13 +164,9 @@ public class Users {
       return sum / timeHistory.size();
     }
     return sum;
-
   }
 
-  /**
-   * Saves the data of the user to a JSON file after a game finishes
-   */
-
+  /** Saves the data of the user to a JSON file after a game finishes */
   public static void saveUser() {
     File dir = new File(folderDirectory + "/src/main/resources/users/");
     try (Writer writer = new FileWriter(new File(dir, userName + ".json"))) {
@@ -200,9 +192,7 @@ public class Users {
     }
   }
 
-  /**
-   * Gets the userlist and recent user list from the JSON file
-   */
+  /** Gets the userlist and recent user list from the JSON file */
   public static void loadUsersFromList() {
     // Reads the userlist file
     folderDirectory = System.getProperty("user.dir");
@@ -223,9 +213,7 @@ public class Users {
     }
   }
 
-  /**
-   * Saves the List of Users and the recent lists
-   */
+  /** Saves the List of Users and the recent lists */
   public static void saveUserList() {
     File dir = new File(folderDirectory + "/src/main/resources/users/");
     try (Writer writer = new FileWriter(new File(dir, "userlist.json"))) {
@@ -241,7 +229,6 @@ public class Users {
       // TODO Auto-generated catch block
       e.printStackTrace();
     }
-
   }
 
   public static void deleteUser(String username) {
@@ -253,7 +240,6 @@ public class Users {
       recentUser = "";
     }
     saveUserList();
-
   }
 
   private static void loadGuest() {
@@ -270,7 +256,6 @@ public class Users {
     wordHistory = null;
 
     timeHistory = null;
-
   }
 
   // updates the userList by adding new user to list
@@ -349,5 +334,4 @@ public class Users {
   public static List<String> getUserList() {
     return userList;
   }
-
 }

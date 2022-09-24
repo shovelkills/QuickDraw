@@ -14,14 +14,9 @@ import nz.ac.auckland.se206.SceneManager.AppUi;
 
 public class UserCreationController {
 
-  @FXML
-  private Button createButton;
-  @FXML
-  private TextField usernameField;
-  @FXML
-  private ImageView createImageView;
-
-
+  @FXML private Button createButton;
+  @FXML private TextField usernameField;
+  @FXML private ImageView createImageView;
 
   public void initialize() {
     File createImageFile = new File("src/main/resources/users/create.png");
@@ -73,7 +68,7 @@ public class UserCreationController {
 
   /**
    * onExitSelection will leave the profile creation scene
-   * 
+   *
    * @param event Takes in Mouse Pressed event
    */
   @FXML
@@ -87,5 +82,4 @@ public class UserCreationController {
     usernameField.clear();
     sceneButtonIsIn.setRoot(SceneManager.getUiRoot(AppUi.USERSELECT));
   }
-
 }

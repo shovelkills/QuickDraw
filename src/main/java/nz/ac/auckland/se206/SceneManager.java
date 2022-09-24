@@ -6,7 +6,10 @@ import javafx.scene.Parent;
 
 public class SceneManager {
   public enum AppUi {
-    MAIN_MENU, GAME, USERSELECT, USERCREATE
+    MAIN_MENU,
+    GAME,
+    USERSELECT,
+    USERCREATE
   }
 
   private static final double widthPadding = 200;
