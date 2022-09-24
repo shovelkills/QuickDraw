@@ -2,6 +2,7 @@ package nz.ac.auckland.se206;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -14,6 +15,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javafx.scene.image.Image;
+import javax.imageio.ImageIO;
 
 public class Users {
   // Stores the information in the JSON file as individual variables
@@ -30,6 +33,8 @@ public class Users {
 
   private static String fastestWord;
   private static String folderDirectory;
+  private static String profilePicture;
+
   private static String recentUser;
   private static String userName;
 
@@ -144,7 +149,8 @@ public class Users {
    *     special characters in the string
    */
   public static boolean isValidUsername(String username) {
-    Pattern validCharacters = Pattern.compile("[^a-z0-9]", Pattern.CASE_INSENSITIVE);
+
+    Pattern validCharacters = Pattern.compile("[^a-z0-9-]", Pattern.CASE_INSENSITIVE);
     Matcher matchCharacters = validCharacters.matcher(username);
     return matchCharacters.find();
   }
@@ -231,6 +237,12 @@ public class Users {
     }
   }
 
+
+  /**
+   * Deletes the user JSON file and also removes it from the userlist
+   *
+   * @param username the username that wants to be deleted
+   */
   public static void deleteUser(String username) {
     File userFile = new File(folderDirectory + "/src/main/resources/users/" + username + ".json");
     userFile.delete();
@@ -240,6 +252,38 @@ public class Users {
       recentUser = "";
     }
     saveUserList();
+  }
+
+
+  /**
+   * Loads the profile picture that the user has drawn
+   *
+   * @return the image of the profile picture
+   */
+  public static Image loadProfilePicture() {
+    File profileFile = new File("src/main/resources/profilepictures/" + userName + ".bmp");
+    return new Image(profileFile.toURI().toString());
+  }
+
+  /**
+   * Saves the profile picture as a bmp in the profilepicture folder
+   *
+   * @param snapshot the profile picture
+   */
+  public static void saveProfilePicture(BufferedImage snapshot) {
+    File file = new File("src/main/resources/profilepictures/" + userName + ".bmp");
+    try {
+      ImageIO.write(snapshot, "bmp", file);
+    } catch (IOException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+  }
+
+  /** Deletes the profile picture of the user */
+  public static void deleteProfilePicture() {
+    File file = new File("src/main/resources/profilepictures/" + userName + ".bmp");
+    file.delete();
   }
 
   private static void loadGuest() {
@@ -334,4 +378,14 @@ public class Users {
   public static List<String> getUserList() {
     return userList;
   }
+
+
+  public static String getProfilePicture() {
+    return profilePicture;
+  }
+
+  public static void setProfilePicture(String profilePicture) {
+    Users.profilePicture = profilePicture;
+  }
+
 }
