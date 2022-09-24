@@ -8,7 +8,8 @@ public class SceneManager {
   public enum AppUi {
     MAIN_MENU,
     GAME,
-    USERSELECT
+    USERSELECT,
+    USERCREATE
   }
 
   private static final double widthPadding = 200;

@@ -34,6 +34,7 @@ public class Users {
   private static String fastestWord;
   private static String folderDirectory;
   private static String profilePicture;
+
   private static String recentUser;
   private static String userName;
 
@@ -148,6 +149,7 @@ public class Users {
    *     special characters in the string
    */
   public static boolean isValidUsername(String username) {
+
     Pattern validCharacters = Pattern.compile("[^a-z0-9-]", Pattern.CASE_INSENSITIVE);
     Matcher matchCharacters = validCharacters.matcher(username);
     return matchCharacters.find();
@@ -235,6 +237,7 @@ public class Users {
     }
   }
 
+
   /**
    * Deletes the user JSON file and also removes it from the userlist
    *
@@ -244,12 +247,13 @@ public class Users {
     File userFile = new File(folderDirectory + "/src/main/resources/users/" + username + ".json");
     userFile.delete();
     int index = userList.indexOf(username);
-    userList.set(index, String.format("~null%d", index));
+    userList.remove(index);
     if (recentUser.equals(username)) {
       recentUser = "";
     }
     saveUserList();
   }
+
 
   /**
    * Loads the profile picture that the user has drawn
@@ -300,20 +304,7 @@ public class Users {
 
   // updates the userList by adding new user to list
   public static void addUserList(String user) {
-    // Get the current userList size
-    int currentSize = userList.size();
-    // Check if the profile created is less than the current size of the list
-    if (ProfileBuilder.recentCreationIndex < currentSize) {
-      // Overwrite that user (will be a deleted user)
-      userList.set(ProfileBuilder.recentCreationIndex, user);
-    } else {
-      // Add empty users
-      for (int i = currentSize; i < ProfileBuilder.recentCreationIndex; i++) {
-        userList.add(String.format("~null%d", i));
-      }
-      // Append the user to the end of list
-      userList.add(user);
-    }
+    userList.add(user);
     // Save the user List
     saveUserList();
   }
@@ -388,6 +379,7 @@ public class Users {
     return userList;
   }
 
+
   public static String getProfilePicture() {
     return profilePicture;
   }
@@ -395,4 +387,5 @@ public class Users {
   public static void setProfilePicture(String profilePicture) {
     Users.profilePicture = profilePicture;
   }
+
 }

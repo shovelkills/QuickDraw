@@ -15,6 +15,7 @@ import java.util.Random;
 
 public class CategorySelector {
 
+  // Global constnats of the difficulties
   public enum Difficulty {
     E,
     M,
@@ -34,6 +35,12 @@ public class CategorySelector {
     }
   }
 
+  /**
+   * getRandomCategory will get a random category's word
+   *
+   * @param difficulty takes in the game's difficulty
+   * @return String: a word in that category or lower
+   */
   public String getRandomCategory(Difficulty difficulty) {
     return difficulty2categories
         .get(difficulty)
@@ -63,8 +70,15 @@ public class CategorySelector {
     return getRandomCategory(Difficulty.H);
   }
 
+  /**
+   * getSelection creates a hash map of a selection of words from different difficulties
+   *
+   * @return HashMap with different words based on their difficulty
+   */
   public HashMap<Difficulty, String> getSelection() {
+    // Initialises a new hash map with key difficulty and a word associated with it
     HashMap<Difficulty, String> selection = new HashMap<Difficulty, String>();
+    // Stores the words with the difficulty
     selection.put(Difficulty.E, getEasyCategory());
     selection.put(Difficulty.M, getEasyMediumCategory());
     selection.put(Difficulty.H, getEasyMediumHardCategory());
