@@ -1,10 +1,11 @@
 package nz.ac.auckland.se206;
 
 import java.io.File;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -14,25 +15,42 @@ public class ProfileBuilder {
 
   // Declare private static objects
   private static HBox hbox;
-  // Load in the images
+  // Load in the images for user profiles
   private static File defaultImageFile = new File("src/main/resources/users/add.png");
   private static Image defaultImage = new Image(defaultImageFile.toURI().toString());
   private static File userImageFile = new File("src/main/resources/users/happy.png");
   private static Image userImage = new Image(userImageFile.toURI().toString());
   private static File guestImageFile = new File("src/main/resources/users/guest.png");
   private static Image guestImage = new Image(guestImageFile.toURI().toString());
-  protected static int recentCreationIndex;
-  private static int counter = 0;
+  protected static int counter = 0;
+
+  // Define the scaling in hovering
+  private static final String IDLE_STYLE = "-fx-scale-x: 1; -fx-scale-y: 1";
+  private static final String HOVERED_STYLE = "-fx-scale-x: 1.2; -fx-scale-y: 1.2";
+
 
   /**
-   * setGrid sets the grid we will be using
+   * setHBox sets the hbox's size and spacing
    * 
-   * @param grid FXML GridPane object
+   * @param hbox FXML HBox object
    */
   public static void setHbox(HBox hbox) {
+    // Set the size of the hbox
     hbox.setPrefSize(2000, 800);
     hbox.setSpacing(100);
     ProfileBuilder.hbox = hbox;
+  }
+
+  // Update all the IDs
+  public static void updateID() {
+    int id = 0;
+    // Reset all the ids
+    for (ProfileBuilder profile : UsersController.profiles) {
+      profile.deleteProfileButton.setId(String.format("deleteProfileButton%d", id));
+      profile.imageView.setId(String.format("image%d", id));
+      id++;
+    }
+
   }
 
   public enum UserType {
@@ -42,8 +60,6 @@ public class ProfileBuilder {
   // Declare all fields that a user profile will have
   protected ImageView imageView;
   protected Label userNameLabel;
-  protected TextField userNameInput;
-  protected Button selectProfileButton;
   protected Label userSelectedLabel;
   protected Button deleteProfileButton;
   protected VBox vbox;
@@ -57,14 +73,14 @@ public class ProfileBuilder {
    * @param col the column number in the grid
    */
   public ProfileBuilder(UserType type) {
+    // Get the type of profile
     this.type = type;
+    // Create all the UI
     createVertBox();
     createImageView();
     createUserNameLabel();
-    createSelectProfileButton();
     createSelectedLabel();
     createDeleteProfileButton();
-
 
     // Set up profiles according to their type
     switch (this.type) {
@@ -79,26 +95,29 @@ public class ProfileBuilder {
         userNameLabel.setText("Guest");
         userSelectedLabel.setVisible(true);
         deleteProfileButton.setVisible(false);
-        selectProfileButton.setDisable(true);
         break;
       // Set up according to add new player type
       case ADD:
         imageView.setImage(defaultImage);
         userNameLabel.setText("Add New Player");
         deleteProfileButton.setVisible(false);
-        selectProfileButton.setVisible(false);
+        counter = counter - 2;
         break;
     }
+    // Increment the counter
     counter++;
   }
 
+  /**
+   * createVertBox will create a vertical box for the UI to be placed in
+   */
   private void createVertBox() {
+    // Initialise a vbox
     vbox = new VBox();
+    // Add the vbox to the hbox and centre it
     hbox.getChildren().add(vbox);
     vbox.setAlignment(Pos.CENTER);
   }
-
-
 
   /**
    * createImageView will set up the image in our profile
@@ -111,8 +130,25 @@ public class ProfileBuilder {
 
     // Binds the height and width of the image in the grid
     imageView.setPreserveRatio(true);
+    // Set the image size
     imageView.fitHeightProperty().bind(hbox.heightProperty().divide(7));
     imageView.fitWidthProperty().bind(hbox.widthProperty().divide(7));
+    // Set the image id
+    imageView.setId(String.format("image%d", counter));
+
+    // Event for hovering on
+    imageView.setOnMouseEntered(e -> {
+      imageView.setStyle(HOVERED_STYLE);
+      imageView.getScene().setCursor(Cursor.HAND);
+    });
+
+    // Event for hovering off
+    imageView.setOnMouseExited(e -> {
+      imageView.setStyle(IDLE_STYLE);
+      if (imageView.getScene() != null) {
+        imageView.getScene().setCursor(Cursor.DEFAULT);
+      }
+    });
 
   }
 
@@ -126,20 +162,10 @@ public class ProfileBuilder {
     vbox.getChildren().add(userNameLabel);
     // Turn on the visibility initially
     userNameLabel.setAlignment(Pos.BOTTOM_CENTER);
+    userNameLabel.setPadding(new Insets(20, 0, 0, 0));
     userNameLabel.setVisible(true);
   }
 
-  /**
-   * createSelectProfileButton creates the creation/selection profile button
-   */
-  private void createSelectProfileButton() {
-    selectProfileButton = new Button();
-    vbox.getChildren().add(selectProfileButton);
-    selectProfileButton.setText("Select Profile");
-    selectProfileButton.setAlignment(Pos.BOTTOM_CENTER);
-    // Set the ID
-    selectProfileButton.setId(String.format("selectProfileButton%d", counter));
-  }
 
   /**
    * createSelectedLabel creates the "selected" label to indicate which user is selected
@@ -166,53 +192,14 @@ public class ProfileBuilder {
     deleteProfileButton.setId(String.format("deleteProfileButton%d", counter));
   }
 
-  /**
-   * Sets the profile image for user
-   * 
-   * @param userImage an image
-   */
-  public void setUserImage(Image userImage) {
-    this.imageView.setImage(userImage);
-  }
-
-  /**
-   * sets the profile's user name
-   * 
-   * @param userName a string text of the username
-   */
-  public void setUserName(String userName) {
-    this.userNameLabel.setText(userName);
-  }
-
-
-  /**
-   * loadProfiles will update the FXML for the user being selected
-   * 
-   * @param userName
-   */
-  public void loadProfiles(String userName) {
-    // Update the image and name in the main menu
-    setUserImage(userImage);
-    setUserName(userName);
-
-    // Update the FXML
-    userNameInput.setText(null);
-    userNameInput.setVisible(false);
-    deleteProfileButton.setVisible(true);
-    deleteProfileButton.setDisable(false);
-  }
 
   /**
    * deleteProfile will delete the user selected for deletion
    */
   public void deleteProfile() {
-    // Set the profile back to default
-    setUserImage(defaultImage);
-    // Remove the user name
-    setUserName(null);
-    // Allow for creation again
-    userNameInput.setVisible(true);
-    deleteProfileButton.setDisable(true);
+    // Remove's the vbox from the hbox
+    vbox.getChildren().removeAll();
+    hbox.getChildren().remove(vbox);
 
 
   }

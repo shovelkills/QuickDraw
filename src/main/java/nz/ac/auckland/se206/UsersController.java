@@ -1,33 +1,35 @@
 package nz.ac.auckland.se206;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
+import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import nz.ac.auckland.se206.ProfileBuilder.UserType;
 import nz.ac.auckland.se206.SceneManager.AppUi;
 
 public class UsersController {
+
+  // Create an array to store the newly built profiles
+  protected static ArrayList<ProfileBuilder> profiles = new ArrayList<ProfileBuilder>();
+  // Get all the users
+  protected static List<String> usersList = Users.getUserList();
+  protected static ProfileBuilder currentlySelected = null;
+  // Max profiles we are having
+  private static int profileCap = 7;
   // Declare the user grid from the FXML
   @FXML
   private HBox userHbox;
-
-  // Get all the users
-  private List<String> usersList = Users.getUserList();
-  // Create an array to store the newly built profiles
-  private ArrayList<ProfileBuilder> profiles = new ArrayList<ProfileBuilder>();
-  // Max profiles we are having
+  // profile amount to load in
   private int profileAmount = usersList.size();
-  private ProfileBuilder guest;
-  private File guestImageFile = new File("src/main/resources/users/guest.png");
-  private Image guestImage = new Image(guestImageFile.toURI().toString());
+
+
 
   /**
    * The initialize method will initialise all the FXML needed for the Users.fxml scene Here it
@@ -38,30 +40,27 @@ public class UsersController {
     ProfileBuilder.setHbox(userHbox);
     // Add all the declared fields into the array lists
 
+    // Load in players
     for (int i = 0; i < profileAmount; i++) {
       profiles.add(new ProfileBuilder(UserType.PLAYER));
     }
     // Add in guest
     profiles.add(new ProfileBuilder(UserType.GUEST));
     profiles.add(new ProfileBuilder(UserType.ADD));
-    guest = profiles.get(profiles.size() - 2);
-    // Load in previously made users
-    for (int i = 0; i < usersList.size(); i++) {
-      // ~ means that there was a player that was recently deleted in that slot
-      if (usersList.get(i).contains("~")) {
-        continue;
-      }
-    }
 
+    // Add event handlers to the profiles
     for (ProfileBuilder profile : profiles) {
-      profile.selectProfileButton.setOnAction(e -> {
+      // Add select profile event
+      profile.imageView.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
         onSelectProfile(e);
+      });
+      // Add delete profile event
+      profile.deleteProfileButton.addEventHandler(ActionEvent.ACTION, e -> {
+        onDeleteProfile(e);
       });
     }
 
   }
-
-
 
   /**
    * onSelectProfile will select a user profile and make that user the current selected user
@@ -69,31 +68,58 @@ public class UsersController {
    * @param event Takes in the FXML action event
    * @param type Either a user profile or the guest profile
    */
-  @FXML
-  private void onSelectProfile(ActionEvent event) {
-    // Initialise a variable
-    String username;
+  private static void onSelectProfile(Event event) {
+    ImageView image = null;
+    String string = null;
+    int number = 0;
     // Get the button pressed
-
-    Button button = (Button) event.getSource();
-    String string = button.getId().toString();
-
-    // Find out which profile was clicked
-    int number = (Integer.parseInt(String.valueOf(string.charAt(string.length() - 1))));
-    // Check if the guest profile was selected
+    if (event.getSource().getClass().equals(profiles.get(0).deleteProfileButton.getClass())) {
+      // guest was selected via creation or deletion
+      number = profiles.size() - 2;
+    } else {
+      image = (ImageView) event.getSource();
+      string = image.getId().toString();
+      // Find out which profile was clicked
+      number = (Integer.parseInt(String.valueOf(string.charAt(string.length() - 1))));
+    }
 
     // Loop through the profiles to say they weren't selected
     for (ProfileBuilder profile : profiles) {
+      // Check
       if (profile.type == UserType.ADD) {
+        // Reset the cursor
+        profile.imageView.getScene().setCursor(Cursor.DEFAULT);
         break;
       }
+      if (profile.userSelectedLabel.isVisible()) {
+        // get the currently selected profile
+        currentlySelected = profile;
+      }
+      // Turn off selection for all
       profile.userSelectedLabel.setVisible(false);
-      profile.selectProfileButton.setDisable(false);
 
     }
+    // Check if the image pressed was the add new player
+    if (number == profiles.size() - 1) {
+      // Check if the profile cap was reached
+      if (profiles.size() == profileCap) {
+        System.out.println("You cannot add anymore users!");
+        currentlySelected.userSelectedLabel.setVisible(true);
+        return;
+      }
+      // Go to user Creation scene
+      image.getScene().setRoot(SceneManager.getUiRoot(AppUi.USERCREATE));
+      return;
+    }
+    selectUser(number);
+  }
+
+  private static void selectUser(int number) {
+    // Initialise a variable
+    String username;
     // Select the profile that was chosen
     profiles.get(number).userSelectedLabel.setVisible(true);
-    profiles.get(number).selectProfileButton.setDisable(true);
+
 
     // Get the user's name based on the number position of the profile
     if (number == profiles.size() - 2) {
@@ -107,43 +133,6 @@ public class UsersController {
     // Update the menu page
     MenuController.updateUser(profiles.get(number).imageView.getImage());
     // TODO Update the Game page
-
-  }
-
-  /**
-   * onCreateProfile method will create a new user profile based on the profile position
-   *
-   * @param event Takes in the FXML action event
-   */
-  @FXML
-  private void onCreateProfile(Event event) {
-    String string = null;
-
-    // Get the button pressed / text field entered
-    if (event.getEventType().equals(ActionEvent.ACTION)) {
-      Button button = (Button) event.getSource();
-      string = button.getId().toString();
-    } else {
-      TextField textfield = (TextField) event.getSource();
-      string = textfield.getId().toString();
-    }
-    // Get the profile number
-    int number = (Integer.parseInt(String.valueOf(string.charAt(string.length() - 1))));
-    // Get the username inputted
-    String username = profiles.get(number).userNameInput.getText();
-    // Check if it was a valid username
-    // Store which index it was created in
-    ProfileBuilder.recentCreationIndex = number;
-    if (username == null || username.equals("") || !Users.createUser(username)) {
-      // TODO Add an alert that will say invalid username in GUI
-      return;
-    }
-
-    // Load the profile FXML
-    profiles.get(number).loadProfiles(username);
-    usersList = Users.getUserList();
-    // Select the profile
-    // onSelectProfile(event);
   }
 
   /**
@@ -151,8 +140,7 @@ public class UsersController {
    * 
    * @param event Takes in the FXML action event
    */
-  @FXML
-  private void onDeleteProfile(ActionEvent event) {
+  private static void onDeleteProfile(Event event) {
     // TODO ASK FOR CONFIRMATION ALERT
     // Find out which button was pressed
     Button button = (Button) event.getSource();
@@ -163,6 +151,10 @@ public class UsersController {
     String username = usersList.get(number);
     // Delete that profile
     profiles.get(number).deleteProfile();
+    profiles.remove(number);
+    ProfileBuilder.updateID();
+    // Update counter position
+    ProfileBuilder.counter--;
     // Select the Guest Profile
     onSelectProfile(event);
     // Delete the user in the JSON file
@@ -180,27 +172,30 @@ public class UsersController {
     // Get the scene currently in
     Button button = (Button) event.getSource();
     Scene sceneButtonIsIn = button.getScene();
-    // for (int i = 0; i < usersList.size(); i++) {
-    // profiles.get(i).userNameInput.clear();
-    // }
-    // Move to the next scene
+
     sceneButtonIsIn.setRoot(SceneManager.getUiRoot(AppUi.MAIN_MENU));
   }
 
-  /**
-   * This will update all the guest information for the Guest Profile
-   */
-  private void updateGuestProfile() {
-    // TODO make cleaner (possibly make static in ProfileBuilder.java)
-    // Set up all the guest profile FXML accordingly
-    guest.setUserName("Guest");
-    guest.deleteProfileButton.setVisible(true);
-    guest.deleteProfileButton.setDisable(true);
-    guest.selectProfileButton.setText("Select");
-    guest.selectProfileButton.setVisible(false);
-    guest.userNameInput.setVisible(false);
-    guest.userSelectedLabel.setVisible(true);
-    guest.imageView.setImage(guestImage);
 
+
+  /**
+   * addEvents will add the events to the image and buttons
+   * 
+   * @param image new profile's image
+   * @param deleteButton new profile's delete button
+   * @param number new profile's slot
+   */
+  protected static void addEvents(ImageView image, Button deleteButton, int number) {
+    // Add the event handler to the image
+    image.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
+      // Add select profile event
+      onSelectProfile(e);
+    });
+    // ADd the event handler to the delete profile button
+    deleteButton.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
+      // Add delete event
+      onDeleteProfile(e);
+    });
+    selectUser(number);
   }
 }
