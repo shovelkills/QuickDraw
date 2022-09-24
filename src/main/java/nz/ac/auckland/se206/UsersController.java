@@ -15,7 +15,6 @@ import nz.ac.auckland.se206.ProfileBuilder.UserType;
 import nz.ac.auckland.se206.SceneManager.AppUi;
 
 public class UsersController {
-
   // Create an array to store the newly built profiles
   protected static ArrayList<ProfileBuilder> profiles = new ArrayList<ProfileBuilder>();
   // Get all the users
@@ -204,4 +203,5 @@ public class UsersController {
 
     sceneButtonIsIn.setRoot(SceneManager.getUiRoot(AppUi.MAIN_MENU));
   }
+
 }
