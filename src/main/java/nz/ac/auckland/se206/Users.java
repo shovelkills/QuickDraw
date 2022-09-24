@@ -1,5 +1,7 @@
 package nz.ac.auckland.se206;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -14,11 +16,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.imageio.ImageIO;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
+import javax.imageio.ImageIO;
 
 public class Users {
   // Stores the information in the JSON file as individual variables
@@ -153,7 +153,7 @@ public class Users {
    *
    * @param username the username the user inputted
    * @return boolean of if there are special characters in the username. True means there are
-   *         special characters in the string
+   *     special characters in the string
    */
   public static boolean isValidUsername(String username) {
 
@@ -244,7 +244,6 @@ public class Users {
     }
   }
 
-
   /**
    * Deletes the user JSON file and also removes it from the userlist
    *
@@ -260,7 +259,6 @@ public class Users {
     }
     saveUserList();
   }
-
 
   /**
    * Loads the profile picture that the user has drawn
@@ -401,7 +399,6 @@ public class Users {
     return userList;
   }
 
-
   public static String getProfilePicture() {
     return profilePicture;
   }
@@ -409,5 +406,4 @@ public class Users {
   public static void setProfilePicture(String profilePicture) {
     Users.profilePicture = profilePicture;
   }
-
 }

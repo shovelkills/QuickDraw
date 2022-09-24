@@ -15,46 +15,40 @@ import nz.ac.auckland.se206.SceneManager.AppUi;
 public class UserCreationController {
 
   // Initialise FXML items
-  @FXML
-  private Button createButton;
-  @FXML
-  private TextField usernameField;
-  @FXML
-  private ImageView userImage;
-  @FXML
-  private ImageView imageOption0;
-  @FXML
-  private ImageView imageOption1;
-  @FXML
-  private ImageView imageOption2;
-  @FXML
-  private ImageView imageOption3;
-  @FXML
-  private ImageView imageOption4;
-  @FXML
-  private ImageView imageOption5;
+  @FXML private Button createButton;
+  @FXML private TextField usernameField;
+  @FXML private ImageView userImage;
+  @FXML private ImageView imageOption0;
+  @FXML private ImageView imageOption1;
+  @FXML private ImageView imageOption2;
+  @FXML private ImageView imageOption3;
+  @FXML private ImageView imageOption4;
+  @FXML private ImageView imageOption5;
   // Initliase array for image options
   private ArrayList<ImageView> imageOptions = new ArrayList<ImageView>();
 
-  /**
-   * initialize will be called on start up
-   */
+  /** initialize will be called on start up */
   public void initialize() {
     // Add all the image options into the array
-    Collections.addAll(imageOptions, imageOption0, imageOption1, imageOption2, imageOption3,
-        imageOption4, imageOption5);
+    Collections.addAll(
+        imageOptions,
+        imageOption0,
+        imageOption1,
+        imageOption2,
+        imageOption3,
+        imageOption4,
+        imageOption5);
     // Loop through them and set event handlers onto them
     for (ImageView option : imageOptions) {
-      option.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
-        onSetImage(e);
-      });
-
+      option.addEventHandler(
+          MouseEvent.MOUSE_CLICKED,
+          e -> {
+            onSetImage(e);
+          });
     }
   }
 
-  /**
-   * onSetImage will set the users image to the one clicked
-   */
+  /** onSetImage will set the users image to the one clicked */
   @FXML
   private void onSetImage(Event e) {
     // Get the image selected
@@ -62,7 +56,6 @@ public class UserCreationController {
 
     // Set the user image to the one they picked
     userImage.setImage(image.getImage());
-
   }
 
   /**

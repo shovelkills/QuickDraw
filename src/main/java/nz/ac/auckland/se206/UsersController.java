@@ -135,23 +135,25 @@ public class UsersController {
    */
   protected static void addEvents(ImageView image, Button deleteButton, int number) {
     // Add the event handler to the image
-    image.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
-      // Add select profile event
-      onSelectProfile(e);
-    });
+    image.addEventHandler(
+        MouseEvent.MOUSE_CLICKED,
+        e -> {
+          // Add select profile event
+          onSelectProfile(e);
+        });
     // ADd the event handler to the delete profile button
-    deleteButton.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
-      // Add delete event
-      onDeleteProfile(e);
-    });
+    deleteButton.addEventHandler(
+        MouseEvent.MOUSE_CLICKED,
+        e -> {
+          // Add delete event
+          onDeleteProfile(e);
+        });
     selectUser(number);
   }
 
   // Declare the user grid from the FXML
-  @FXML
-  private HBox userHbox;
-  @FXML
-  private Button returnButton;
+  @FXML private HBox userHbox;
+  @FXML private Button returnButton;
   // profile amount to load in
   private int profileAmount = usersList.size();
 
@@ -175,13 +177,17 @@ public class UsersController {
     // Add event handlers to the profiles
     for (ProfileBuilder profile : profiles) {
       // Add select profile event
-      profile.imageView.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
-        onSelectProfile(e);
-      });
+      profile.imageView.addEventHandler(
+          MouseEvent.MOUSE_CLICKED,
+          e -> {
+            onSelectProfile(e);
+          });
       // Add delete profile event
-      profile.deleteProfileButton.addEventHandler(ActionEvent.ACTION, e -> {
-        onDeleteProfile(e);
-      });
+      profile.deleteProfileButton.addEventHandler(
+          ActionEvent.ACTION,
+          e -> {
+            onDeleteProfile(e);
+          });
     }
   }
 

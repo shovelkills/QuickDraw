@@ -53,7 +53,9 @@ public class ProfileBuilder {
 
   // Define the types of users a profile can be
   public enum UserType {
-    PLAYER, GUEST, ADD
+    PLAYER,
+    GUEST,
+    ADD
   }
 
   // Declare all fields that a user profile will have
@@ -82,20 +84,20 @@ public class ProfileBuilder {
 
     // Set up profiles according to their type
     switch (this.type) {
-      // Set up according to player type
+        // Set up according to player type
       case PLAYER:
         userNameLabel.setText(Users.getUserList().get(counter));
         // Load in the user's profile picture
         imageView.setImage(Users.loadProfilePicture(userNameLabel.getText()));
         break;
-      // Set up according to guest type
+        // Set up according to guest type
       case GUEST:
         imageView.setImage(guestImage);
         userNameLabel.setText("Guest");
         userSelectedLabel.setVisible(true);
         deleteProfileButton.setVisible(false);
         break;
-      // Set up according to add new player type
+        // Set up according to add new player type
       case ADD:
         imageView.setImage(addImage);
         userNameLabel.setText("Add New Player");
@@ -132,18 +134,20 @@ public class ProfileBuilder {
     imageView.setId(String.format("image%d", counter));
 
     // Event for hovering on
-    imageView.setOnMouseEntered(e -> {
-      imageView.setStyle(HOVERED_STYLE);
-      imageView.getScene().setCursor(Cursor.HAND);
-    });
+    imageView.setOnMouseEntered(
+        e -> {
+          imageView.setStyle(HOVERED_STYLE);
+          imageView.getScene().setCursor(Cursor.HAND);
+        });
 
     // Event for hovering off
-    imageView.setOnMouseExited(e -> {
-      imageView.setStyle(IDLE_STYLE);
-      if (imageView.getScene() != null) {
-        imageView.getScene().setCursor(Cursor.DEFAULT);
-      }
-    });
+    imageView.setOnMouseExited(
+        e -> {
+          imageView.setStyle(IDLE_STYLE);
+          if (imageView.getScene() != null) {
+            imageView.getScene().setCursor(Cursor.DEFAULT);
+          }
+        });
   }
 
   /** createUserNameLabel will set up the username label to be displayed */
