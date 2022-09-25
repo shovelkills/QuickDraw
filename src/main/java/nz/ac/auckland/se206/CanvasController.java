@@ -19,8 +19,10 @@ import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.embed.swing.SwingFXUtils;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
+import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Alert;
@@ -40,6 +42,7 @@ import javafx.scene.text.FontWeight;
 import javafx.stage.FileChooser;
 import javafx.util.Duration;
 import javax.imageio.ImageIO;
+import nz.ac.auckland.se206.SceneManager.AppUi;
 import nz.ac.auckland.se206.words.CategorySelector.Difficulty;
 
 /**
@@ -68,6 +71,7 @@ public class CanvasController {
   @FXML private Pane canvasPane;
   @FXML private Button clearButton;
   @FXML private ChoiceBox<String> difficultyMenu;
+  @FXML private Button backToMenuButton;
 
   // Define game object
   private Game game;
@@ -152,6 +156,7 @@ public class CanvasController {
     startButton.setVisible(true);
     startButton.setDisable(false);
     brushButton.setVisible(false);
+    backToMenuButton.setVisible(true);
     difficultyMenu.setVisible(true);
     // Select last played difficulty (default EASY if new game)
     difficultyMenu.setValue(difficultySettingsMap.get(Game.getDifficulty()));
@@ -386,6 +391,7 @@ public class CanvasController {
           brushButton.setVisible(false);
           clearButton.setVisible(false);
           restartButton.setVisible(true);
+          backToMenuButton.setVisible(true);
 
           // Unbind label properties bound to game properties
           wordLabel.textProperty().unbind();
@@ -466,6 +472,7 @@ public class CanvasController {
     startButton.setVisible(false);
     brushButton.setVisible(true);
     difficultyMenu.setVisible(false);
+    backToMenuButton.setVisible(false);
 
     // Get eraser colour
     Background currentBackground = canvasPane.getBackground();
@@ -501,5 +508,24 @@ public class CanvasController {
           currentX = x;
           currentY = y;
         });
+  }
+
+  /**
+   * Takes the user back to the main menu. Also resets the game in the canvas scene so loading a new
+   * game from the menu will present the user with a fresh game.
+   *
+   * @param event
+   * @throws IOException
+   * @throws URISyntaxException
+   * @throws CsvException
+   * @throws ModelException
+   */
+  @FXML
+  private void onBackToMenu(ActionEvent event)
+      throws IOException, URISyntaxException, CsvException, ModelException {
+    onRestartGame();
+    Button backButton = (Button) event.getSource();
+    Scene currentScene = backButton.getScene();
+    currentScene.setRoot(SceneManager.getUiRoot(AppUi.MAIN_MENU));
   }
 }
