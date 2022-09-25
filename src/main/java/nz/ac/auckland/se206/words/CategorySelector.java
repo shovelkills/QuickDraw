@@ -25,12 +25,22 @@ public class CategorySelector {
 
   private Map<Difficulty, List<String>> difficulty2categories;
 
+  /**
+   * CategorySelector will instantiate a category selector object to get words for the game
+   *
+   * @throws IOException exception to do with input output
+   * @throws URISyntaxException reading and writing file exception
+   * @throws CsvException reading spreadsheets exception
+   */
   public CategorySelector() throws IOException, URISyntaxException, CsvException {
+    // Declare a hashmap
     difficulty2categories = new HashMap<>();
     for (Difficulty difficulty : Difficulty.values()) {
+      // Add all the difficulties in with empty lists
       difficulty2categories.put(difficulty, new ArrayList<>());
     }
     for (String[] line : getLines()) {
+      // Place the words in the hash map
       difficulty2categories.get(Difficulty.valueOf(line[1])).add(line[0]);
     }
   }
@@ -55,13 +65,24 @@ public class CategorySelector {
     return getRandomCategory(new Random().nextInt(2) == 0 ? Difficulty.E : Difficulty.M);
   }
 
+  /**
+   * getEasyMediumHardCategory will get a word from any of the three categories
+   *
+   * @return
+   */
   public String getEasyMediumHardCategory() {
+    // Choose a random category
     int number = new Random().nextInt(3);
+    // Get the easy word
     if (number == 0) {
       return getRandomCategory(Difficulty.E);
-    } else if (number == 1) {
+    }
+    // Get the medium word
+    else if (number == 1) {
       return getRandomCategory(Difficulty.M);
-    } else {
+    }
+    // Get the hard word
+    else {
       return getRandomCategory(Difficulty.H);
     }
   }
@@ -86,10 +107,19 @@ public class CategorySelector {
     return selection;
   }
 
+  /**
+   * getLines will read the lines from the CSV file
+   *
+   * @return
+   * @throws IOException
+   * @throws CsvException
+   * @throws URISyntaxException
+   */
   protected List<String[]> getLines() throws IOException, CsvException, URISyntaxException {
+    // Get the CSV File
     File fileName =
         new File(CategorySelector.class.getResource("/category_difficulty.csv").toURI());
-
+    // Read in the word
     try (FileReader fr = new FileReader(fileName, StandardCharsets.UTF_8);
         CSVReader reader = new CSVReader(fr)) {
       return reader.readAll();

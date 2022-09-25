@@ -129,7 +129,7 @@ public class CanvasController {
     titleLabel.setFont(font);
 
     // Set up the pre-game UI elements that are in common with restarting the game
-    setPreGameUI();
+    setPreGameInterface();
 
     // Create a new thread for the alternating colours task
     Thread colourThread = new Thread(alternateColoursTask);
@@ -142,7 +142,7 @@ public class CanvasController {
   /**
    * Sets UI elements which are common to the initialisation of the scene and restarting the game.
    */
-  private void setPreGameUI() {
+  private void setPreGameInterface() {
     // Bind label properties to game properties
     wordLabel.textProperty().bind(game.getCurrentPromptProperty());
     timerLabel.textProperty().bind(game.getTimeRemainingAsStringBinding());
@@ -170,16 +170,21 @@ public class CanvasController {
   /** Set the game difficulty through the UI dropdown, update the word label */
   @FXML
   private void onDifficultySelect() {
+    // gets the current difficulty we are on from the menu
     switch (difficultyMenu.getValue()) {
+        // Sets the difficulty of the game to easy
       case "EASY":
         game.setDifficulty(Difficulty.E);
         break;
+        // Sets the difficulty of the game to medium
       case "MEDIUM":
         game.setDifficulty(Difficulty.M);
         break;
+        // Sets the difficulty of the game to hard
       case "HARD":
         game.setDifficulty(Difficulty.H);
         break;
+        // Sets the difficulty of the game to master
       case "MASTER":
         game.setDifficulty(Difficulty.MS);
         break;
@@ -285,7 +290,7 @@ public class CanvasController {
     // Reset game variables and concurrent service
     game.resetGame();
     // Reset UI elements
-    setPreGameUI();
+    setPreGameInterface();
   }
 
   /**

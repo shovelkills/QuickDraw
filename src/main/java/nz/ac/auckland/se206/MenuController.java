@@ -26,6 +26,7 @@ import javafx.util.Duration;
 import nz.ac.auckland.se206.SceneManager.AppUi;
 
 public class MenuController {
+  // Declare the menu objects
   @FXML private Canvas canvas;
   @FXML private Label titleLabel;
   @FXML private StackPane stackPane;
@@ -78,6 +79,7 @@ public class MenuController {
     // Set up the image and label in the UI
     stackPane.getChildren().add(selectedUserLabel);
     StackPane.setAlignment(selectedUserLabel, Pos.BOTTOM_CENTER);
+    // Add the selected user Label in
     selectedUserLabel.setTextAlignment(TextAlignment.CENTER);
     selectedUserLabel.setText("Guest");
     selectedUserLabel.setMaxHeight(60);
