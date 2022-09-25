@@ -17,7 +17,7 @@ public class Testing {
 
   private static void testDeleteProfilePicture() {
     Users.loadUser("thelegend27");
-    Users.deleteProfilePicture();
+    Users.deleteProfilePicture("thelegend27");
   }
 
   public static void testLoadingJSONFile() {
@@ -42,8 +42,8 @@ public class Testing {
 
     // Note - do not use special characters when testing
     Users.createUser("//"); // Error in creating due to special characters
-    Users.createUser(
-        "thelegend27"); // Error for first one as there is already a file with same name
+    Users.createUser("thelegend27"); // Error for first one as there is already a file with same
+    // name
     Users.createUser("thelegend28"); // Note - must delete file after running, might have to refresh
     // users folder to see new created file
     System.out.println("Username " + Users.getUserName());

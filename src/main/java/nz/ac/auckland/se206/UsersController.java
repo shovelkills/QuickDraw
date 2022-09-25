@@ -123,6 +123,7 @@ public class UsersController {
     onSelectProfile(event);
     // Delete the user in the JSON file
     Users.deleteUser(username);
+    Users.deleteProfilePicture(username);
   }
 
   /**
