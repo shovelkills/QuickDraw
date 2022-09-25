@@ -114,7 +114,7 @@ public class Users {
       userMap.put("gamesWon", 0);
       userMap.put("gamesLost", 0);
       userMap.put("wordHistory", new ArrayList<String>());
-      userMap.put("fastestGame", 0);
+      userMap.put("fastestGame", -1);
       userMap.put("fastestWord", " ");
       userMap.put("timeHistory", new ArrayList<Double>());
 
@@ -237,7 +237,6 @@ public class Users {
     }
   }
 
-
   /**
    * Deletes the user JSON file and also removes it from the userlist
    *
@@ -253,7 +252,6 @@ public class Users {
     }
     saveUserList();
   }
-
 
   /**
    * Loads the profile picture that the user has drawn
@@ -324,8 +322,10 @@ public class Users {
     Users.wordHistory.add(word);
   }
 
-  public static void addTimeHistory(int time) {
-    Users.timeHistory.add((double) time);
+  public static void addTimeHistory(int time, String word) {
+    int solvetime = 60 - time;
+    Users.timeHistory.add((double) solvetime);
+    checkFastestTime(solvetime, word);
   }
 
   // Getters and setter methods below.
@@ -351,8 +351,12 @@ public class Users {
     return fastestTime;
   }
 
-  public static void setFastestTime(int fastestTime) {
-    Users.fastestTime = fastestTime;
+  public static void checkFastestTime(int time, String word) {
+    if (time <= Users.fastestTime || Users.fastestTime == -1) {
+      Users.fastestTime = time;
+      setFastestWord(word);
+    }
+    addWordHistory(word);
   }
 
   public static String getUserName() {
@@ -379,7 +383,6 @@ public class Users {
     return userList;
   }
 
-
   public static String getProfilePicture() {
     return profilePicture;
   }
@@ -387,5 +390,4 @@ public class Users {
   public static void setProfilePicture(String profilePicture) {
     Users.profilePicture = profilePicture;
   }
-
 }

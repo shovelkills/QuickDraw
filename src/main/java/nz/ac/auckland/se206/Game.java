@@ -116,6 +116,7 @@ public class Game {
                             if (getCurrentPrompt()
                                 .equals(
                                     currentPredictions.get(i).getClassName().replace("_", " "))) {
+                              Users.addTimeHistory(timer.getValue().intValue(), getCurrentPrompt());
                               endGame(true);
                               return;
                             }
@@ -127,6 +128,7 @@ public class Game {
                     });
               }
               System.out.println("LOST IN TASK");
+              Users.addTimeHistory(0, getCurrentPrompt());
               endGame(false);
               return null;
             }
