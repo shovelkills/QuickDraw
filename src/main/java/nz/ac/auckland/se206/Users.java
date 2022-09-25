@@ -317,7 +317,7 @@ public class Users {
 
     fastestTime = 0;
 
-    wordHistory = null;
+    wordHistory = new ArrayList<String>();
 
     timeHistory = null;
   }

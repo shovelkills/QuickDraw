@@ -43,6 +43,7 @@ import javafx.stage.FileChooser;
 import javafx.util.Duration;
 import javax.imageio.ImageIO;
 import nz.ac.auckland.se206.SceneManager.AppUi;
+import nz.ac.auckland.se206.words.CategorySelector;
 import nz.ac.auckland.se206.words.CategorySelector.Difficulty;
 
 /**
@@ -112,6 +113,7 @@ public class CanvasController {
    */
   public void initialize() throws IOException, URISyntaxException, CsvException, ModelException {
     // Instantiate a new game object on first opening the scene
+    CategorySelector.loadCategories();
     game = new Game(this);
     // Build difficulty settings map for the dropdown
     difficultySettingsMap.put(Difficulty.E, "EASY");

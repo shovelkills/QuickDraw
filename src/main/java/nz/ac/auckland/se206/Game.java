@@ -40,16 +40,17 @@ public class Game {
   private HashMap<Difficulty, String> currentSelection;
   private StringProperty currentPrompt = new SimpleStringProperty(" ");
   private IntegerProperty timer = new SimpleIntegerProperty(60);
-  private CategorySelector cs;
 
   public Game(CanvasController canvas)
       throws IOException, URISyntaxException, CsvException, ModelException {
+    // Set the canvas
     this.canvas = canvas;
+    // Set default difficulty to easy
     difficulty = Difficulty.E;
-    cs = new CategorySelector();
     model = new DoodlePrediction();
-    currentSelection = cs.getSelection();
-    currentPrompt.setValue(currentSelection.get(difficulty));
+    currentSelection = CategorySelector.getSelection();
+    String word = currentSelection.get(difficulty);
+    currentPrompt.setValue(word);
   }
 
   /**
@@ -90,7 +91,7 @@ public class Game {
   public void resetGame() {
     service.reset();
     resetTimer(difficulty);
-    currentSelection = cs.getSelection();
+    currentSelection = CategorySelector.getSelection();
   }
 
   /**
