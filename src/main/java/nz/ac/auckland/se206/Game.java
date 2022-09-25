@@ -26,7 +26,15 @@ import nz.ac.auckland.se206.words.CategorySelector.Difficulty;
  * Runs the prediction model to determine win condition.
  */
 public class Game {
+  // Declare difficulty field
+
   private static Difficulty difficulty;
+
+  public static Difficulty getDifficulty() {
+    return difficulty;
+  }
+
+  // Declare fields used in the game
   private DoodlePrediction model;
   private CanvasController canvas;
   private HashMap<Difficulty, String> currentSelection;
@@ -42,10 +50,6 @@ public class Game {
     model = new DoodlePrediction();
     currentSelection = cs.getSelection();
     currentPrompt.setValue(currentSelection.get(difficulty));
-  }
-
-  public static Difficulty getDifficulty() {
-    return difficulty;
   }
 
   /**
@@ -98,25 +102,35 @@ public class Game {
 
   private Service<Void> service =
       new Service<Void>() {
+        // Create the task to handle the game
         protected Task<Void> createTask() {
+          // Main game loop thread
           return new Task<Void>() {
             protected Void call() throws InterruptedException {
+              // Check that the timer is running
               while (timer.intValue() > 1) {
+                // Wait 1 second
                 Thread.sleep(1000);
                 Platform.runLater(
                     () -> {
+                      // Decrement timer
                       timer.set(timer.get() - 1);
 
                       try {
+                        // Check if the player is currently drawing
                         if (canvas.getIsDrawing()) {
+                          // Get the top 10 predictions
                           List<Classifications.Classification> currentPredictions =
                               model.getPredictions(canvas.getCurrentSnapshot(), 10);
+                          // Update the predictions
                           canvas.updatePredictionGridDisplay(currentPredictions);
                           for (int i = 0; i < 3; i++) {
+                            // Check if the top 3 words are what we are drawing
                             if (getCurrentPrompt()
                                 .equals(
                                     currentPredictions.get(i).getClassName().replace("_", " "))) {
                               Users.addTimeHistory(timer.getValue().intValue(), getCurrentPrompt());
+                              // End the game
                               endGame(true);
                               return;
                             }
@@ -129,6 +143,7 @@ public class Game {
               }
               System.out.println("LOST IN TASK");
               Users.addTimeHistory(0, getCurrentPrompt());
+              // End the game
               endGame(false);
               return null;
             }
@@ -137,7 +152,12 @@ public class Game {
         ;
       };
 
+  /**
+   * @param isWin checks if the user has won
+   * @throws InterruptedException interrupt exception stops the function
+   */
   private void endGame(boolean isWin) throws InterruptedException {
+    // Cancel service and end game
     canvas.onEndGame(isWin);
     service.cancel();
   }
