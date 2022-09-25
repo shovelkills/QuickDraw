@@ -81,13 +81,14 @@
           </HBox>
             <HBox alignment="TOP_CENTER" prefHeight="0.0" prefWidth="400.0" spacing="10.0">
                <children>
-                  <Button fx:id="restartButton" alignment="CENTER" mnemonicParsing="false" onAction="#onRestartGame" prefHeight="25.0" prefWidth="96.0" text="Restart" visible="false" />
+                  <Button fx:id="restartButton" alignment="CENTER" mnemonicParsing="false" onAction="#onRestartGame" prefHeight="25.0" prefWidth="96.0" text="Restart" />
                   <Button fx:id="brushButton" mnemonicParsing="false" onAction="#onBrushChange" text="Eraser">
                      <HBox.margin>
                         <Insets />
                      </HBox.margin>
                   </Button>
-              <Button fx:id="clearButton" mnemonicParsing="false" onAction="#onClear" text="Clear" visible="false" />
+              <Button fx:id="clearButton" mnemonicParsing="false" onAction="#onClear" text="Clear" />
+                  <Button fx:id="backToMenuButton" mnemonicParsing="false" onAction="#onBackToMenu" text="Back to Main Menu" />
                </children>
             </HBox>
          </children>
