@@ -320,7 +320,6 @@ public class CanvasController {
   private File saveCurrentSnapshotOnFile() throws IOException {
     // Create a file chooser
     FileChooser fileChooser = new FileChooser();
-
     // Set extension filter for bmp files
     FileChooser.ExtensionFilter extFilter =
         new FileChooser.ExtensionFilter("BMP files (*.bmp)", "*.bmp");
@@ -392,10 +391,13 @@ public class CanvasController {
           // game.
           if (isWin) {
             wordLabel.setText(getWinMessage());
+            Users.increaseWins();
           } else {
             System.out.println("LOST");
             wordLabel.setText(getLossMessage());
+            Users.increaseLosses();
           }
+          Users.saveUser();
 
           // Create a new alert
           Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
