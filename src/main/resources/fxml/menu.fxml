@@ -16,21 +16,26 @@
                <children>
                   <Button fx:id="startButton" mnemonicParsing="false" onAction="#onStartGame" prefHeight="77.0" prefWidth="166.0" text="Start New Game" StackPane.alignment="CENTER">
                      <StackPane.margin>
-                        <Insets bottom="100.0" top="50.0" />
+                        <Insets bottom="200.0" />
                      </StackPane.margin>
                   </Button>
                   <Button fx:id="instructionsButton" mnemonicParsing="false" prefHeight="77.0" prefWidth="166.0" text="Instructions">
                      <StackPane.margin>
-                        <Insets top="150.0" />
+                        <Insets />
                      </StackPane.margin></Button>
                   <Button fx:id="exitButton" mnemonicParsing="false" onAction="#onExitGame" prefHeight="77.0" prefWidth="166.0" text="Exit">
                      <StackPane.margin>
-                        <Insets top="350.0" />
+                        <Insets top="200.0" />
                      </StackPane.margin>
                   </Button>
                   <Button fx:id="selectedUserButton" mnemonicParsing="false" onAction="#onUserSelect" StackPane.alignment="BOTTOM_CENTER">
                      <StackPane.margin>
-                        <Insets bottom="50.0" />
+                        <Insets bottom="100.0" />
+                     </StackPane.margin>
+                  </Button>
+                  <Button fx:id="statsButton" mnemonicParsing="false" onAction="#onMoveToStats" text="Stats" StackPane.alignment="BOTTOM_CENTER">
+                     <StackPane.margin>
+                        <Insets />
                      </StackPane.margin>
                   </Button>
                   <Label fx:id="titleLabel" alignment="CENTER" prefHeight="85.0" prefWidth="605.0" text="DRAW GAME" textFill="WHITE" StackPane.alignment="TOP_CENTER">

@@ -9,6 +9,7 @@ import javafx.animation.Timeline;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -34,14 +35,26 @@ public class MenuController {
   @FXML private Button instructionsButton;
   @FXML private Button exitButton;
   @FXML private Button selectedUserButton;
+  @FXML private Button statsButton;
 
+  // Declare the user static fields
   private static ImageView selectedUserImage;
   private static Label selectedUserLabel;
 
+  /**
+   * updateUserImage will update the selected profile's image
+   *
+   * @param image takes in the user's image
+   */
   private static void updateUserImage(Image image) {
     selectedUserImage.setImage(image);
   }
 
+  /**
+   * updateUser will update the User's label and image
+   *
+   * @param image takes in the user's image
+   */
   public static void updateUser(Image image) {
     updateUserImage(image);
     selectedUserLabel.setText(Users.getUserName());
@@ -82,7 +95,9 @@ public class MenuController {
     // Add the selected user Label in
     selectedUserLabel.setTextAlignment(TextAlignment.CENTER);
     selectedUserLabel.setText("Guest");
+    // Set up the dimensions
     selectedUserLabel.setMaxHeight(60);
+    StackPane.setMargin(selectedUserLabel, new Insets(0, 0, 50, 0));
     selectedUserImage.setFitHeight(80);
     selectedUserImage.setFitWidth(108);
     // Load in the guest image
@@ -124,6 +139,15 @@ public class MenuController {
     Scene sceneButtonIsIn = button.getScene();
     // Move to the next scene
     sceneButtonIsIn.setRoot(SceneManager.getUiRoot(AppUi.GAME));
+  }
+
+  @FXML
+  private void onMoveToStats(ActionEvent event) {
+    // Get the scene currently in
+    Button button = (Button) event.getSource();
+    Scene sceneButtonIsIn = button.getScene();
+    // Move to the next scene
+    sceneButtonIsIn.setRoot(SceneManager.getUiRoot(AppUi.STATS));
   }
 
   @FXML
