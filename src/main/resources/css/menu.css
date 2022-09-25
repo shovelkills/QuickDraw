@@ -1,21 +1,30 @@
+
+.button{
+	-fx-background-radius: 8px;
+}
 .startButton {
-	-fx-background-color: #FFFFFF;
+	-fx-background-color: linear-gradient(to left bottom, #1168ec, #009aff, #00bdf1, #00d69b, #42e620);
+	-fx-background-radius: 25px;
 }
 .instructionsButton {
-	-fx-background-color: #FFFFFF;
+	-fx-background-color: linear-gradient(to left bottom, #1168ec, #009aff, #00bdf1, #00d69b, #42e620);
+	-fx-background-radius: 25px;
 }
 .exitButton {
-	-fx-background-color: #FFFFFF;
+	-fx-background-color: linear-gradient(to left bottom, #1168ec, #009aff, #00bdf1, #00d69b, #42e620);
+	-fx-background-radius: 25px;
 }
 .startButton:hover {
-	-fx-background-color: #000000;
+	-fx-background-color: linear-gradient(to right top, #1168ec, #009aff, #00bdf1, #00d69b, #42e620);
+	-fx-background-position: right center; /* change the direction of the change here */
 	-fx-text-fill: #FFFFFF;
 }
 .instructionsButton:hover {
-	-fx-background-color: #000000;
+	-fx-background-color: linear-gradient(to right top, #1168ec, #009aff, #00bdf1, #00d69b, #42e620);
 	-fx-text-fill: #FFFFFF;
 }
 .exitButton:hover {
-	-fx-background-color: #000000;	
+	-fx-background-color: linear-gradient(to right top, #1168ec, #009aff, #00bdf1, #00d69b, #42e620);
 	-fx-text-fill: #FFFFFF;
-}
+}	
+
