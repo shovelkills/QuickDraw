@@ -34,12 +34,15 @@ public class Users {
   private static Map<?, ?> userInfo;
 
   private static String fastestWord;
-  private static String folderDirectory;
+  private static String folderDirectory = System.getProperty("user.dir");
   private static String profilePicture;
 
   private static String recentUser;
   private static String userName;
   protected static Image userImage = ProfileBuilder.userImage;
+
+  // Only one guest player can be referenced through Users at one time
+  private static GuestPlayer guestPlayer;
 
   /**
    * This method finds the local files stored for the users by inputting their username
@@ -47,17 +50,18 @@ public class Users {
    * @param username the username of the user
    */
   public static void loadUser(String username) {
-
+    // Check for guest profile
+    if (username == "Guest") {
+      loadGuest(guestPlayer);
+      setRecentUser(username);
+      return;
+    }
     if (isValidUsername(username)) {
       // Change to show in GUI
       System.err.println("You cannot have special characters in username");
       return;
-    } else if (username == "Guest") {
-      loadGuest();
-      return;
     }
     // Creates a jsonParser to read the file
-    folderDirectory = System.getProperty("user.dir");
     try (FileReader reader =
         new FileReader(folderDirectory + "/src/main/resources/users/" + username + ".json")) {
       // Reads the JSON file and casts and stores it as a Map
@@ -102,8 +106,6 @@ public class Users {
       System.err.println("You cannot have special characters in username");
       return false;
     }
-
-    folderDirectory = System.getProperty("user.dir");
     try (FileReader reader =
         new FileReader(folderDirectory + "/src/main/resources/users/" + username + ".json")) {
       // Change to show on GUI
@@ -181,6 +183,10 @@ public class Users {
 
   /** Saves the data of the user to a JSON file after a game finishes */
   public static void saveUser() {
+    if (userName == "Guest") {
+      guestPlayer.saveGuest();
+      return;
+    }
     File dir = new File(folderDirectory + "/src/main/resources/users/");
     try (Writer writer = new FileWriter(new File(dir, userName + ".json"))) {
 
@@ -208,7 +214,6 @@ public class Users {
   /** Gets the userlist and recent user list from the JSON file */
   public static void loadUsersFromList() {
     // Reads the userlist file
-    folderDirectory = System.getProperty("user.dir");
     try (FileReader reader =
         new FileReader(folderDirectory + "/src/main/resources/users/userlist.json")) {
 
@@ -306,20 +311,28 @@ public class Users {
     file.delete();
   }
 
-  private static void loadGuest() {
+  /**
+   * Loads the guest statistics into the current player statistics, allowing for a guest profile to
+   * retain their statistics for that session even if another profile has also played during this
+   * session
+   *
+   * @param sessionGuest The current GuestPlayer object for this session
+   */
+  private static void loadGuest(GuestPlayer sessionGuest) {
     // Add the information to the guest
     userName = "Guest";
-    fastestWord = null;
+    fastestWord = guestPlayer.getFastestWord();
+    wins = guestPlayer.getWins();
+    losses = guestPlayer.getLosses();
+    fastestTime = guestPlayer.getFastestTime();
+    wordHistory = guestPlayer.getWordHistroy();
+    timeHistory = guestPlayer.getTimeHistory();
+    setRecentUser(userName);
+  }
 
-    wins = 0;
-
-    losses = 0;
-
-    fastestTime = 0;
-
-    wordHistory = null;
-
-    timeHistory = null;
+  /** Creates a new guest player instance with reset stats (as if no games played) */
+  public static void createNewGuest() {
+    guestPlayer = new GuestPlayer();
   }
 
   // updates the userList by adding new user to list
@@ -329,12 +342,12 @@ public class Users {
     saveUserList();
   }
 
-  // Increases the wins and losses
-
+  // Increases current user's wins by 1
   public static void increaseWins() {
     Users.wins++;
   }
 
+  // Increases current user's losses by 1
   public static void increaseLosses() {
     Users.losses++;
   }
@@ -379,6 +392,9 @@ public class Users {
       setFastestWord(word);
     }
     addWordHistory(word);
+    if (recentUser == "Guest") {
+      guestPlayer.saveGuest();
+    }
   }
 
   public static String getUserName() {

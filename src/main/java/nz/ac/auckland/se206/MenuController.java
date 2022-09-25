@@ -112,6 +112,9 @@ public class MenuController {
     titleAnimation.start();
     // Load all the users from the user list
     Users.loadUsersFromList();
+    // Instantiate a new guest for this session.
+    Users.createNewGuest();
+    Users.loadUser("Guest");
   }
 
   private void alternateColours(Label label, Color colour1, Color colour2) {
