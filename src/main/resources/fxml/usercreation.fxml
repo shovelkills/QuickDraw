@@ -6,92 +6,85 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
 <HBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="760.0" prefWidth="900.0" style="-fx-background-color: #96e7ff;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nz.ac.auckland.se206.UserCreationController">
    <children>
-      <AnchorPane prefHeight="200.0" prefWidth="200.0">
+      <HBox fx:id="userHbox" alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
          <children>
-            <StackPane layoutX="-142.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="760.0" prefWidth="900.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="-142.0" AnchorPane.rightAnchor="-141.0" AnchorPane.topAnchor="0.0">
+            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="25.0">
                <children>
-                  <HBox fx:id="userHbox" alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
-                     <children>
-                        <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="30.0">
-                           <children>
-                              <ImageView fx:id="userImage" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../users/happy.png" />
-                                 </image>
-                                 <VBox.margin>
-                                    <Insets />
-                                 </VBox.margin>
-                              </ImageView>
-                              <TextField fx:id="usernameField" alignment="BOTTOM_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="193.0" promptText="Username">
-                                 <VBox.margin>
-                                    <Insets top="50.0" />
-                                 </VBox.margin></TextField>
-                              <Button fx:id="createButton" alignment="CENTER" mnemonicParsing="false" onAction="#onCreateProfile" style="-fx-cursor: hand;" text="Create">
-                                 <VBox.margin>
-                                    <Insets />
-                                 </VBox.margin>
-                              </Button>
-                              <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0" spacing="30.0">
-                                 <children>
-                                    <ImageView fx:id="imageOption0" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" styleClass="image-style">
-                                       <image>
-                                          <Image url="@../images/profile1.png" />
-                                       </image>
-                                    </ImageView>
-                                    <ImageView fx:id="imageOption1" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" styleClass="image-style">
-                                       <image>
-                                          <Image url="@../images/profile2.png" />
-                                       </image>
-                                    </ImageView>
-                                    <ImageView fx:id="imageOption2" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" styleClass="image-style">
-                                       <image>
-                                          <Image url="@../images/profile3.png" />
-                                       </image>
-                                    </ImageView>
-                                    <ImageView fx:id="imageOption3" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" styleClass="image-style">
-                                       <image>
-                                          <Image url="@../images/profile4.png" />
-                                       </image>
-                                    </ImageView>
-                                    <ImageView fx:id="imageOption4" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" styleClass="image-style">
-                                       <image>
-                                          <Image url="@../images/profile5.png" />
-                                       </image>
-                                    </ImageView>
-                                    <ImageView fx:id="imageOption5" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" styleClass="image-style">
-                                       <image>
-                                          <Image url="@../images/profile6.png" />
-                                       </image>
-                                    </ImageView>
-                                 </children>
-                                 <VBox.margin>
-                                    <Insets top="50.0" />
-                                 </VBox.margin>
-                              </HBox>
-                           </children>
-                        </VBox>
-                     </children></HBox>
-                  <Label fx:id="titleLabel" alignment="CENTER" prefHeight="85.0" prefWidth="605.0" text="USER CREATE" textFill="WHITE" StackPane.alignment="TOP_CENTER">
+                  <Label fx:id="titleLabel" alignment="CENTER" prefHeight="85.0" prefWidth="605.0" text="USER CREATE" textFill="WHITE">
                      <font>
                         <Font name="System Bold" size="75.0" />
                      </font>
                   </Label>
-                  <Button fx:id="returnButton" mnemonicParsing="false" onAction="#onExitSelection" style="-fx-cursor: hand;" text="Go Back" StackPane.alignment="BOTTOM_CENTER">
-                     <StackPane.margin>
-                        <Insets bottom="50.0" />
-                     </StackPane.margin>
+                  <ImageView fx:id="userImage" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../users/happy.png" />
+                     </image>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                  </ImageView>
+                  <Label text="Enter Username">
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                  </Label>
+                  <TextField fx:id="usernameField" alignment="BOTTOM_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="193.0" promptText="Username">
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                  </TextField>
+                  <Button fx:id="createButton" alignment="CENTER" mnemonicParsing="false" onAction="#onCreateProfile" style="-fx-cursor: hand;" text="Create">
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
                   </Button>
+                  <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0" spacing="30.0">
+                     <children>
+                        <ImageView fx:id="imageOption0" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" styleClass="image-style">
+                           <image>
+                              <Image url="@../images/profile1.png" />
+                           </image>
+                        </ImageView>
+                        <ImageView fx:id="imageOption1" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" styleClass="image-style">
+                           <image>
+                              <Image url="@../images/profile2.png" />
+                           </image>
+                        </ImageView>
+                        <ImageView fx:id="imageOption2" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" styleClass="image-style">
+                           <image>
+                              <Image url="@../images/profile3.png" />
+                           </image>
+                        </ImageView>
+                        <ImageView fx:id="imageOption3" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" styleClass="image-style">
+                           <image>
+                              <Image url="@../images/profile4.png" />
+                           </image>
+                        </ImageView>
+                        <ImageView fx:id="imageOption4" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" styleClass="image-style">
+                           <image>
+                              <Image url="@../images/profile5.png" />
+                           </image>
+                        </ImageView>
+                        <ImageView fx:id="imageOption5" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" styleClass="image-style">
+                           <image>
+                              <Image url="@../images/profile6.png" />
+                           </image>
+                        </ImageView>
+                     </children>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                  </HBox>
+                  <Button fx:id="returnButton" mnemonicParsing="false" onAction="#onExitSelection" style="-fx-cursor: hand;" text="Go Back" />
                </children>
-            </StackPane>
+            </VBox>
          </children>
-      </AnchorPane>
+      </HBox>
    </children>
 </HBox>
