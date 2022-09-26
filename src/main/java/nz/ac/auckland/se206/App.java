@@ -59,11 +59,11 @@ public class App extends Application {
   public static StatsController getStatsController() {
     return statsController;
   }
-  
+
   public static MenuController getMenuController() {
     return menuController;
   }
-  
+
   public static UsersController getUsersController() {
     return usersController;
   }
