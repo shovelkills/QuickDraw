@@ -73,6 +73,7 @@ public class CanvasController {
   @FXML private Button clearButton;
   @FXML private ChoiceBox<String> difficultyMenu;
   @FXML private Button backToMenuButton;
+  @FXML private Button saveButton;
 
   // Define game object
   private Game game;
@@ -155,9 +156,12 @@ public class CanvasController {
     // Set UI elements for pre-game
     canvas.setDisable(true);
     restartButton.setVisible(false);
+    // Turn off start button
     startButton.setVisible(true);
     startButton.setDisable(false);
     brushButton.setVisible(false);
+    // Disable save image
+    saveButton.setVisible(false);
     backToMenuButton.setVisible(true);
     difficultyMenu.setVisible(false);
     // Select last played difficulty (default EASY if new game)
@@ -394,6 +398,7 @@ public class CanvasController {
           clearButton.setVisible(false);
           restartButton.setVisible(true);
           backToMenuButton.setVisible(true);
+          saveButton.setVisible(true);
 
           // Unbind label properties bound to game properties
           wordLabel.textProperty().unbind();
@@ -411,29 +416,6 @@ public class CanvasController {
             Users.increaseLosses();
           }
           Users.saveUser();
-
-          // Create a new alert
-          Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-          // Set up the alert accordingly
-          alert.setTitle("Save File");
-          alert.setHeaderText("Would you like to save your image?");
-          alert.setResizable(false);
-          alert.setContentText("Select OK or Cancel.");
-          // Show the alert
-          Optional<ButtonType> result = alert.showAndWait();
-          // Check if the person presses OK
-          if (result.get() == ButtonType.OK) {
-            try {
-              // Save the current canvas as a file in the tmp folder
-              saveCurrentSnapshotOnFile();
-            } catch (IOException e) {
-
-              e.printStackTrace();
-            }
-          } else if (result.get() == ButtonType.CANCEL) {
-            // Do nothing if cancelled is pressed
-            return;
-          }
         });
   }
 
@@ -532,5 +514,38 @@ public class CanvasController {
     Scene currentScene = backButton.getScene();
     // Move back to main menu
     currentScene.setRoot(SceneManager.getUiRoot(AppUi.MAIN_MENU));
+  }
+
+  /**
+   * onSaveImage will ask the user if they want to save their image and then allow the user to save
+   * the image on their computer
+   *
+   * @param event the Action Event taken in from FXML
+   */
+  @FXML
+  private void onSaveImage(ActionEvent event) {
+    // Create a new alert
+    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+    // Set up the alert accordingly
+    alert.setTitle("Save File");
+    alert.setHeaderText("Would you like to save your image?");
+    alert.setResizable(false);
+    alert.setContentText("Select OK or Cancel.");
+
+    // Show the alert
+    Optional<ButtonType> result = alert.showAndWait();
+    // Check if the person presses yes
+    if (result.get() == ButtonType.OK) {
+      try {
+        // Save the current canvas as a file in the tmp folder
+        saveCurrentSnapshotOnFile();
+      } catch (IOException e) {
+
+        e.printStackTrace();
+      }
+    } else if (result.get() == ButtonType.CANCEL) {
+      // Do nothing if no is pressed
+      return;
+    }
   }
 }
