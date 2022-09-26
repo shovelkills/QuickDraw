@@ -1,30 +1,42 @@
+.menuButton{
+	-fx-background-radius: 0;
+	-fx-min-width: 300;
+}
 
-.button{
-	-fx-background-radius: 8px;
+.menuButton:hover{
+	-fx-min-width: 350;
 }
-.startButton {
-	-fx-background-color: linear-gradient(to left bottom, #1168ec, #009aff, #00bdf1, #00d69b, #42e620);
-	-fx-background-radius: 25px;
-}
-.instructionsButton {
-	-fx-background-color: linear-gradient(to left bottom, #1168ec, #009aff, #00bdf1, #00d69b, #42e620);
-	-fx-background-radius: 25px;
-}
-.exitButton {
-	-fx-background-color: linear-gradient(to left bottom, #1168ec, #009aff, #00bdf1, #00d69b, #42e620);
-	-fx-background-radius: 25px;
-}
-.startButton:hover {
-	-fx-background-color: linear-gradient(to right top, #1168ec, #009aff, #00bdf1, #00d69b, #42e620);
-	-fx-background-position: right center; /* change the direction of the change here */
-	-fx-text-fill: #FFFFFF;
-}
-.instructionsButton:hover {
-	-fx-background-color: linear-gradient(to right top, #1168ec, #009aff, #00bdf1, #00d69b, #42e620);
-	-fx-text-fill: #FFFFFF;
-}
-.exitButton:hover {
-	-fx-background-color: linear-gradient(to right top, #1168ec, #009aff, #00bdf1, #00d69b, #42e620);
-	-fx-text-fill: #FFFFFF;
-}	
 
+.menuButton:pressed{
+	-fx-min-width: 360;
+}
+
+.profileButton{
+	-fx-background-radius: 10;
+	-fx-background-color: #F0A88E;
+}
+
+.profileButton:hover{
+	-fx-background-color: #2AA1D0;
+}
+
+.profileButton:pressed{
+	-fx-background-color: #05668D;
+}
+
+.pencilTip{
+	-fx-shape: "M 100 400 L 100 200 L 350 300 Z";
+	-fx-pref-width: 70;
+	-fx-max-height: Infinity;
+}
+
+.background{
+	-fx-background-image: url("../images/drawn_wallpaper.png");
+	-fx-background-size: 1920 1080;
+}
+
+.menuBox{
+	-fx-background-color: #F0A88E;
+	-fx-background-radius: 50 50 0 0;
+	-fx-effect: dropshadow(gaussian, black, 40, 0.05, 0.0, 0.0);
+}

@@ -10,8 +10,6 @@ import javafx.animation.Timeline;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Alert;
@@ -20,46 +18,25 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.StackPane;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 import nz.ac.auckland.se206.SceneManager.AppUi;
 
 public class MenuController {
-  // Declare the user static fields
-  private static ImageView selectedUserImage;
-  private static Label selectedUserLabel;
-
-  /**
-   * updateUserImage will update the selected profile's image
-   *
-   * @param image takes in the user's image
-   */
-  private static void updateUserImage(Image image) {
-    selectedUserImage.setImage(image);
-  }
-
-  /**
-   * updateUser will update the User's label and image
-   *
-   * @param image takes in the user's image
-   */
-  public static void updateUser(Image image) {
-    updateUserImage(image);
-    selectedUserLabel.setText(Users.getUserName());
-  }
-
   // Declare the menu objects
   @FXML private Canvas canvas;
+  @FXML private ImageView profileImageView;
   @FXML private Label titleLabel;
-  @FXML private StackPane stackPane;
+  @FXML private Label usernameLabel;
   @FXML private Button startButton;
-  @FXML private Button instructionsButton;
-  @FXML private Button exitButton;
-  @FXML private Button selectedUserButton;
+  @FXML private Button startTipButton;
   @FXML private Button statsButton;
+  @FXML private Button statsTipButton;
+  @FXML private Button exitButton;
+  @FXML private Button exitTipButton;
+  @FXML private Button selectedUserButton;
 
   /**
    * This method alternates alternates colours for a label
@@ -80,33 +57,15 @@ public class MenuController {
       };
 
   public void initialize() {
-    // Add styling to the start button and instructions button and exit button
-    startButton.getStyleClass().add("startButton");
-    instructionsButton.getStyleClass().add("instructionsButton");
-    exitButton.getStyleClass().add("exitButton");
     // Load in a new font and set it to the tile
-    Font font = Font.loadFont("file:src/main/resources/fonts/somethingwild-Regular.ttf", 200);
+    Font font = Font.loadFont("file:src/main/resources/fonts/somethingwild-Regular.ttf", 120);
     titleLabel.setFont(font);
-    // Create user image and user label to know who we have selected
-    selectedUserLabel = new Label();
-    selectedUserImage = new ImageView();
-    // Set up the image and label in the UI
-    stackPane.getChildren().add(selectedUserLabel);
-    StackPane.setAlignment(selectedUserLabel, Pos.BOTTOM_CENTER);
-    // Add the selected user Label in
-    selectedUserLabel.setTextAlignment(TextAlignment.CENTER);
-    selectedUserLabel.setText("Guest");
-    // Set up the dimensions
-    selectedUserLabel.setMaxHeight(60);
-    StackPane.setMargin(selectedUserLabel, new Insets(0, 0, 50, 0));
-    selectedUserImage.setFitHeight(80);
-    selectedUserImage.setFitWidth(108);
+    // Set default guest login label
+    usernameLabel.setText("Guest");
     // Load in the guest image
     File guestImageFile = new File("src/main/resources/users/guest.png");
     Image guestImage = new Image(guestImageFile.toURI().toString());
-    selectedUserButton.setGraphic(selectedUserImage);
-    updateUserImage(guestImage);
-    // Create a new thread to alternate the background colours
+    profileImageView.setImage(guestImage);
     Thread titleAnimation = new Thread(backgroundTask);
     // Start the thread
     titleAnimation.setDaemon(true);
@@ -134,6 +93,14 @@ public class MenuController {
     // Play the animation indefinitely
     timeline.setCycleCount(Animation.INDEFINITE);
     timeline.play();
+  }
+  
+  public void updateUserImage(Image image) {
+    profileImageView.setImage(image);
+  }
+  
+  public void updateUsernameLabel(String username) {
+    usernameLabel.setText(username);
   }
 
   @FXML
