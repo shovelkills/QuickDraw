@@ -28,16 +28,6 @@ import javafx.util.Duration;
 import nz.ac.auckland.se206.SceneManager.AppUi;
 
 public class MenuController {
-  // Declare the menu objects
-  @FXML private Canvas canvas;
-  @FXML private Label titleLabel;
-  @FXML private StackPane stackPane;
-  @FXML private Button startButton;
-  @FXML private Button instructionsButton;
-  @FXML private Button exitButton;
-  @FXML private Button selectedUserButton;
-  @FXML private Button statsButton;
-
   // Declare the user static fields
   private static ImageView selectedUserImage;
   private static Label selectedUserLabel;
@@ -60,6 +50,16 @@ public class MenuController {
     updateUserImage(image);
     selectedUserLabel.setText(Users.getUserName());
   }
+
+  // Declare the menu objects
+  @FXML private Canvas canvas;
+  @FXML private Label titleLabel;
+  @FXML private StackPane stackPane;
+  @FXML private Button startButton;
+  @FXML private Button instructionsButton;
+  @FXML private Button exitButton;
+  @FXML private Button selectedUserButton;
+  @FXML private Button statsButton;
 
   /**
    * This method alternates alternates colours for a label
@@ -87,7 +87,7 @@ public class MenuController {
     // Load in a new font and set it to the tile
     Font font = Font.loadFont("file:src/main/resources/fonts/somethingwild-Regular.ttf", 200);
     titleLabel.setFont(font);
-    // Create static user image and user label to know who we have selected
+    // Create user image and user label to know who we have selected
     selectedUserLabel = new Label();
     selectedUserImage = new ImageView();
     // Set up the image and label in the UI

@@ -84,8 +84,7 @@ public class CategorySelector {
     List<String> usersWords = Users.getWordHistory();
     List<String> easyWords = difficulty2categories.get(Difficulty.E);
     if (usersWords == null || listCompare(usersWords, easyWords)) {
-      return randomWord =
-          difficulty2categories.get(difficulty).get(new Random().nextInt(difficultySize));
+      return difficulty2categories.get(difficulty).get(new Random().nextInt(difficultySize));
     }
     // Keep getting new word until the word is not in the user's history
     while (randomWord == null || usersWords.contains(randomWord)) {
@@ -115,13 +114,11 @@ public class CategorySelector {
     // Get the easy word
     if (number == 0) {
       return getRandomCategory(Difficulty.E);
-    }
-    // Get the medium word
-    else if (number == 1) {
+    } else if (number == 1) {
+      // Get the medium word
       return getRandomCategory(Difficulty.M);
-    }
-    // Get the hard word
-    else {
+    } else {
+      // Get the hard word
       return getRandomCategory(Difficulty.H);
     }
   }

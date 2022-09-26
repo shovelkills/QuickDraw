@@ -52,7 +52,7 @@ public class App extends Application {
    */
   @Override
   public void start(final Stage stage) throws IOException {
-    // Adds the menu and canvas UI to the scene manager
+    // Add all the scenes to the scene manager
     SceneManager.addUi(AppUi.MAIN_MENU, loadFxml("menu"));
     SceneManager.addUi(AppUi.GAME, loadFxml("canvas"));
     SceneManager.addUi(AppUi.USERSELECT, loadFxml("users"));

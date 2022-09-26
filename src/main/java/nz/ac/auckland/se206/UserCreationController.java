@@ -81,23 +81,20 @@ public class UserCreationController {
     UsersController.profiles.add(index, new ProfileBuilder(UserType.PLAYER));
     // Store the profiles in an arraylist temporary variable for readability
     ArrayList<ProfileBuilder> profiles = UsersController.profiles;
-    // Grab the guest, new user, and add profiles
+    // Grab the guest and add profiles
     ProfileBuilder guest = profiles.get(profiles.size() - 2);
     ProfileBuilder add = profiles.get(profiles.size() - 1);
-    ProfileBuilder newUser = profiles.get(index);
     // Move the guest and add profiles
     guest.vbox.toFront();
     add.vbox.toFront();
     // Update all the IDS after shift
-    ProfileBuilder.updateID();
+    ProfileBuilder.updateId();
+    // Grab the new user
+    ProfileBuilder newUser = profiles.get(index);
     // Set up new events to the new user
     UsersController.addEvents(newUser.imageView, newUser.deleteProfileButton, index);
     // Select the new user
     UsersController.currentlySelected = newUser;
-
-    // Select the profile
-    // onSelectProfile(event);
-
     onExitSelection(event);
   }
 
@@ -108,14 +105,14 @@ public class UserCreationController {
    */
   @FXML
   private void onExitSelection(Event event) {
-    // Get the scene currently in
-    Button button = (Button) event.getSource();
-    Scene sceneButtonIsIn = button.getScene();
     // Set the selected label to visible
     UsersController.currentlySelected.userSelectedLabel.setVisible(true);
     // Clear the username field and the user image
     usernameField.clear();
-    userImage.setImage(ProfileBuilder.userImage);
+    userImage.setImage(ProfileBuilder.getUserImage());
+    // Get the scene currently in
+    Button button = (Button) event.getSource();
+    Scene sceneButtonIsIn = button.getScene();
     sceneButtonIsIn.setRoot(SceneManager.getUiRoot(AppUi.USERSELECT));
   }
 }
