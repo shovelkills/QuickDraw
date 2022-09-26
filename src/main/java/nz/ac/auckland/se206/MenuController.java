@@ -18,7 +18,6 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
@@ -94,11 +93,11 @@ public class MenuController {
     timeline.setCycleCount(Animation.INDEFINITE);
     timeline.play();
   }
-  
+
   public void updateUserImage(Image image) {
     profileImageView.setImage(image);
   }
-  
+
   public void updateUsernameLabel(String username) {
     usernameLabel.setText(username);
   }
