@@ -17,6 +17,7 @@ import javafx.beans.property.StringProperty;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import nz.ac.auckland.se206.ml.DoodlePrediction;
+import nz.ac.auckland.se206.speech.TextToSpeech;
 import nz.ac.auckland.se206.words.CategorySelector;
 import nz.ac.auckland.se206.words.CategorySelector.Difficulty;
 
@@ -39,7 +40,42 @@ public class Game {
   private HashMap<Difficulty, String> currentSelection;
   private StringProperty currentPrompt = new SimpleStringProperty(" ");
   private IntegerProperty timer = new SimpleIntegerProperty(60);
+  private boolean spoken = false;
+  private boolean hasWon = false;
 
+  // Initialise the speech task
+  private Task<Void> speechTask =
+      new Task<Void>() {
+        @Override
+        protected Void call() throws Exception {
+          // Initialise a text to speech instance
+          TextToSpeech textToSpeech = new TextToSpeech();
+          // Run indefinitely
+          while (true) {
+            // When starting speak that its starting
+            if (timer.get() == 59) {
+              textToSpeech.speak("Starting");
+            } else if (timer.get() == 31) {
+              // When half way speak thats it is halfway
+              textToSpeech.speak("Thirty Seconds Remaining");
+            }
+            // Speak if the person has won
+            if (hasWon && !spoken) {
+              textToSpeech.speak("You Won!");
+              // Set that it has spoken
+              spoken = true;
+
+            } else if (timer.get() == 0 && !spoken) {
+              // Speak if the person has lost
+              textToSpeech.speak("YOU LOST!");
+              // Set that it has spoken
+              spoken = true;
+            }
+            // Sleep for 10 ms
+            Thread.sleep(10);
+          }
+        }
+      };
   // Initialise a service routine
   private Service<Void> service =
       new Service<Void>() {
@@ -72,6 +108,7 @@ public class Game {
                                     currentPredictions.get(i).getClassName().replace("_", " "))) {
                               Users.addTimeHistory(timer.getValue().intValue(), getCurrentPrompt());
                               // End the game
+                              hasWon = true;
                               endGame(true);
                               return;
                             }
@@ -100,9 +137,14 @@ public class Game {
     // Set default difficulty to easy
     difficulty = Difficulty.E;
     model = new DoodlePrediction();
+    // Get the current difficulty's word
     currentSelection = CategorySelector.getSelection();
     String word = currentSelection.get(difficulty);
     currentPrompt.setValue(word);
+    // Start the text to speech thread
+    Thread ttsThread = new Thread(speechTask);
+    ttsThread.setDaemon(true);
+    ttsThread.start();
   }
 
   /**
@@ -132,7 +174,11 @@ public class Game {
     return timer.asString();
   }
 
+  /** startGame will initialize the game */
   public void startGame() {
+    // Set these fields to false so that tts only speaks once
+    spoken = false;
+    hasWon = false;
     service.start();
   }
 
