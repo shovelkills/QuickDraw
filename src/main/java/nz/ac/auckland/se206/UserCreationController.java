@@ -5,6 +5,7 @@ import java.util.Collections;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
@@ -72,7 +73,12 @@ public class UserCreationController {
     // Store which index it was created in
     Users.userImage = userImage.getImage();
     if (username == null || username.equals("") || !Users.createUser(username)) {
-      // TODO Add an alert that will say invalid username in GUI
+      // Set up an error
+      Alert alert = new Alert(Alert.AlertType.ERROR);
+      alert.setTitle("Username not available");
+      alert.setHeaderText("That username is not available");
+      // Show the error
+      alert.showAndWait();
       return;
     }
     // Get the third to last place in profiles
