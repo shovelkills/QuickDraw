@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.Cursor?>
 <?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
@@ -13,96 +13,123 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="BOTTOM_CENTER" nodeOrientation="LEFT_TO_RIGHT" prefHeight="593.0" prefWidth="900.0" style="-fx-background-color: #96e7ff;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nz.ac.auckland.se206.CanvasController">
-  <children>
-      <Label fx:id="titleLabel" alignment="CENTER" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" prefHeight="58.0" prefWidth="500.0" text="Quick, Draw!" textAlignment="CENTER">
-         <font>
-            <Font size="40.0" />
-         </font>
-         <VBox.margin>
-            <Insets />
-         </VBox.margin></Label>
-      <Label fx:id="wordLabel" alignment="CENTER" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" prefHeight="0.0" prefWidth="260.0" text="WORD" textAlignment="CENTER" VBox.vgrow="ALWAYS">
-         <font>
-            <Font size="26.0" />
-         </font>
-      </Label>
-      <Label fx:id="timerLabel" alignment="CENTER" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" prefHeight="0.0" prefWidth="196.0" text="0" textAlignment="CENTER" VBox.vgrow="ALWAYS">
-         <font>
-            <Font size="30.0" />
-         </font>
-      </Label>
-      <HBox fx:id="canvasPane" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="0.0" prefWidth="700.0" style="-fx-background-color: #cffffc; -fx-border-color: white; -fx-border-width: 5;" VBox.vgrow="NEVER">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="660.0" prefWidth="900.0" styleClass="background" stylesheets="@../css/menu.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nz.ac.auckland.se206.CanvasController">
+   <center>
+      <VBox alignment="TOP_CENTER" maxWidth="1.7976931348623157E308" prefHeight="602.0" prefWidth="900.0" styleClass="canvasPanel" stylesheets="@../css/canvas.css" BorderPane.alignment="CENTER">
          <children>
-          <Canvas fx:id="canvas" height="400.0" width="500.0">
-            <cursor>
-              <Cursor fx:constant="HAND" />
-            </cursor>
-               <HBox.margin>
-                  <Insets />
-               </HBox.margin>
-          </Canvas>
-            <GridPane fx:id="predictionGrid" alignment="TOP_RIGHT" prefHeight="430.0" prefWidth="180.0" style="-fx-background-color: #483D8B;" HBox.hgrow="ALWAYS">
-              <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-              </columnConstraints>
-              <rowConstraints>
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-              </rowConstraints>
-               <opaqueInsets>
-                  <Insets />
-               </opaqueInsets>
-            </GridPane>
-         </children>
-         <VBox.margin>
-            <Insets left="80.0" right="80.0" />
-         </VBox.margin>
-      </HBox>
-      <VBox prefHeight="200.0" prefWidth="100.0" spacing="10.0">
-         <children>
-          <HBox alignment="TOP_CENTER" prefHeight="0.0" prefWidth="400.0" spacing="10.0">
-            <children>
-                  <ChoiceBox fx:id="difficultyMenu" onAction="#onDifficultySelect" prefWidth="150.0" />
-                  <Button fx:id="startButton" alignment="CENTER" mnemonicParsing="false" onAction="#onStartGame" prefHeight="25.0" prefWidth="63.0" text="Start">
-                     <HBox.margin>
-                        <Insets />
-                     </HBox.margin>
-                  </Button>
-                  <Button fx:id="saveButton" alignment="CENTER" mnemonicParsing="false" onAction="#onSaveImage" prefHeight="25.0" prefWidth="105.0" text="Save Image" />
-            </children>
-          </HBox>
-            <HBox alignment="TOP_CENTER" prefHeight="0.0" prefWidth="400.0" spacing="10.0">
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <Button fx:id="restartButton" alignment="CENTER" mnemonicParsing="false" onAction="#onRestartGame" prefHeight="25.0" prefWidth="96.0" text="Restart" />
-                  <Button fx:id="brushButton" mnemonicParsing="false" onAction="#onBrushChange" text="Eraser">
+                  <Label fx:id="timerLabel" alignment="CENTER" prefHeight="60.0" prefWidth="60.0" styleClass="timerLabel" stylesheets="@../css/canvas.css" text="60" textFill="WHITE">
+                     <font>
+                        <Font name="System Bold" size="36.0" />
+                     </font>
                      <HBox.margin>
-                        <Insets />
+                        <Insets bottom="10.0" top="10.0" />
                      </HBox.margin>
-                  </Button>
-              <Button fx:id="clearButton" mnemonicParsing="false" onAction="#onClear" text="Clear" />
-                  <Button fx:id="backToMenuButton" mnemonicParsing="false" onAction="#onBackToMenu" text="Back to Main Menu" />
+                  </Label>
+                  <Label fx:id="wordLabel" alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="32.0" prefWidth="600.0" styleClass="promptLabel" stylesheets="@../css/canvas.css" text="Label" textFill="WHITE">
+                     <font>
+                        <Font name="System Bold" size="22.0" />
+                     </font>
+                  </Label>
                </children>
             </HBox>
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+                     <children>
+                        <Button fx:id="brushButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onBrushChange" styleClass="drawingButton" stylesheets="@../css/canvas.css" text="Brush" VBox.vgrow="ALWAYS">
+                           <font>
+                              <Font name="System Bold" size="20.0" />
+                           </font>
+                        </Button>
+                        <Button fx:id="clearButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onClear" styleClass="drawingButton" stylesheets="@../css/canvas.css" text="Clear" VBox.vgrow="ALWAYS">
+                           <font>
+                              <Font name="System Bold" size="20.0" />
+                           </font>
+                        </Button>
+                     </children>
+                  </VBox>
+                  <HBox fx:id="canvasPane" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="500.0" styleClass="canvasBox" stylesheets="@../css/canvas.css">
+                     <children>
+                        <Canvas fx:id="canvas" height="400.0" styleClass="canvas" width="500.0" />
+                     </children>
+                  </HBox>
+                  <GridPane fx:id="predictionGrid" prefHeight="400.0" prefWidth="190.0" styleClass="predictionGrid" stylesheets="@../css/canvas.css">
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                  </GridPane>
+               </children>
+            </HBox>
+            <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0">
+               <children>
+                  <HBox alignment="TOP_CENTER" prefHeight="0.0" prefWidth="860.0">
+                     <children>
+                        <ChoiceBox fx:id="difficultyMenu" prefHeight="40.0" prefWidth="150.0" styleClass="difficultyDropdown" stylesheets="@../css/canvas.css" />
+                        <Button fx:id="startButton" mnemonicParsing="false" onAction="#onStartGame" prefHeight="40.0" prefWidth="107.0" styleClass="startButton" stylesheets="@../css/canvas.css" text="Start Game">
+                           <font>
+                              <Font name="System Bold" size="16.0" />
+                           </font>
+                        </Button>
+                     </children>
+                     <padding>
+                        <Insets left="10.0" right="10.0" top="10.0" />
+                     </padding>
+                  </HBox>
+                  <HBox alignment="TOP_CENTER" prefHeight="0.0" prefWidth="860.0">
+                     <padding>
+                        <Insets left="10.0" right="10.0" top="10.0" />
+                     </padding>
+                     <children>
+                        <Button fx:id="restartButton" mnemonicParsing="false" onAction="#onRestartGame" styleClass="restartButton" stylesheets="@../css/canvas.css" text="Restart" textFill="WHITE">
+                           <font>
+                              <Font name="System Bold" size="16.0" />
+                           </font>
+                        </Button>
+                        <Button fx:id="backToMenuButton" mnemonicParsing="false" onAction="#onBackToMenu" styleClass="backToMenuButton" stylesheets="@../css/canvas.css" text="Back To Menu" textFill="WHITE">
+                           <font>
+                              <Font name="System Bold" size="16.0" />
+                           </font>
+                        </Button>
+                        <Button fx:id="saveButton" mnemonicParsing="false" onAction="#onSaveImage" styleClass="saveButton" stylesheets="@../css/canvas.css" text="Save Drawing">
+                           <HBox.margin>
+                              <Insets left="10.0" />
+                           </HBox.margin>
+                           <font>
+                              <Font name="System Bold" size="16.0" />
+                           </font>
+                        </Button>
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
          </children>
-         <VBox.margin>
-            <Insets />
-         </VBox.margin>
          <padding>
-            <Insets top="10.0" />
+            <Insets bottom="20.0" left="20.0" right="20.0" />
          </padding>
       </VBox>
-
-  </children>
-  <padding>
-    <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-  </padding>
-</VBox>
+   </center>
+   <top>
+      <Label fx:id="titleLabel" alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="0.0" prefWidth="900.0" text="Quick, Draw!" textFill="WHITE" BorderPane.alignment="CENTER">
+         <font>
+            <Font name="System Bold" size="42.0" />
+         </font>
+         <BorderPane.margin>
+            <Insets />
+         </BorderPane.margin>
+      </Label>
+   </top>
+</BorderPane>

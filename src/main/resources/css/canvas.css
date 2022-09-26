@@ -1,0 +1,92 @@
+.canvasPanel{
+	-fx-background-color: #F0A88E;
+	-fx-background-radius: 50 50 0 0;
+}
+
+.canvasBox{
+	-fx-background-color: white;
+}
+
+.predictionGrid{
+	-fx-background-color: #2AA1D0;
+}
+
+.drawingButton{
+	-fx-background-radius: 20 0 0 20;
+	-fx-background-color: linear-gradient(to top, #2AA1D0, #EFFBF5 2%);
+}
+
+.drawingButton:hover{
+	-fx-background-color: linear-gradient(to top, #2AA1D0, #CAE5EB 5%);
+}
+
+.drawingButton:pressed{
+	-fx-background-color: linear-gradient(to top, #2AA1D0, #05668D 5%);
+}
+
+.promptLabel{
+	-fx-background-color: #DE6449;
+	-fx-background-radius: 0 20 20 0;
+}
+
+.difficultyDropdown{
+	-fx-background-color: #EFFBF5;
+	-fx-background-radius: 10 0 0 10;
+}
+
+.startButton{
+	-fx-background-radius: 0 10 10 0;
+	-fx-text-fill: white;
+	-fx-background-color: #DE6449;
+}
+
+.startButton:hover{
+	-fx-background-color: #E76637;
+}
+
+.startButton:pressed{
+	-fx-background-color: #B35A70;
+}
+
+.backToMenuButton{
+	-fx-background-color: #874F96;
+	-fx-background-radius: 0 10 10 0;
+}
+
+.backToMenuButton:hover{
+	-fx-background-color: #985995;
+}
+
+.backToMenuButton:pressed{
+	-fx-background-color: #87466F;
+}
+
+.restartButton{
+	-fx-background-color: #05668D;
+	-fx-background-radius: 10 0 0 10;
+}
+
+.restartButton:hover{
+	-fx-background-color: #2AA1D0;
+}
+
+.restartButton:pressed{
+	-fx-background-color: #20647F;
+}
+
+.saveButton{
+	-fx-background-color: #CAE5EB;
+}
+
+.saveButton:hover{
+	-fx-background-color: #EFFBF5;
+}
+
+.saveButton:pressed{
+	-fx-background-color: #E5D8EA;
+}
+
+.timerLabel{
+	-fx-background-color: #20647F;
+	-fx-background-radius: 10 10 10 10;
+}

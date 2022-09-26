@@ -8,22 +8,28 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
-<HBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="760.0" prefWidth="900.0" style="-fx-background-color: #96e7ff;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nz.ac.auckland.se206.UsersController">
+<HBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="760.0" prefWidth="900.0" style="-fx-background-color: #96e7ff;" styleClass="background" stylesheets="@../css/menu.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nz.ac.auckland.se206.UsersController">
    <children>
       <AnchorPane prefHeight="200.0" prefWidth="200.0">
          <children>
             <StackPane layoutX="-142.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="760.0" prefWidth="900.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="-142.0" AnchorPane.rightAnchor="-141.0" AnchorPane.topAnchor="0.0">
                <children>
-                  <HBox fx:id="userHbox" alignment="CENTER" prefHeight="100.0" prefWidth="200.0" />
+                  <HBox fx:id="userHbox" alignment="CENTER" prefHeight="100.0" prefWidth="200.0" stylesheets="@../css/menu.css" />
                   <Label fx:id="titleLabel" alignment="CENTER" prefHeight="85.0" prefWidth="605.0" text="USER SELECT" textFill="WHITE" StackPane.alignment="TOP_CENTER">
                      <font>
                         <Font name="System Bold" size="75.0" />
                      </font>
-                  </Label>
-                  <Button fx:id="returnButton" mnemonicParsing="false" onAction="#onExitSelection" style="-fx-cursor: hand;" text="Go Back" StackPane.alignment="BOTTOM_CENTER">
                      <StackPane.margin>
-                        <Insets bottom="50.0" />
+                        <Insets top="50.0" />
                      </StackPane.margin>
+                  </Label>
+                  <Button fx:id="returnButton" mnemonicParsing="false" onAction="#onExitSelection" prefHeight="60.0" prefWidth="120.0" style="-fx-cursor: hand;" styleClass="userSelectButton" stylesheets="@../css/userselection.css" text="Go Back" StackPane.alignment="BOTTOM_CENTER">
+                     <StackPane.margin>
+                        <Insets bottom="100.0" />
+                     </StackPane.margin>
+                     <font>
+                        <Font name="System Bold" size="20.0" />
+                     </font>
                   </Button>
                </children>
             </StackPane>

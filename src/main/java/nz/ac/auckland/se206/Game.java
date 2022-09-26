@@ -92,6 +92,8 @@ public class Game {
                     () -> {
                       // Decrement timer
                       timer.set(timer.get() - 1);
+                      // Decrement timer bar
+                      canvas.decrementTimerBar();
 
                       try {
                         // Check if the player is currently drawing

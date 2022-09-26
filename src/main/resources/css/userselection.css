@@ -1,0 +1,12 @@
+.userSelectButton{
+	-fx-background-radius: 10 10 10 10;
+	-fx-background-color: #CAE5EB;
+}
+
+.userSelectButton:hover{
+	-fx-background-color: #EFFBF5;
+}
+
+.userSelectButton:pressed{
+	-fx-background-color: #BCC6DDl;
+}
