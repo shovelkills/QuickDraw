@@ -1,0 +1,43 @@
+.tabButton{
+	-fx-background-color: linear-gradient(to right, #E299E5 60%, #B57BC7
+	);
+	-fx-background-radius: 50 0 0 50;
+	-fx-border-width: 0;
+	-fx-text-fill: #EFFBF5;
+}
+
+.tabButton:hover{
+	-fx-background-color: linear-gradient(to right, #FF99D5, #B57BC7);
+}
+
+.tabButton:pressed{
+	-fx-background-color: #B57BC7;
+}
+
+.backButton{
+	-fx-background-color: #CEF3E0;
+}
+
+.backButton:hover{
+	-fx-background-color: #EFFBF5;
+}
+
+.backButton:pressed{
+	-fx-background-color: #1C779B;
+}
+
+.titleLabel{
+	-fx-background-color: linear-gradient(to bottom, #FFCAE9, #E7AEE8);
+	-fx-background-radius: 50 50 0 0;
+}
+
+.tabPane{
+	-fx-background-color: #E7AEE8;
+	-fx-background: #E7AEE8;
+	-fx-background-radius: 0 0 50 0;
+}
+
+.background{
+	-fx-background-color: #3A6171;
+	-fx-background: ##3A6171;
+}
