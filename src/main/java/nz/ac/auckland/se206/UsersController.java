@@ -94,7 +94,9 @@ public class UsersController {
     // Load in the user
     Users.loadUser(username);
     // Update the menu page
-    MenuController.updateUser(profiles.get(number).imageView.getImage());
+    
+    App.getMenuController().updateUserImage(profiles.get(number).imageView.getImage());
+    App.getMenuController().updateUsernameLabel(username);
   }
 
   /**

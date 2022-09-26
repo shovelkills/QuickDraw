@@ -14,6 +14,8 @@ import nz.ac.auckland.se206.SceneManager.AppUi;
  */
 public class App extends Application {
   private static StatsController statsController;
+  private static MenuController menuController;
+  private static UsersController usersController;
 
   public static void main(final String[] args) {
     launch();
@@ -28,11 +30,25 @@ public class App extends Application {
    * @throws IOException If the file is not found.
    */
   private static Parent loadFxml(final String fxml) throws IOException {
-    // Retrieve and store a reference to the StatsController for use by other classes
+    // Retrieve and store a reference to controllers needed by other classes
     if (fxml == "stats") {
       FXMLLoader loader = new FXMLLoader(App.class.getResource("/fxml/" + fxml + ".fxml"));
       Parent root = (Parent) loader.load();
       statsController = loader.getController();
+      // return the root for switching scenes
+      return root;
+    }
+    if (fxml == "menu") {
+      FXMLLoader loader = new FXMLLoader(App.class.getResource("/fxml/" + fxml + ".fxml"));
+      Parent root = (Parent) loader.load();
+      menuController = loader.getController();
+      // return the root for switching scenes
+      return root;
+    }
+    if (fxml == "users") {
+      FXMLLoader loader = new FXMLLoader(App.class.getResource("/fxml/" + fxml + ".fxml"));
+      Parent root = (Parent) loader.load();
+      usersController = loader.getController();
       // return the root for switching scenes
       return root;
     }
@@ -42,6 +58,14 @@ public class App extends Application {
 
   public static StatsController getStatsController() {
     return statsController;
+  }
+  
+  public static MenuController getMenuController() {
+    return menuController;
+  }
+  
+  public static UsersController getUsersController() {
+    return usersController;
   }
 
   /**
