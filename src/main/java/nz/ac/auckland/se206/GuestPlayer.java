@@ -5,6 +5,7 @@ import java.util.List;
 
 /** Special guest player class that is loaded as a session instance rather than from file. */
 public class GuestPlayer {
+  // Declare the guest's fields
   private int fastestTime;
   private int losses;
   private int wins;
@@ -18,6 +19,7 @@ public class GuestPlayer {
    * Default constructor, used for instantiating a new guest with stats reflecting no games played
    */
   public GuestPlayer() {
+    // Set up the guest's attributes
     fastestTime = -1;
     losses = 0;
     wins = 0;
@@ -52,6 +54,7 @@ public class GuestPlayer {
 
   /** Saves all relevant current user stats to this instance of guestPlayer */
   public void saveGuest() {
+    // Save all of the attributes into the guest temporary stats
     fastestTime = Users.getFastestTime();
     losses = Users.getLosses();
     wins = Users.getLosses();

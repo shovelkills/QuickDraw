@@ -13,8 +13,8 @@ public class SceneManager {
     USERCREATE
   }
 
-  private static final double widthPadding = 200;
-  private static final double heightPadding = 150;
+  private static final double WIDTH_PADDING = 200;
+  private static final double HEIGHT_PADDING = 150;
 
   private static HashMap<AppUi, Parent> sceneMap = new HashMap<AppUi, Parent>();
 
@@ -27,10 +27,10 @@ public class SceneManager {
   }
 
   public static double getMaxWindowedWidth() {
-    return Toolkit.getDefaultToolkit().getScreenSize().getWidth() - widthPadding;
+    return Toolkit.getDefaultToolkit().getScreenSize().getWidth() - WIDTH_PADDING;
   }
 
   public static double getMaxWindowedHeight() {
-    return Toolkit.getDefaultToolkit().getScreenSize().getHeight() - heightPadding;
+    return Toolkit.getDefaultToolkit().getScreenSize().getHeight() - HEIGHT_PADDING;
   }
 }

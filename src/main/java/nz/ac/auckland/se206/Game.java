@@ -27,7 +27,6 @@ import nz.ac.auckland.se206.words.CategorySelector.Difficulty;
  */
 public class Game {
   // Declare difficulty field
-
   private static Difficulty difficulty;
 
   public static Difficulty getDifficulty() {
@@ -40,6 +39,59 @@ public class Game {
   private HashMap<Difficulty, String> currentSelection;
   private StringProperty currentPrompt = new SimpleStringProperty(" ");
   private IntegerProperty timer = new SimpleIntegerProperty(60);
+
+  // Initialise a service routine
+  private Service<Void> service =
+      new Service<Void>() {
+        // Create the task to handle the game
+        protected Task<Void> createTask() {
+          // Main game loop thread
+          return new Task<Void>() {
+            protected Void call() throws InterruptedException {
+              // Check that the timer is running
+              while (timer.intValue() > 1) {
+                // Wait 1 second
+                Thread.sleep(1000);
+                Platform.runLater(
+                    () -> {
+                      // Decrement timer
+                      timer.set(timer.get() - 1);
+
+                      try {
+                        // Check if the player is currently drawing
+                        if (canvas.getIsDrawing()) {
+                          // Get the top 10 predictions
+                          List<Classifications.Classification> currentPredictions =
+                              model.getPredictions(canvas.getCurrentSnapshot(), 10);
+                          // Update the predictions
+                          canvas.updatePredictionGridDisplay(currentPredictions);
+                          for (int i = 0; i < 3; i++) {
+                            // Check if the top 3 words are what we are drawing
+                            if (getCurrentPrompt()
+                                .equals(
+                                    currentPredictions.get(i).getClassName().replace("_", " "))) {
+                              Users.addTimeHistory(timer.getValue().intValue(), getCurrentPrompt());
+                              // End the game
+                              endGame(true);
+                              return;
+                            }
+                          }
+                        }
+                      } catch (TranslateException | InterruptedException e) {
+                        e.printStackTrace();
+                      }
+                    });
+              }
+              System.out.println("LOST IN TASK");
+              Users.addTimeHistory(0, getCurrentPrompt());
+              // End the game
+              endGame(false);
+              return null;
+            }
+          };
+        }
+        ;
+      };
 
   public Game(CanvasController canvas)
       throws IOException, URISyntaxException, CsvException, ModelException {
@@ -95,65 +147,17 @@ public class Game {
   }
 
   /**
+   * Resets the game's timer
+   *
    * @param difficulty
    */
   public void resetTimer(Difficulty difficulty) {
     timer.set(60);
   }
 
-  private Service<Void> service =
-      new Service<Void>() {
-        // Create the task to handle the game
-        protected Task<Void> createTask() {
-          // Main game loop thread
-          return new Task<Void>() {
-            protected Void call() throws InterruptedException {
-              // Check that the timer is running
-              while (timer.intValue() > 1) {
-                // Wait 1 second
-                Thread.sleep(1000);
-                Platform.runLater(
-                    () -> {
-                      // Decrement timer
-                      timer.set(timer.get() - 1);
-
-                      try {
-                        // Check if the player is currently drawing
-                        if (canvas.getIsDrawing()) {
-                          // Get the top 10 predictions
-                          List<Classifications.Classification> currentPredictions =
-                              model.getPredictions(canvas.getCurrentSnapshot(), 10);
-                          // Update the predictions
-                          canvas.updatePredictionGridDisplay(currentPredictions);
-                          for (int i = 0; i < 3; i++) {
-                            // Check if the top 3 words are what we are drawing
-                            if (getCurrentPrompt()
-                                .equals(
-                                    currentPredictions.get(i).getClassName().replace("_", " "))) {
-                              Users.addTimeHistory(timer.getValue().intValue(), getCurrentPrompt());
-                              // End the game
-                              endGame(true);
-                              return;
-                            }
-                          }
-                        }
-                      } catch (TranslateException | InterruptedException e) {
-                        e.printStackTrace();
-                      }
-                    });
-              }
-              System.out.println("LOST IN TASK");
-              Users.addTimeHistory(0, getCurrentPrompt());
-              // End the game
-              endGame(false);
-              return null;
-            }
-          };
-        }
-        ;
-      };
-
   /**
+   * endGame will finish the game correctly
+   *
    * @param isWin checks if the user has won
    * @throws InterruptedException interrupt exception stops the function
    */

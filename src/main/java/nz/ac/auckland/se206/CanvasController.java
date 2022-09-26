@@ -159,7 +159,7 @@ public class CanvasController {
     startButton.setDisable(false);
     brushButton.setVisible(false);
     backToMenuButton.setVisible(true);
-    difficultyMenu.setVisible(true);
+    difficultyMenu.setVisible(false);
     // Select last played difficulty (default EASY if new game)
     difficultyMenu.setValue(difficultySettingsMap.get(Game.getDifficulty()));
     onDifficultySelect();
@@ -179,20 +179,20 @@ public class CanvasController {
   private void onDifficultySelect() {
     // gets the current difficulty we are on from the menu
     switch (difficultyMenu.getValue()) {
-        // Sets the difficulty of the game to easy
       case "EASY":
+        // Sets the difficulty of the game to easy
         game.setDifficulty(Difficulty.E);
         break;
-        // Sets the difficulty of the game to medium
       case "MEDIUM":
+        // Sets the difficulty of the game to medium
         game.setDifficulty(Difficulty.M);
         break;
-        // Sets the difficulty of the game to hard
       case "HARD":
+        // Sets the difficulty of the game to hard
         game.setDifficulty(Difficulty.H);
         break;
-        // Sets the difficulty of the game to master
       case "MASTER":
+        // Sets the difficulty of the game to master
         game.setDifficulty(Difficulty.MS);
         break;
       default:
@@ -525,9 +525,12 @@ public class CanvasController {
   @FXML
   private void onBackToMenu(ActionEvent event)
       throws IOException, URISyntaxException, CsvException, ModelException {
+    // Reset the game
     onRestartGame();
+    // Get the current scene
     Button backButton = (Button) event.getSource();
     Scene currentScene = backButton.getScene();
+    // Move back to main menu
     currentScene.setRoot(SceneManager.getUiRoot(AppUi.MAIN_MENU));
   }
 }

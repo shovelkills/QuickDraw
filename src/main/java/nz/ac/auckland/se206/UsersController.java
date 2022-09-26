@@ -31,15 +31,14 @@ public class UsersController {
    */
   private static void onSelectProfile(Event event) {
     ImageView image = null;
-    String string = null;
-    int number = 0;
+    int number;
     // Get the button pressed
     if (event.getSource().getClass().equals(profiles.get(0).deleteProfileButton.getClass())) {
       // guest was selected via creation or deletion
       number = profiles.size() - 2;
     } else {
       image = (ImageView) event.getSource();
-      string = image.getId().toString();
+      String string = image.getId().toString();
       // Find out which profile was clicked
       number = (Integer.parseInt(String.valueOf(string.charAt(string.length() - 1))));
     }
@@ -96,7 +95,6 @@ public class UsersController {
     Users.loadUser(username);
     // Update the menu page
     MenuController.updateUser(profiles.get(number).imageView.getImage());
-    // TODO Update the Game page
   }
 
   /**
@@ -111,16 +109,16 @@ public class UsersController {
     String string = button.getId().toString();
     // Get the index number from the button
     int number = (Integer.parseInt(String.valueOf(string.charAt(string.length() - 1))));
-    // Find that user in the list
-    String username = usersList.get(number);
     // Delete that profile
     profiles.get(number).deleteProfile();
     profiles.remove(number);
-    ProfileBuilder.updateID();
+    ProfileBuilder.updateId();
     // Update counter position
-    ProfileBuilder.counter--;
+    ProfileBuilder.decrementCounter();
     // Select the Guest Profile
     onSelectProfile(event);
+    // Find that user in the list
+    String username = usersList.get(number);
     // Delete the user in the JSON file
     Users.deleteUser(username);
     Users.deleteProfilePicture(username);

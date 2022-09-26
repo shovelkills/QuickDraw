@@ -1,5 +1,7 @@
 package nz.ac.auckland.se206;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -14,11 +16,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.imageio.ImageIO;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
+import javax.imageio.ImageIO;
 
 public class Users {
   // Stores the information in the JSON file as individual variables
@@ -39,7 +39,7 @@ public class Users {
 
   private static String recentUser;
   private static String userName;
-  protected static Image userImage = ProfileBuilder.userImage;
+  protected static Image userImage = ProfileBuilder.getUserImage();
 
   // Only one guest player can be referenced through Users at one time
   private static GuestPlayer guestPlayer;
@@ -155,7 +155,7 @@ public class Users {
    *
    * @param username the username the user inputted
    * @return boolean of if there are special characters in the username. True means there are
-   *         special characters in the string
+   *     special characters in the string
    */
   public static boolean isValidUsername(String username) {
 
@@ -339,7 +339,7 @@ public class Users {
 
   /**
    * Checks if the most recent game has the fastest time
-   * 
+   *
    * @param time the time it took to draw the word
    * @param word the word the user had to draw
    */
@@ -406,7 +406,6 @@ public class Users {
   public static int getFastestTime() {
     return fastestTime;
   }
-
 
   public static String getUserName() {
     return userName;

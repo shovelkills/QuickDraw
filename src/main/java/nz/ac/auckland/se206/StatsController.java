@@ -12,6 +12,7 @@ import javafx.scene.text.Font;
 import nz.ac.auckland.se206.SceneManager.AppUi;
 
 public class StatsController {
+  // Declare all the FXML fields
   @FXML private Button backButton;
   @FXML private Button statsTabButton;
   @FXML private Button wordsTabButton;
@@ -25,6 +26,7 @@ public class StatsController {
   @FXML private VBox wordsListVBox;
 
   public void initialize() {
+    // Updates all the stats
     updateAllStats();
   }
 
@@ -41,12 +43,12 @@ public class StatsController {
     statsGridPane.setVisible(true);
     statsTabButton.setStyle(
         "-fx-background-color: linear-gradient(to right, #FFCAE9, #E7AEE8); -fx-text-fill: #791E94;");
-    wordsTabButton.setStyle("tabButton");
+    wordsTabButton.setStyle(".tabButton");
   }
 
   /**
-   * Activates when the words list tab button is pressed. Refreshes the displayed word list for the
-   * current user.
+   * on WordsTab Activates when the words list tab button is pressed. Refreshes the displayed word
+   * list for the current user.
    */
   @FXML
   private void onWordsTab() {
@@ -57,7 +59,7 @@ public class StatsController {
     wordsListPaneVBox.setVisible(true);
     wordsTabButton.setStyle(
         "-fx-background-color: linear-gradient(to right, #FFCAE9, #E7AEE8); -fx-text-fill: #791E94;");
-    statsTabButton.setStyle("tabButton");
+    statsTabButton.setStyle(".tabButton");
   }
 
   /**
@@ -131,8 +133,10 @@ public class StatsController {
    */
   @FXML
   private void onBackButton(ActionEvent event) {
+    // Get the button pressed
     Button buttonPressed = (Button) event.getSource();
     Scene currentScene = buttonPressed.getScene();
+    // Travel back to main menu
     currentScene.setRoot(SceneManager.getUiRoot(AppUi.MAIN_MENU));
   }
 
@@ -141,6 +145,7 @@ public class StatsController {
    * Updates all stats and resets open tab to the stats tab.
    */
   public void updateAllStats() {
+    // Update all stats: the users stats, their words, and the user
     updateUserStats();
     updateWordList();
     onStatsTab();
