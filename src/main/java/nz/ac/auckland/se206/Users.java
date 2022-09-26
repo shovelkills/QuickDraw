@@ -1,7 +1,5 @@
 package nz.ac.auckland.se206;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -16,9 +14,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.imageio.ImageIO;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
-import javax.imageio.ImageIO;
 
 public class Users {
   // Stores the information in the JSON file as individual variables
@@ -155,7 +155,7 @@ public class Users {
    *
    * @param username the username the user inputted
    * @return boolean of if there are special characters in the username. True means there are
-   *     special characters in the string
+   *         special characters in the string
    */
   public static boolean isValidUsername(String username) {
 
@@ -255,8 +255,10 @@ public class Users {
    * @param username the username that wants to be deleted
    */
   public static void deleteUser(String username) {
+    // Finds the json file and deletes it
     File userFile = new File(folderDirectory + "/src/main/resources/users/" + username + ".json");
     userFile.delete();
+    // removes user from the userlist and if its the recent user
     int index = userList.indexOf(username);
     userList.remove(index);
     if (recentUser.equals(username)) {
@@ -335,6 +337,25 @@ public class Users {
     guestPlayer = new GuestPlayer();
   }
 
+  /**
+   * Checks if the most recent game has the fastest time
+   * 
+   * @param time the time it took to draw the word
+   * @param word the word the user had to draw
+   */
+  public static void checkFastestTime(int time, String word) {
+    // Checks if it is the fastest time
+    if (time <= Users.fastestTime || (Users.fastestTime == -1 && time != 60)) {
+      Users.fastestTime = time;
+      setFastestWord(word);
+    }
+    addWordHistory(word);
+    // Checks if the user is a guest
+    if (recentUser == "Guest") {
+      guestPlayer.saveGuest();
+    }
+  }
+
   // updates the userList by adding new user to list
   public static void addUserList(String user) {
     userList.add(user);
@@ -386,16 +407,6 @@ public class Users {
     return fastestTime;
   }
 
-  public static void checkFastestTime(int time, String word) {
-    if (time <= Users.fastestTime || Users.fastestTime == -1) {
-      Users.fastestTime = time;
-      setFastestWord(word);
-    }
-    addWordHistory(word);
-    if (recentUser == "Guest") {
-      guestPlayer.saveGuest();
-    }
-  }
 
   public static String getUserName() {
     return userName;
