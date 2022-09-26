@@ -1,6 +1,5 @@
 package nz.ac.auckland.se206;
 
-import java.awt.Label;
 import java.util.ArrayList;
 import java.util.Collections;
 import javafx.event.Event;

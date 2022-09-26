@@ -127,9 +127,10 @@ public class CanvasController {
     difficultyMenu.getItems().add(difficultySettingsMap.get(Difficulty.H));
     difficultyMenu.getItems().add(difficultySettingsMap.get(Difficulty.MS));
     // Set difficulty menu listener for when setting is changed
-    difficultyMenu.setOnAction((event) ->{
-      onDifficultySelect();
-    });
+    difficultyMenu.setOnAction(
+        (event) -> {
+          onDifficultySelect();
+        });
     // Get the graphic from the canvas
     graphic = canvas.getGraphicsContext2D();
     // Load in the font
@@ -380,11 +381,11 @@ public class CanvasController {
     timeline.setCycleCount(Animation.INDEFINITE);
     timeline.play();
   }
-  
+
   public void decrementTimerBar() {
     wordLabel.setMaxWidth(wordLabel.getWidth() - (600 / 70));
   }
-  
+
   public void resetTimerBar() {
     wordLabel.setMaxWidth(600.0);
   }
