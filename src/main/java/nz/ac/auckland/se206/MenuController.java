@@ -10,8 +10,6 @@ import javafx.animation.Timeline;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Alert;
@@ -20,11 +18,9 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 import nz.ac.auckland.se206.SceneManager.AppUi;
 
@@ -35,10 +31,12 @@ public class MenuController {
   @FXML private Label titleLabel;
   @FXML private Label usernameLabel;
   @FXML private Button startButton;
-  @FXML private Button instructionsButton;
-  @FXML private Button exitButton;
-  @FXML private Button selectedUserButton;
+  @FXML private Button startTipButton;
   @FXML private Button statsButton;
+  @FXML private Button statsTipButton;
+  @FXML private Button exitButton;
+  @FXML private Button exitTipButton;
+  @FXML private Button selectedUserButton;
 
   /**
    * This method alternates alternates colours for a label
@@ -60,7 +58,7 @@ public class MenuController {
 
   public void initialize() {
     // Load in a new font and set it to the tile
-    Font font = Font.loadFont("file:src/main/resources/fonts/somethingwild-Regular.ttf", 200);
+    Font font = Font.loadFont("file:src/main/resources/fonts/somethingwild-Regular.ttf", 120);
     titleLabel.setFont(font);
     // Set default guest login label
     usernameLabel.setText("Guest");

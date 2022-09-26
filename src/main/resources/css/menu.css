@@ -1,8 +1,42 @@
-.pencilButton{
-	-fx-shape: "M 150 450 Q 150 450 150 350 C 450 350 350 350 500 350 C 500 350 500 350 600 400 L 500 450 L 150 450";
-	-fx-background-colour: #05668D;
+.menuButton{
+	-fx-background-radius: 0;
+	-fx-min-width: 300;
 }
 
-.crayonButton{
-	-fx-shape: "M 20 380 L 20 220 L 560 220 L 570 230 L 720 280 L 720 320 L 570 370 L 560 380 Z";
+.menuButton:hover{
+	-fx-min-width: 350;
+}
+
+.menuButton:pressed{
+	-fx-min-width: 360;
+}
+
+.profileButton{
+	-fx-background-radius: 10;
+	-fx-background-color: #F0A88E;
+}
+
+.profileButton:hover{
+	-fx-background-color: #2AA1D0;
+}
+
+.profileButton:pressed{
+	-fx-background-color: #05668D;
+}
+
+.pencilTip{
+	-fx-shape: "M 100 400 L 100 200 L 350 300 Z";
+	-fx-pref-width: 70;
+	-fx-max-height: Infinity;
+}
+
+.background{
+	-fx-background-image: url("../images/drawn_wallpaper.png");
+	-fx-background-size: 1920 1080;
+}
+
+.menuBox{
+	-fx-background-color: #F0A88E;
+	-fx-background-radius: 50 50 0 0;
+	-fx-effect: dropshadow(gaussian, black, 40, 0.05, 0.0, 0.0);
 }
