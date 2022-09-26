@@ -77,6 +77,7 @@
                         <Insets />
                      </HBox.margin>
                   </Button>
+                  <Button fx:id="saveButton" alignment="CENTER" mnemonicParsing="false" onAction="#onSaveImage" prefHeight="25.0" prefWidth="105.0" text="Save Image" />
             </children>
           </HBox>
             <HBox alignment="TOP_CENTER" prefHeight="0.0" prefWidth="400.0" spacing="10.0">
