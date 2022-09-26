@@ -1,6 +1,7 @@
 package nz.ac.auckland.se206;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Optional;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -137,6 +138,7 @@ public class MenuController {
 
   @FXML
   private void onStartGame(ActionEvent event) {
+
     // Get the scene currently in
     Button button = (Button) event.getSource();
     Scene sceneButtonIsIn = button.getScene();
@@ -145,7 +147,10 @@ public class MenuController {
   }
 
   @FXML
-  private void onMoveToStats(ActionEvent event) {
+  private void onMoveToStats(ActionEvent event) throws IOException {
+    // Tell the stats controller to update values for the current user
+    StatsController statsController = App.getStatsController();
+    statsController.updateAllStats();
     // Get the scene currently in
     Button button = (Button) event.getSource();
     Scene sceneButtonIsIn = button.getScene();
