@@ -2,12 +2,15 @@ package nz.ac.auckland.se206;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
@@ -94,7 +97,6 @@ public class UsersController {
     // Load in the user
     Users.loadUser(username);
     // Update the menu page
-    
     App.getMenuController().updateUserImage(profiles.get(number).imageView.getImage());
     App.getMenuController().updateUsernameLabel(username);
   }
@@ -105,25 +107,42 @@ public class UsersController {
    * @param event Takes in the FXML action event
    */
   private static void onDeleteProfile(Event event) {
-    // TODO ASK FOR CONFIRMATION ALERT
-    // Find out which button was pressed
-    Button button = (Button) event.getSource();
-    String string = button.getId().toString();
-    // Get the index number from the button
-    int number = (Integer.parseInt(String.valueOf(string.charAt(string.length() - 1))));
-    // Delete that profile
-    profiles.get(number).deleteProfile();
-    profiles.remove(number);
-    ProfileBuilder.updateId();
-    // Update counter position
-    ProfileBuilder.decrementCounter();
-    // Select the Guest Profile
-    onSelectProfile(event);
-    // Find that user in the list
-    String username = usersList.get(number);
-    // Delete the user in the JSON file
-    Users.deleteUser(username);
-    Users.deleteProfilePicture(username);
+    // Create a new alert
+    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+    // Set up the alert accordingly
+    alert.setTitle("Delete Profile");
+    alert.setHeaderText("Would you like to delete this profile?");
+    alert.setResizable(false);
+    alert.setContentText("Select OK or Cancel.");
+
+    // Show the alert
+    Optional<ButtonType> result = alert.showAndWait();
+    // Check if the person presses yes
+    if (result.get() == ButtonType.OK) {
+
+      // Find out which button was pressed
+      Button button = (Button) event.getSource();
+      String string = button.getId().toString();
+      // Get the index number from the button
+      int number = (Integer.parseInt(String.valueOf(string.charAt(string.length() - 1))));
+      // Delete that profile
+      profiles.get(number).deleteProfile();
+      profiles.remove(number);
+      ProfileBuilder.updateId();
+      // Update counter position
+      ProfileBuilder.decrementCounter();
+      // Select the Guest Profile
+      onSelectProfile(event);
+      // Find that user in the list
+      String username = usersList.get(number);
+      // Delete the user in the JSON file
+      Users.deleteUser(username);
+      Users.deleteProfilePicture(username);
+
+    } else if (result.get() == ButtonType.CANCEL) {
+      // Do nothing if no is pressed
+      return;
+    }
   }
 
   /**
