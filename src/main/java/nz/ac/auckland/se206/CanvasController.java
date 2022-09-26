@@ -34,6 +34,7 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
@@ -69,7 +70,7 @@ public class CanvasController {
   @FXML private Button startButton;
   @FXML private Button restartButton;
   @FXML private Button brushButton;
-  @FXML private Pane canvasPane;
+  @FXML private HBox canvasPane;
   @FXML private Button clearButton;
   @FXML private ChoiceBox<String> difficultyMenu;
   @FXML private Button backToMenuButton;
@@ -98,7 +99,7 @@ public class CanvasController {
         protected Void call() throws Exception {
           // Set two labels to alternate between colours
           alternateColours(titleLabel, Color.BEIGE, Color.RED);
-          alternateColours(wordLabel, Color.web("#56d6ff"), Color.web("b669ff"));
+          alternateColours(wordLabel, Color.web("#CAE5EB"), Color.web("EFFBF5"));
           return null;
         }
       };
@@ -126,10 +127,12 @@ public class CanvasController {
     difficultyMenu.getItems().add(difficultySettingsMap.get(Difficulty.M));
     difficultyMenu.getItems().add(difficultySettingsMap.get(Difficulty.H));
     difficultyMenu.getItems().add(difficultySettingsMap.get(Difficulty.MS));
+    // Set difficulty menu listener for when setting is changed
+    difficultyMenu.setOnAction((event) ->{
+      onDifficultySelect();
+    });
     // Get the graphic from the canvas
     graphic = canvas.getGraphicsContext2D();
-    // Add the canvasPane's css styling to the object
-    canvasPane.getStyleClass().add("canvasPane");
     // Load in the font
     Font font = Font.loadFont("file:src/main/resources/fonts/somethingwild-Regular.ttf", 100);
     // Update title's font
@@ -159,11 +162,12 @@ public class CanvasController {
     // Turn off start button
     startButton.setVisible(true);
     startButton.setDisable(false);
-    brushButton.setVisible(false);
+    brushButton.setDisable(true);
     // Disable save image
     saveButton.setVisible(false);
     backToMenuButton.setVisible(true);
-    difficultyMenu.setVisible(false);
+    difficultyMenu.setVisible(true);
+    clearButton.setDisable(true);
     // Select last played difficulty (default EASY if new game)
     difficultyMenu.setValue(difficultySettingsMap.get(Game.getDifficulty()));
     onDifficultySelect();
@@ -242,7 +246,7 @@ public class CanvasController {
       // Create and add the prediction label to its cell in the grid, row order is top
       // to bottom :
       // highest to lowest rank
-      predictionGrid.add(createPredictionLabel(predictionEntry, isPrompt), 0, i);
+      predictionGrid.add(createPredictionLabel(predictionEntry, isPrompt, i), 0, i);
     }
   }
 
@@ -254,7 +258,7 @@ public class CanvasController {
    * @param labelColor The color for the label background
    * @return Label object
    */
-  private Label createPredictionLabel(String labelText, boolean isPrompt) {
+  private Label createPredictionLabel(String labelText, boolean isPrompt, int index) {
     // Set color for label depending on whether it is the prompt word
     Color labelColor = isPrompt ? predictionHighlightColor : predictionListColor;
     // Create new label and configure formatting
@@ -267,7 +271,6 @@ public class CanvasController {
     label.setPadding(new Insets(0, 0, 0, 10));
     // Ensure the label background fills the entire cell
     label.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-
     label.setBackground(new Background(new BackgroundFill(labelColor, null, null)));
     return label;
   }
@@ -278,7 +281,7 @@ public class CanvasController {
     predictionGrid.getChildren().clear();
     // Fill the GridPane with empty Label nodes
     for (int i = 0; i < predictionGrid.getRowCount(); i++) {
-      predictionGrid.add(createPredictionLabel(" ", false), 0, i);
+      predictionGrid.add(createPredictionLabel(" ", false, i), 0, i);
     }
   }
 
@@ -378,6 +381,14 @@ public class CanvasController {
     timeline.setCycleCount(Animation.INDEFINITE);
     timeline.play();
   }
+  
+  public void decrementTimerBar() {
+    wordLabel.setMaxWidth(wordLabel.getWidth() - (600 / 70));
+  }
+  
+  public void resetTimerBar() {
+    wordLabel.setMaxWidth(600.0);
+  }
 
   /**
    * Called when the game ends. <br>
@@ -393,9 +404,10 @@ public class CanvasController {
     Platform.runLater(
         () -> {
           // Set UI elements for post-game
+          resetTimerBar();
           canvas.setDisable(true);
-          brushButton.setVisible(false);
-          clearButton.setVisible(false);
+          brushButton.setDisable(true);
+          clearButton.setDisable(true);
           restartButton.setVisible(true);
           backToMenuButton.setVisible(true);
           saveButton.setVisible(true);
@@ -452,9 +464,9 @@ public class CanvasController {
     brushButton.setText("Eraser");
 
     // Change the visibilities of buttons according to brief
-    clearButton.setVisible(true);
+    clearButton.setDisable(false);
     startButton.setVisible(false);
-    brushButton.setVisible(true);
+    brushButton.setDisable(false);
     difficultyMenu.setVisible(false);
     backToMenuButton.setVisible(false);
 
