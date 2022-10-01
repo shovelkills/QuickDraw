@@ -109,7 +109,7 @@ public class MenuController {
     Button button = (Button) event.getSource();
     Scene sceneButtonIsIn = button.getScene();
     // Move to the next scene
-    sceneButtonIsIn.setRoot(SceneManager.getUiRoot(AppUi.GAME));
+    sceneButtonIsIn.setRoot(SceneManager.getUiRoot(AppUi.GAMESELECT));
   }
 
   @FXML

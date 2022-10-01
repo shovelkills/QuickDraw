@@ -1,18 +1,16 @@
 package nz.ac.auckland.se206;
 
+import ai.djl.ModelException;
+import ai.djl.modality.Classifications.Classification;
+import com.opencsv.exceptions.CsvException;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Paths;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
-import javax.imageio.ImageIO;
-import com.opencsv.exceptions.CsvException;
-import ai.djl.ModelException;
-import ai.djl.modality.Classifications.Classification;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -29,7 +27,6 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Background;
@@ -42,20 +39,18 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.FileChooser;
 import javafx.util.Duration;
+import javax.imageio.ImageIO;
 import nz.ac.auckland.se206.SceneManager.AppUi;
 import nz.ac.auckland.se206.words.CategorySelector;
-import nz.ac.auckland.se206.words.CategorySelector.Difficulty;
 
 /**
  * This is the controller of the canvas. You are free to modify this class and the corresponding
  * FXML file as you see fit. For example, you might no longer need the "Predict" button because the
  * DL model should be automatically queried in the background every second.
  *
- * <p>
- * !! IMPORTANT !!
+ * <p>!! IMPORTANT !!
  *
- * <p>
- * Although we added the scale of the image, you need to be careful when changing the size of the
+ * <p>Although we added the scale of the image, you need to be careful when changing the size of the
  * drawable canvas and the brush size. If you make the brush too big or too small with respect to
  * the canvas size, the ML model will not work correctly. So be careful. If you make some changes in
  * the canvas and brush sizes, make sure that the prediction works fine.
@@ -63,40 +58,25 @@ import nz.ac.auckland.se206.words.CategorySelector.Difficulty;
 public class CanvasController {
 
   // Define FXML fields
-  @FXML
-  private Canvas canvas;
-  @FXML
-  private Label titleLabel;
-  @FXML
-  private Label wordLabel;
-  @FXML
-  private Label timerLabel;
-  @FXML
-  private GridPane predictionGrid;
-  @FXML
-  private Button startButton;
-  @FXML
-  private Button restartButton;
-  @FXML
-  private Button brushButton;
-  @FXML
-  private HBox canvasPane;
-  @FXML
-  private Button clearButton;
-  @FXML
-  private ChoiceBox<String> difficultyMenu;
-  @FXML
-  private Button backToMenuButton;
-  @FXML
-  private Button saveButton;
+  @FXML private Canvas canvas;
+  @FXML private Label titleLabel;
+  @FXML private Label wordLabel;
+  @FXML private Label timerLabel;
+  @FXML private GridPane predictionGrid;
+  @FXML private Button startButton;
+  @FXML private Button restartButton;
+  @FXML private Button brushButton;
+  @FXML private HBox canvasPane;
+  @FXML private Button clearButton;
+
+  @FXML private Button backToMenuButton;
+  @FXML private Button saveButton;
 
   // Define game object
   private Game game;
 
   // Define other UI data
   private GraphicsContext graphic;
-  private final HashMap<Difficulty, String> difficultySettingsMap =
-      new HashMap<Difficulty, String>();
   private boolean brush;
   private boolean isDrawing;
   private double currentX;
@@ -106,16 +86,17 @@ public class CanvasController {
   private Color predictionTextColor = Color.WHITE;
 
   // Task for alternating colour of the title and word label concurrently
-  private Task<Void> alternateColoursTask = new Task<Void>() {
+  private Task<Void> alternateColoursTask =
+      new Task<Void>() {
 
-    @Override
-    protected Void call() throws Exception {
-      // Set two labels to alternate between colours
-      alternateColours(titleLabel, Color.BEIGE, Color.RED);
-      alternateColours(wordLabel, Color.web("#CAE5EB"), Color.web("EFFBF5"));
-      return null;
-    }
-  };
+        @Override
+        protected Void call() throws Exception {
+          // Set two labels to alternate between colours
+          alternateColours(titleLabel, Color.BEIGE, Color.RED);
+          alternateColours(wordLabel, Color.web("#CAE5EB"), Color.web("EFFBF5"));
+          return null;
+        }
+      };
 
   /**
    * JavaFX calls this method once the GUI elements are loaded. In our case we create a listener for
@@ -127,33 +108,12 @@ public class CanvasController {
    * @throws CsvException If the Csv cannot be found
    */
   public void initialize() throws IOException, URISyntaxException, CsvException, ModelException {
-    // Instantiate a new game object on first opening the scene
-    CategorySelector.loadCategories();
-    game = new Game(this);
-    // Build difficulty settings map for the dropdown
-    difficultySettingsMap.put(Difficulty.E, "EASY");
-    difficultySettingsMap.put(Difficulty.M, "MEDIUM");
-    difficultySettingsMap.put(Difficulty.H, "HARD");
-    difficultySettingsMap.put(Difficulty.MS, "MASTER");
-    // Populate difficulty dropdown
-    difficultyMenu.getItems().add(difficultySettingsMap.get(Difficulty.E));
-    difficultyMenu.getItems().add(difficultySettingsMap.get(Difficulty.M));
-    difficultyMenu.getItems().add(difficultySettingsMap.get(Difficulty.H));
-    difficultyMenu.getItems().add(difficultySettingsMap.get(Difficulty.MS));
-    // Set difficulty menu listener for when setting is changed
-    difficultyMenu.setOnAction((event) -> {
-      onDifficultySelect();
-    });
     // Get the graphic from the canvas
     graphic = canvas.getGraphicsContext2D();
     // Load in the font
     Font font = Font.loadFont("file:src/main/resources/fonts/somethingwild-Regular.ttf", 100);
     // Update title's font
     titleLabel.setFont(font);
-
-    // Set up the pre-game UI elements that are in common with restarting the game
-    setPreGameInterface();
-
     // Create a new thread for the alternating colours task
     Thread colourThread = new Thread(alternateColoursTask);
     // Allow the task to be cancelled on closing of application
@@ -164,26 +124,34 @@ public class CanvasController {
 
   /**
    * Sets UI elements which are common to the initialisation of the scene and restarting the game.
+   *
+   * @throws URISyntaxException
+   * @throws CsvException
+   * @throws IOException
+   * @throws ModelException
    */
-  private void setPreGameInterface() {
-    // Bind label properties to game properties
-    wordLabel.textProperty().bind(game.getCurrentPromptProperty());
-    timerLabel.textProperty().bind(game.getTimeRemainingAsStringBinding());
-    // Set UI elements for pre-game
-    canvas.setDisable(true);
-    restartButton.setVisible(false);
-    // Turn off start button
-    startButton.setVisible(true);
-    startButton.setDisable(false);
-    brushButton.setDisable(true);
-    // Disable save image
-    saveButton.setVisible(false);
-    backToMenuButton.setVisible(true);
-    difficultyMenu.setVisible(true);
-    clearButton.setDisable(true);
-    // Select last played difficulty (default EASY if new game)
-    difficultyMenu.setValue(difficultySettingsMap.get(Game.getDifficulty()));
-    onDifficultySelect();
+  public void setPreGameInterface()
+      throws IOException, CsvException, URISyntaxException, ModelException {
+    // Instantiate a new game object on first opening the scene
+    CategorySelector.loadCategories();
+    game = new Game(this);
+    Platform.runLater(
+        () -> {
+          // Bind label properties to game properties
+          wordLabel.textProperty().bind(game.getCurrentPromptProperty());
+          timerLabel.textProperty().bind(game.getTimeRemainingAsStringBinding());
+          // Set UI elements for pre-game
+          canvas.setDisable(true);
+          restartButton.setVisible(false);
+          // Turn off start button
+          startButton.setVisible(true);
+          startButton.setDisable(false);
+          brushButton.setDisable(true);
+          // Disable save image
+          saveButton.setVisible(false);
+          backToMenuButton.setVisible(true);
+          clearButton.setDisable(true);
+        });
   }
 
   /**
@@ -193,32 +161,6 @@ public class CanvasController {
    */
   public boolean getIsDrawing() {
     return isDrawing;
-  }
-
-  /** Set the game difficulty through the UI dropdown, update the word label */
-  @FXML
-  private void onDifficultySelect() {
-    // gets the current difficulty we are on from the menu
-    switch (difficultyMenu.getValue()) {
-      case "EASY":
-        // Sets the difficulty of the game to easy
-        game.setDifficulty(Difficulty.E);
-        break;
-      case "MEDIUM":
-        // Sets the difficulty of the game to medium
-        game.setDifficulty(Difficulty.M);
-        break;
-      case "HARD":
-        // Sets the difficulty of the game to hard
-        game.setDifficulty(Difficulty.H);
-        break;
-      case "MASTER":
-        // Sets the difficulty of the game to master
-        game.setDifficulty(Difficulty.MS);
-        break;
-      default:
-        game.setDifficulty(Difficulty.E);
-    }
   }
 
   /** This function toggles from brush to eraser */
@@ -278,8 +220,9 @@ public class CanvasController {
     Label label = new Label();
     label.setText(labelText);
     label.setTextFill(predictionTextColor);
-    label.setFont(Font.font(Font.getDefault().getFamily(),
-        isPrompt ? FontWeight.BOLD : FontWeight.MEDIUM, 16));
+    label.setFont(
+        Font.font(
+            Font.getDefault().getFamily(), isPrompt ? FontWeight.BOLD : FontWeight.MEDIUM, 16));
     label.setPadding(new Insets(0, 0, 0, 10));
     // Ensure the label background fills the entire cell
     label.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
@@ -382,8 +325,12 @@ public class CanvasController {
     // Loop three times
     for (int i = 0; i < 3; i++) {
       // Add a new keyframe accordingly
-      timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(2.5 * i),
-          new KeyValue(label.textFillProperty(), i != 1 ? colour1 : colour2)));
+      timeline
+          .getKeyFrames()
+          .add(
+              new KeyFrame(
+                  Duration.seconds(2.5 * i),
+                  new KeyValue(label.textFillProperty(), i != 1 ? colour1 : colour2)));
     }
     // Play the animation indefinitely
     timeline.setCycleCount(Animation.INDEFINITE);
@@ -405,38 +352,39 @@ public class CanvasController {
    * - Prompts user with a pop-up giving them the option to save their drawing
    *
    * @return isWin The win flag from the game controller, is true if the game was won and false if
-   *         lost
+   *     lost
    * @throws InterruptedException
    */
   public void onEndGame(boolean isWin) {
-    Platform.runLater(() -> {
-      isDrawing = false;
-      // Set UI elements for post-game
-      resetTimerBar();
-      canvas.setDisable(true);
-      brushButton.setDisable(true);
-      clearButton.setDisable(true);
-      restartButton.setVisible(true);
-      backToMenuButton.setVisible(true);
-      saveButton.setVisible(true);
+    Platform.runLater(
+        () -> {
+          isDrawing = false;
+          // Set UI elements for post-game
+          resetTimerBar();
+          canvas.setDisable(true);
+          brushButton.setDisable(true);
+          clearButton.setDisable(true);
+          restartButton.setVisible(true);
+          backToMenuButton.setVisible(true);
+          saveButton.setVisible(true);
 
-      // Unbind label properties bound to game properties
-      wordLabel.textProperty().unbind();
-      timerLabel.textProperty().unbind();
+          // Unbind label properties bound to game properties
+          wordLabel.textProperty().unbind();
+          timerLabel.textProperty().unbind();
 
-      // Update the word label to display a win or loss message for the user at the
-      // end of the
-      // game.
-      if (isWin) {
-        wordLabel.setText(getWinMessage());
-        Users.increaseWins();
-      } else {
-        System.out.println("LOST");
-        wordLabel.setText(getLossMessage());
-        Users.increaseLosses();
-      }
-      Users.saveUser();
-    });
+          // Update the word label to display a win or loss message for the user at the
+          // end of the
+          // game.
+          if (isWin) {
+            wordLabel.setText(getWinMessage());
+            Users.increaseWins();
+          } else {
+            System.out.println("LOST");
+            wordLabel.setText(getLossMessage());
+            Users.increaseLosses();
+          }
+          Users.saveUser();
+        });
   }
 
   /**
@@ -445,7 +393,10 @@ public class CanvasController {
    * @return A string informing the user they have won and how much time they took.
    */
   private String getWinMessage() {
-    return "You won! You drew " + game.getCurrentPrompt() + " in " + (60 - game.getTimeRemaining())
+    return "You won! You drew "
+        + game.getCurrentPrompt()
+        + " in "
+        + (CategorySelector.getTime() - game.getTimeRemaining())
         + " seconds!";
   }
 
@@ -472,37 +423,38 @@ public class CanvasController {
     clearButton.setDisable(false);
     startButton.setVisible(false);
     brushButton.setDisable(false);
-    difficultyMenu.setVisible(false);
     backToMenuButton.setVisible(false);
 
     // Get eraser colour
     Background currentBackground = canvasPane.getBackground();
     Paint eraserColour = currentBackground.getFills().get(0).getFill();
-    canvas.setOnMousePressed(e -> {
-      currentX = e.getX();
-      currentY = e.getY();
-      isDrawing = true;
-    });
+    canvas.setOnMousePressed(
+        e -> {
+          currentX = e.getX();
+          currentY = e.getY();
+          isDrawing = true;
+        });
 
-    canvas.setOnMouseDragged(e -> {
+    canvas.setOnMouseDragged(
+      e -> {
 
-      // Brush size (you can change this, it should not be too small or too large).
-      double size = 5.0;
+        // Brush size (you can change this, it should not be too small or too large).
+        double size = 5.0;
 
-      final double x = e.getX() - size / 2;
-      final double y = e.getY() - size / 2;
-      if (isDrawing == true) {
-        // This is the colour of the brush.
-        if (brush) {
-          graphic.setFill(Color.BLACK);
-          graphic.setLineWidth(size);
-          graphic.strokeLine(currentX, currentY, x, y);
+        final double x = e.getX() - size / 2;
+        final double y = e.getY() - size / 2;
+        if (isDrawing == true) {
+          // This is the colour of the brush.
+          if (brush) {
+            graphic.setFill(Color.BLACK);
+            graphic.setLineWidth(size);
+            graphic.strokeLine(currentX, currentY, x, y);
 
-        } else {
+          } else {
 
-          graphic.setFill(eraserColour);
-          size = 10.0;
-          graphic.fillOval(x, y, size, size);
+            graphic.setFill(eraserColour);
+            size = 10.0;
+            graphic.fillOval(x, y, size, size);
         }
         currentX = x;
         currentY = y;

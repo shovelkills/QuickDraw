@@ -8,6 +8,7 @@ public class SceneManager {
   public enum AppUi {
     MAIN_MENU,
     GAME,
+    GAMESELECT,
     STATS,
     USERSELECT,
     USERCREATE
