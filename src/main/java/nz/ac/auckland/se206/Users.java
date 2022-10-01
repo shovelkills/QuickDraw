@@ -1,7 +1,5 @@
 package nz.ac.auckland.se206;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -16,9 +14,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.imageio.ImageIO;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
-import javax.imageio.ImageIO;
 
 public class Users {
   // Stores the information in the JSON file as individual variables
@@ -32,6 +32,7 @@ public class Users {
   private static List<String> wordHistory;
 
   private static Map<?, ?> userInfo;
+  private static Map<String, String> gameDifficulty;
 
   private static String fastestWord;
   private static String folderDirectory = System.getProperty("user.dir");
@@ -83,6 +84,8 @@ public class Users {
 
       timeHistory = (List<Double>) userInfo.get("timeHistory");
 
+      gameDifficulty = (Map<String, String>) userInfo.get("gameDifficulty");
+
       setRecentUser(username);
 
       reader.close();
@@ -123,6 +126,18 @@ public class Users {
       userMap.put("fastestWord", " ");
       userMap.put("timeHistory", new ArrayList<Double>());
 
+      // Creates the default difficulty
+      Map<String, String> difficulty = new HashMap<>();
+      difficulty.put("accuracyDifficulty", "easy");
+      difficulty.put("wordsDifficulty", "easy");
+      difficulty.put("timeDifficulty", "easy");
+      difficulty.put("confidenceDifficulty", "easy");
+      userMap.put("gameDifficulty", difficulty);
+
+      // Creates the badges
+      Map<String, String> badges = new HashMap<>();
+
+
       // Gets the file directory to save to and runs the load user method
       File dir = new File(folderDirectory + "/src/main/resources/users/");
       try {
@@ -155,7 +170,7 @@ public class Users {
    *
    * @param username the username the user inputted
    * @return boolean of if there are special characters in the username. True means there are
-   *     special characters in the string
+   *         special characters in the string
    */
   public static boolean isValidUsername(String username) {
 
@@ -199,6 +214,7 @@ public class Users {
       userMap.put("fastestGame", fastestTime);
       userMap.put("fastestWord", fastestWord);
       userMap.put("timeHistory", timeHistory);
+      userMap.put("gameDifficulty", gameDifficulty);
 
       // Creates a writer object to write and save the file
       Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -337,6 +353,7 @@ public class Users {
     guestPlayer = new GuestPlayer();
   }
 
+
   /**
    * Checks if the most recent game has the fastest time
    *
@@ -371,6 +388,25 @@ public class Users {
   // Increases current user's losses by 1
   public static void increaseLosses() {
     Users.losses++;
+  }
+
+  /**
+   * Sets the difficulty of each aspect of the game to the most recent difficulties
+   * 
+   * @param accuracydifficulty the accuracy difficulty
+   * @param worddifficulty the word difficulty
+   * @param timedifficulty the time difficulty
+   * @param confidencedifficulty the confidence difficulty
+   */
+  public static void setGameDifficulty(String accuracydifficulty, String worddifficulty,
+      String timedifficulty, String confidencedifficulty) {
+    // Sets each of the difficulty
+    Users.gameDifficulty.put("accuracyDifficulty", accuracydifficulty);
+    Users.gameDifficulty.put("wordsDifficulty", worddifficulty);
+    Users.gameDifficulty.put("timeDifficulty", timedifficulty);
+    Users.gameDifficulty.put("confidenceDifficulty", confidencedifficulty);
+    // Saves the difficulty
+    Users.saveUser();
   }
 
   // Adds the word and time to the list
@@ -437,5 +473,15 @@ public class Users {
 
   public static void setProfilePicture(String profilePicture) {
     Users.profilePicture = profilePicture;
+  }
+
+  /**
+   * To get each difficulty, do Map.get(difficult) e.g. Map.get("timedifficulty") to get the time
+   * difficulty
+   * 
+   * @return
+   */
+  public static Map<String, String> getGameDifficulty() {
+    return gameDifficulty;
   }
 }
