@@ -1,12 +1,12 @@
 package nz.ac.auckland.se206;
 
+import ai.djl.ModelException;
+import com.opencsv.exceptions.CsvException;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import com.opencsv.exceptions.CsvException;
-import ai.djl.ModelException;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -19,7 +19,9 @@ import nz.ac.auckland.se206.words.CategorySelector.Difficulty;
 public class GameSelectController {
 
   public enum GameMode {
-    NORMAL, ZEN, DEFINITION
+    NORMAL,
+    ZEN,
+    DEFINITION
   }
 
   protected static GameMode currentGameMode = GameMode.NORMAL;
@@ -33,20 +35,13 @@ public class GameSelectController {
   }
 
   // Define FXML fields
-  @FXML
-  private ChoiceBox<String> accuracyMenu;
-  @FXML
-  private ChoiceBox<String> wordsMenu;
-  @FXML
-  private ChoiceBox<String> timeMenu;
-  @FXML
-  private ChoiceBox<String> confidenceMenu;
-  @FXML
-  private Button definitionButton;
-  @FXML
-  private Button normalButton;
-  @FXML
-  private Button zenButton;
+  @FXML private ChoiceBox<String> accuracyMenu;
+  @FXML private ChoiceBox<String> wordsMenu;
+  @FXML private ChoiceBox<String> timeMenu;
+  @FXML private ChoiceBox<String> confidenceMenu;
+  @FXML private Button definitionButton;
+  @FXML private Button normalButton;
+  @FXML private Button zenButton;
   private boolean started = false;
 
   private ArrayList<Button> gameModes = new ArrayList<Button>();
@@ -54,20 +49,21 @@ public class GameSelectController {
   private final HashMap<Difficulty, String> difficultyMap = new HashMap<Difficulty, String>();
   private ArrayList<ChoiceBox<String>> difficultyMenu = new ArrayList<ChoiceBox<String>>();
   // Task for alternating colour of the title and word label concurrently
-  private Task<Void> preGameTask = new Task<Void>() {
+  private Task<Void> preGameTask =
+      new Task<Void>() {
 
-    @Override
-    protected Void call() throws Exception {
-      // Set up the pre-game UI elements that are in common with restarting the game
-      while (true) {
-        if (started) {
-          App.getCanvasController().setPreGameInterface();
-          started = false;
+        @Override
+        protected Void call() throws Exception {
+          // Set up the pre-game UI elements that are in common with restarting the game
+          while (true) {
+            if (started) {
+              App.getCanvasController().setPreGameInterface();
+              started = false;
+            }
+            Thread.sleep(1);
+          }
         }
-        Thread.sleep(1);
-      }
-    }
-  };
+      };
 
   public void initialize() {
     Thread preGameThread = new Thread(preGameTask);
@@ -96,7 +92,7 @@ public class GameSelectController {
 
   /**
    * onStartGame will start the game based on the given settings
-   * 
+   *
    * @param event
    * @throws IOException
    * @throws CsvException
@@ -107,8 +103,11 @@ public class GameSelectController {
   private void onStartGame(ActionEvent event)
       throws IOException, CsvException, URISyntaxException, ModelException {
     if (currentGameMode != GameMode.ZEN) {
-      DifficultyBuilder.difficultySetter(accuracyMenu.getValue(), wordsMenu.getValue(),
-          timeMenu.getValue(), confidenceMenu.getValue());
+      DifficultyBuilder.difficultySetter(
+          accuracyMenu.getValue(),
+          wordsMenu.getValue(),
+          timeMenu.getValue(),
+          confidenceMenu.getValue());
     }
     started = true;
 
@@ -121,7 +120,7 @@ public class GameSelectController {
 
   /**
    * onSelectGameMode will change the current GameMode
-   * 
+   *
    * @param event
    */
   @FXML
@@ -172,5 +171,4 @@ public class GameSelectController {
         break;
     }
   }
-
 }
