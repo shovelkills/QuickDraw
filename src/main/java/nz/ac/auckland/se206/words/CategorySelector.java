@@ -13,6 +13,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import nz.ac.auckland.se206.DifficultyBuilder;
 import nz.ac.auckland.se206.Users;
 
 public class CategorySelector {
@@ -132,7 +133,7 @@ public class CategorySelector {
    *
    * @return HashMap with different words based on their difficulty
    */
-  public static HashMap<Difficulty, String> getSelection() {
+  public static HashMap<Difficulty, String> getWordSelection() {
     // Initialises a new hash map with key difficulty and a word associated with it
     HashMap<Difficulty, String> selection = new HashMap<Difficulty, String>();
     // Stores the words with the difficulty
@@ -141,5 +142,100 @@ public class CategorySelector {
     selection.put(Difficulty.H, getEasyMediumHardCategory());
     selection.put(Difficulty.MS, getMasterCategory());
     return selection;
+  }
+
+  /**
+   * getTime will return the current difficulty's time
+   *
+   * @return the time as an integer
+   */
+  public static int getTime() {
+    int time;
+    // Set up switch case for different difficulties
+    switch (DifficultyBuilder.getTimeDifficulty()) {
+      case E:
+        // Set the time 60 seconds for easy difficulty
+        time = 60;
+        break;
+      case M:
+        // Set the time 45 seconds for medium difficulty
+        time = 45;
+        break;
+      case H:
+        // Set the time 30 seconds for hard difficulty
+        time = 30;
+        break;
+      case MS:
+        // Set the time 15 seconds for master difficulty
+        time = 15;
+        break;
+      default:
+        // By default set it to the easy difficulty's time
+        time = 60;
+        break;
+    }
+    return time;
+  }
+
+  /**
+   * getConfidence will return the current difficulty's confidence
+   *
+   * @return the confidence as an integer
+   */
+  public static int getConfidence() {
+    int confidence;
+    // Set up switch case for different difficulties
+    switch (DifficultyBuilder.getConfDifficulty()) {
+      case E:
+        // Set the confidence to at least 1% for easy difficulty
+        confidence = 1;
+        break;
+      case M:
+        // Set the confidence to at least 10% for medium difficulty
+        confidence = 10;
+        break;
+      case H:
+        // Set the confidence to at least 25% for hard difficulty
+        confidence = 25;
+        break;
+      case MS:
+        // Set the confidence to at least 50% for master difficulty
+        confidence = 50;
+        break;
+      default:
+        // By default set it to the easy difficulty's confidence
+        confidence = 1;
+        break;
+    }
+    return confidence;
+  }
+
+  /**
+   * getConf will return the current difficulty's confidence
+   *
+   * @return the confidence as an integer
+   */
+  public static int getAccuracy() {
+    int accuracy;
+    // Set up switch case for different difficulties
+    switch (DifficultyBuilder.getAccDifficulty()) {
+      case E:
+        // Set the accuracy to top 3 for easy difficulty
+        accuracy = 3;
+        break;
+      case M:
+        // Set the accuracy to top 2 for medium difficulty
+        accuracy = 2;
+        break;
+      case H:
+        // Set the accuracy to top 1 for hard difficulty
+        accuracy = 1;
+        break;
+      default:
+        // By default set it to the easy difficulty's accuracy
+        accuracy = 3;
+        break;
+    }
+    return accuracy;
   }
 }

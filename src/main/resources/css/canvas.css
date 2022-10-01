@@ -29,11 +29,6 @@
 	-fx-background-radius: 0 20 20 0;
 }
 
-.difficultyDropdown{
-	-fx-background-color: #EFFBF5;
-	-fx-background-radius: 10 0 0 10;
-}
-
 .startButton{
 	-fx-background-radius: 0 10 10 0;
 	-fx-text-fill: white;

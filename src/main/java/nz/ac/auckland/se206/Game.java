@@ -39,7 +39,10 @@ public class Game {
   private CanvasController canvas;
   private HashMap<Difficulty, String> currentSelection;
   private StringProperty currentPrompt = new SimpleStringProperty(" ");
-  private IntegerProperty timer = new SimpleIntegerProperty(60);
+  private IntegerProperty timer;
+  private int gameTime;
+  private int topMatch;
+  private float confidence;
   private boolean spoken = false;
   private boolean hasWon = false;
 
@@ -53,11 +56,12 @@ public class Game {
           // Run indefinitely
           while (true) {
             // When starting speak that its starting
-            if (timer.get() == 59) {
+            if (timer.get() == gameTime - 1) {
               textToSpeech.speak("Starting");
-            } else if (timer.get() == 31) {
+            } else if (timer.get() == (gameTime / 2) + 1) {
               // When half way speak thats it is halfway
-              textToSpeech.speak("Thirty Seconds Remaining");
+              textToSpeech.speak(
+                  String.format("%s Seconds Remaining"), Integer.toString(gameTime / 2));
             }
             // Speak if the person has won
             if (hasWon && !spoken) {
@@ -88,6 +92,7 @@ public class Game {
               while (timer.intValue() > 1) {
                 // Wait 1 second
                 Thread.sleep(1000);
+
                 Platform.runLater(
                     () -> {
                       // Decrement timer
@@ -102,12 +107,19 @@ public class Game {
                           List<Classifications.Classification> currentPredictions =
                               model.getPredictions(canvas.getCurrentSnapshot(), 10);
                           // Update the predictions
-                          canvas.updatePredictionGridDisplay(currentPredictions);
-                          for (int i = 0; i < 3; i++) {
-                            // Check if the top 3 words are what we are drawing
-                            if (getCurrentPrompt()
-                                .equals(
-                                    currentPredictions.get(i).getClassName().replace("_", " "))) {
+                          System.out.println(confidence);
+                          for (int i = 0; i < topMatch; i++) {
+                            canvas.updatePredictionGridDisplay(currentPredictions);
+                            System.out.println(currentPredictions.get(i).getProbability());
+                            System.out.println(CategorySelector.getTime());
+                            // Check if the top words are what we are drawing based on difficulty
+                            if (currentPredictions.get(i).getProbability() > confidence
+                                && getCurrentPrompt()
+                                    .equals(
+                                        currentPredictions
+                                            .get(i)
+                                            .getClassName()
+                                            .replace("_", " "))) {
                               Users.addTimeHistory(timer.getValue().intValue(), getCurrentPrompt());
                               // End the game
                               hasWon = true;
@@ -132,16 +144,27 @@ public class Game {
         ;
       };
 
+  /**
+   * Game will set up a game based on the presets selected
+   *
+   * @param canvas takes in the canvas controller for the game
+   * @throws IOException reading/writing exception
+   * @throws URISyntaxException converting to link exception
+   * @throws CsvException reading spreadsheet exceptions
+   * @throws ModelException doodle prediction exception
+   */
   public Game(CanvasController canvas)
       throws IOException, URISyntaxException, CsvException, ModelException {
     // Set the canvas
     this.canvas = canvas;
-    // Set default difficulty to easy
-    difficulty = Difficulty.E;
     model = new DoodlePrediction();
     // Get the current difficulty's word
-    currentSelection = CategorySelector.getSelection();
-    String word = currentSelection.get(difficulty);
+    currentSelection = CategorySelector.getWordSelection();
+    String word = currentSelection.get(DifficultyBuilder.getWordsDifficulty());
+    gameTime = CategorySelector.getTime();
+    topMatch = CategorySelector.getAccuracy();
+    confidence = ((float) CategorySelector.getConfidence() / 100);
+    timer = new SimpleIntegerProperty(gameTime);
     currentPrompt.setValue(word);
     // Start the text to speech thread
     Thread ttsThread = new Thread(speechTask);
@@ -155,7 +178,7 @@ public class Game {
    *
    * @param newDifficulty The Difficulty to change the game setting to
    */
-  public void setDifficulty(Difficulty newDifficulty) {
+  public void setWordDifficulty(Difficulty newDifficulty) {
     difficulty = newDifficulty;
     currentPrompt.setValue(currentSelection.get(difficulty));
   }
@@ -191,7 +214,7 @@ public class Game {
   public void resetGame() {
     service.reset();
     resetTimer(difficulty);
-    currentSelection = CategorySelector.getSelection();
+    currentSelection = CategorySelector.getWordSelection();
   }
 
   /**
@@ -200,7 +223,7 @@ public class Game {
    * @param difficulty
    */
   public void resetTimer(Difficulty difficulty) {
-    timer.set(60);
+    timer.set(CategorySelector.getTime());
   }
 
   /**
