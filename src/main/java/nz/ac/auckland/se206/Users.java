@@ -1,5 +1,7 @@
 package nz.ac.auckland.se206;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -14,11 +16,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.imageio.ImageIO;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
+import javax.imageio.ImageIO;
 
 public class Users {
   // Stores the information in the JSON file as individual variables
@@ -139,7 +139,6 @@ public class Users {
 
       userMap.put("Badges", createBadges());
 
-
       // Gets the file directory to save to and runs the load user method
       File dir = new File(folderDirectory + "/src/main/resources/users/");
       try {
@@ -169,7 +168,7 @@ public class Users {
 
   /**
    * Generates a HashMap of all the badges
-   * 
+   *
    * @return the badge HashMap of all the badges
    */
   public static Map<String, Map<String, Boolean>> createBadges() {
@@ -215,7 +214,7 @@ public class Users {
    *
    * @param username the username the user inputted
    * @return boolean of if there are special characters in the username. True means there are
-   *         special characters in the string
+   *     special characters in the string
    */
   public static boolean isValidUsername(String username) {
 
@@ -399,7 +398,6 @@ public class Users {
     guestPlayer = new GuestPlayer();
   }
 
-
   /**
    * Checks if the most recent game has the fastest time
    *
@@ -438,14 +436,17 @@ public class Users {
 
   /**
    * Sets the difficulty of each aspect of the game to the most recent difficulties
-   * 
+   *
    * @param accuracydifficulty the accuracy difficulty
    * @param worddifficulty the word difficulty
    * @param timedifficulty the time difficulty
    * @param confidencedifficulty the confidence difficulty
    */
-  public static void setGameDifficulty(String accuracydifficulty, String worddifficulty,
-      String timedifficulty, String confidencedifficulty) {
+  public static void setGameDifficulty(
+      String accuracydifficulty,
+      String worddifficulty,
+      String timedifficulty,
+      String confidencedifficulty) {
     // Sets each of the difficulty
     Users.gameDifficulty.put("accuracyDifficulty", accuracydifficulty);
     Users.gameDifficulty.put("wordsDifficulty", worddifficulty);
@@ -524,7 +525,7 @@ public class Users {
   /**
    * To get each difficulty, do Map.get(difficult) e.g. Map.get("timedifficulty") to get the time
    * difficulty
-   * 
+   *
    * @return
    */
   public static Map<String, String> getGameDifficulty() {
@@ -534,5 +535,4 @@ public class Users {
   public static Map<String, Map<String, Boolean>> getBadges() {
     return badges;
   }
-
 }
