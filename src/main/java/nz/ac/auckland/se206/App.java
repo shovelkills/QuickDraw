@@ -16,6 +16,7 @@ public class App extends Application {
   private static StatsController statsController;
   private static MenuController menuController;
   private static UsersController usersController;
+  private static GameSelectController gameSelectController;
 
   public static void main(final String[] args) {
     launch();
@@ -52,6 +53,13 @@ public class App extends Application {
       // return the root for switching scenes
       return root;
     }
+    if (fxml == "gameselect") {
+      FXMLLoader loader = new FXMLLoader(App.class.getResource("/fxml/" + fxml + ".fxml"));
+      Parent root = (Parent) loader.load();
+      gameSelectController = loader.getController();
+      // return the root for switching scenes
+      return root;
+    }
     // For other FXMLs just return the root
     return new FXMLLoader(App.class.getResource("/fxml/" + fxml + ".fxml")).load();
   }
@@ -68,6 +76,10 @@ public class App extends Application {
     return usersController;
   }
 
+  public static GameSelectController getGameSelectController() {
+    return gameSelectController;
+  }
+
   /**
    * This method is invoked when the application starts. It loads and shows the "Canvas" scene.
    *
@@ -79,20 +91,20 @@ public class App extends Application {
     // Add all the scenes to the scene manager
     SceneManager.addUi(AppUi.MAIN_MENU, loadFxml("menu"));
     SceneManager.addUi(AppUi.GAME, loadFxml("canvas"));
+    SceneManager.addUi(AppUi.GAMESELECT, loadFxml("gameselect"));
     SceneManager.addUi(AppUi.USERSELECT, loadFxml("users"));
     SceneManager.addUi(AppUi.USERCREATE, loadFxml("usercreation"));
     SceneManager.addUi(AppUi.STATS, loadFxml("stats"));
     // Creates a new scene that starts on the main menu in windowed mode
-    final Scene scene =
-        new Scene(
-            SceneManager.getUiRoot(AppUi.MAIN_MENU),
-            SceneManager.getMaxWindowedWidth(),
-            SceneManager.getMaxWindowedHeight());
+    final Scene scene = new Scene(SceneManager.getUiRoot(AppUi.MAIN_MENU),
+        SceneManager.getMaxWindowedWidth(), SceneManager.getMaxWindowedHeight());
     // Adds the css formatting to the scenes
     scene.getStylesheets().add("/css/menu.css");
     scene.getStylesheets().add("/css/canvas.css");
     scene.getStylesheets().add("/css/creation.css");
     scene.getStylesheets().add("/css/stats.css");
+    scene.getStylesheets().add("/css/gameselect.css");
+
 
     // Set the scene and then show
     stage.setTitle("Draw Game");

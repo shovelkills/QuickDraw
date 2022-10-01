@@ -1,0 +1,8 @@
+.background{
+	-fx-background-image: url("../images/drawn_wallpaper.png");
+	-fx-background-size: 1920 1080;
+}
+.difficultyDropdown{
+	-fx-background-color: #EFFBF5;
+	-fx-background-radius: 10 0 0 10;
+}

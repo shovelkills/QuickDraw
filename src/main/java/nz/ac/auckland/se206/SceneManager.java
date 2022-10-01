@@ -6,11 +6,7 @@ import javafx.scene.Parent;
 
 public class SceneManager {
   public enum AppUi {
-    MAIN_MENU,
-    GAME,
-    STATS,
-    USERSELECT,
-    USERCREATE
+    MAIN_MENU, GAME, GAMESELECT, STATS, USERSELECT, USERCREATE
   }
 
   private static final double WIDTH_PADDING = 200;

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="660.0" prefWidth="900.0" styleClass="background" stylesheets="@../css/menu.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nz.ac.auckland.se206.GameSelectController">
+   <center>
+      <VBox alignment="TOP_CENTER" maxWidth="1.7976931348623157E308" prefHeight="602.0" prefWidth="900.0" styleClass="canvasPanel" stylesheets="@../css/canvas.css" BorderPane.alignment="CENTER">
+         <children>
+            <HBox alignment="CENTER" prefHeight="611.0" prefWidth="860.0" spacing="30.0">
+               <children>
+                  <VBox alignment="CENTER" prefHeight="578.0" prefWidth="165.0" spacing="20.0">
+                     <children>
+                        <Label alignment="CENTER" text="Accuracy" />
+                        <ChoiceBox fx:id="accuracyMenu" prefHeight="40.0" prefWidth="150.0" styleClass="difficultyDropdown" stylesheets="@../css/gameselect.css" />
+                     </children>
+                  </VBox>
+                  <VBox alignment="CENTER" prefHeight="578.0" prefWidth="165.0" spacing="20.0">
+                     <children>
+                        <Label alignment="CENTER" text="Words" />
+                        <ChoiceBox fx:id="wordsMenu" prefHeight="40.0" prefWidth="150.0" styleClass="difficultyDropdown" stylesheets="@../css/gameselect.css" />
+                     </children>
+                  </VBox>
+                  <VBox alignment="CENTER" prefHeight="578.0" prefWidth="165.0" spacing="20.0">
+                     <children>
+                        <Label alignment="CENTER" text="Time" />
+                        <ChoiceBox fx:id="timeMenu" prefHeight="40.0" prefWidth="150.0" styleClass="difficultyDropdown" stylesheets="@../css/gameselect.css" />
+                     </children>
+                  </VBox>
+                  <VBox alignment="CENTER" prefHeight="578.0" prefWidth="165.0" spacing="20.0">
+                     <children>
+                        <Label alignment="CENTER" text="Confidence" />
+                        <ChoiceBox fx:id="confidenceMenu" prefHeight="40.0" prefWidth="150.0" styleClass="difficultyDropdown" stylesheets="@../css/gameselect.css" />
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" prefHeight="196.0" prefWidth="860.0" spacing="30.0">
+               <children>
+                  <Button mnemonicParsing="false" onAction="#onStartGame" text="Start Game" />
+               </children>
+            </HBox>
+         </children>
+         <padding>
+            <Insets bottom="20.0" left="20.0" right="20.0" />
+         </padding>
+      </VBox>
+   </center>
+   <top>
+      <Label fx:id="titleLabel" alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="0.0" prefWidth="900.0" text="Game Select" textFill="WHITE" BorderPane.alignment="CENTER">
+         <font>
+            <Font name="System Bold" size="42.0" />
+         </font>
+         <BorderPane.margin>
+            <Insets />
+         </BorderPane.margin>
+      </Label>
+   </top>
+</BorderPane>
