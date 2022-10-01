@@ -32,6 +32,7 @@ public class Users {
   private static List<String> wordHistory;
 
   private static Map<?, ?> userInfo;
+  private static Map<String, Map<String, Boolean>> badges;
   private static Map<String, String> gameDifficulty;
 
   private static String fastestWord;
@@ -86,6 +87,8 @@ public class Users {
 
       gameDifficulty = (Map<String, String>) userInfo.get("gameDifficulty");
 
+      badges = (Map<String, Map<String, Boolean>>) userInfo.get("Badges");
+
       setRecentUser(username);
 
       reader.close();
@@ -134,8 +137,7 @@ public class Users {
       difficulty.put("confidenceDifficulty", "easy");
       userMap.put("gameDifficulty", difficulty);
 
-      // Creates the badges
-      Map<String, String> badges = new HashMap<>();
+      userMap.put("Badges", createBadges());
 
 
       // Gets the file directory to save to and runs the load user method
@@ -163,6 +165,49 @@ public class Users {
     }
 
     return true;
+  }
+
+  /**
+   * Generates a HashMap of all the badges
+   * 
+   * @return the badge HashMap of all the badges
+   */
+  public static Map<String, Map<String, Boolean>> createBadges() {
+    // Creates a new HashMap the contains all the badges
+    Map<String, Map<String, Boolean>> badgeList = new HashMap<>();
+    Map<String, Boolean> difficulty = new HashMap<>();
+    // Generates the badges
+    difficulty.put("Easy", false);
+    difficulty.put("Medium", false);
+    difficulty.put("Hard", false);
+    badgeList.put("Accuracy", difficulty);
+    difficulty.put("Master", false);
+    // Adds to badge list based of difficulty
+    badgeList.put("Words", difficulty);
+    badgeList.put("Time", difficulty);
+    badgeList.put("Confidence", difficulty);
+    badgeList.put("All difficulties", difficulty);
+    // Generate hashMap for badges based on time wins
+    Map<String, Boolean> timedWins = new HashMap<>();
+    timedWins.put("10 Seconds", false);
+    timedWins.put("30 Seconds", false);
+    timedWins.put("Last Second", false);
+    badgeList.put("Timed Wins", timedWins);
+    // Generate hashMap for badges based on Wins
+    Map<String, Boolean> wins = new HashMap<>();
+    wins.put("First Win", false);
+    wins.put("2 consecutive wins", false);
+    wins.put("5 consecutive wins", false);
+    badgeList.put("Wins", wins);
+    // Generates hashMap for badges on Misc actions
+    Map<String, Boolean> misc = new HashMap<>();
+    misc.put("Draw User Profile", false);
+    misc.put("Play Zen Mode", false);
+    misc.put("View Stats Page", false);
+    misc.put("View Badges Page", false);
+    badgeList.put("Misc", misc);
+
+    return badgeList;
   }
 
   /**
@@ -215,6 +260,7 @@ public class Users {
       userMap.put("fastestWord", fastestWord);
       userMap.put("timeHistory", timeHistory);
       userMap.put("gameDifficulty", gameDifficulty);
+      userMap.put("Badges", badges);
 
       // Creates a writer object to write and save the file
       Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -484,4 +530,9 @@ public class Users {
   public static Map<String, String> getGameDifficulty() {
     return gameDifficulty;
   }
+
+  public static Map<String, Map<String, Boolean>> getBadges() {
+    return badges;
+  }
+
 }

@@ -1,0 +1,63 @@
+{
+  "gameDifficulty": {
+    "timeDifficulty": "easy",
+    "confidenceDifficulty": "easy",
+    "wordsDifficulty": "easy",
+    "accuracyDifficulty": "easy"
+  },
+  "gamesLost": 0,
+  "fastestWord": " ",
+  "wordHistory": [],
+  "timeHistory": [],
+  "Badges": {
+    "All difficulties": {
+      "Master": false,
+      "Easy": false,
+      "Medium": false,
+      "Hard": false
+    },
+    "Timed Wins": {
+      "10 Seconds": false,
+      "Last Second": false,
+      "30 Seconds": false
+    },
+    "Accuracy": {
+      "Master": false,
+      "Easy": false,
+      "Medium": false,
+      "Hard": false
+    },
+    "Confidence": {
+      "Master": false,
+      "Easy": false,
+      "Medium": false,
+      "Hard": false
+    },
+    "Words": {
+      "Master": false,
+      "Easy": false,
+      "Medium": false,
+      "Hard": false
+    },
+    "Misc": {
+      "View Badges Page": false,
+      "Play Zen Mode": false,
+      "Draw User Profile": false,
+      "View Stats Page": false
+    },
+    "Time": {
+      "Master": false,
+      "Easy": false,
+      "Medium": false,
+      "Hard": false
+    },
+    "Wins": {
+      "5 consecutive wins": false,
+      "First Win": false,
+      "2 consecutive wins": false
+    }
+  },
+  "fastestGame": -1,
+  "username": "asda",
+  "gamesWon": 0
+}
