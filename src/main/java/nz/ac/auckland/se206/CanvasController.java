@@ -358,6 +358,7 @@ public class CanvasController {
   public void onEndGame(boolean isWin) {
     Platform.runLater(
         () -> {
+          isDrawing = false;
           // Set UI elements for post-game
           resetTimerBar();
           canvas.setDisable(true);
@@ -435,14 +436,14 @@ public class CanvasController {
         });
 
     canvas.setOnMouseDragged(
-        e -> {
+      e -> {
 
-          // Brush size (you can change this, it should not be too small or too large).
-          double size = 5.0;
+        // Brush size (you can change this, it should not be too small or too large).
+        double size = 5.0;
 
-          final double x = e.getX() - size / 2;
-          final double y = e.getY() - size / 2;
-
+        final double x = e.getX() - size / 2;
+        final double y = e.getY() - size / 2;
+        if (isDrawing == true) {
           // This is the colour of the brush.
           if (brush) {
             graphic.setFill(Color.BLACK);
@@ -454,10 +455,11 @@ public class CanvasController {
             graphic.setFill(eraserColour);
             size = 10.0;
             graphic.fillOval(x, y, size, size);
-          }
-          currentX = x;
-          currentY = y;
-        });
+        }
+        currentX = x;
+        currentY = y;
+      }
+    });
   }
 
   /**
