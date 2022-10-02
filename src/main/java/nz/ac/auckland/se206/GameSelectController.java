@@ -181,10 +181,15 @@ public class GameSelectController {
 
   /** Sets the difficulties of the choice menus of the users previous difficulties selected */
   public void setUserDifficulties() {
-
-    accuracyMenu.setValue(Users.getIndividualDifficulty("accuracyDifficulty"));
-    confidenceMenu.setValue(Users.getIndividualDifficulty("confidenceDifficulty"));
+    if (getCurrentGameMode() == GameMode.ZEN) {
+      accuracyMenu.setValue("N/A");
+      confidenceMenu.setValue("N/A");
+      timeMenu.setValue("N/A");
+    } else {
+      accuracyMenu.setValue(Users.getIndividualDifficulty("accuracyDifficulty"));
+      confidenceMenu.setValue(Users.getIndividualDifficulty("confidenceDifficulty"));
+      timeMenu.setValue(Users.getIndividualDifficulty("timeDifficulty"));
+    }
     wordsMenu.setValue(Users.getIndividualDifficulty("wordsDifficulty"));
-    timeMenu.setValue(Users.getIndividualDifficulty("timeDifficulty"));
   }
 }
