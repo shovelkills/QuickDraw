@@ -64,7 +64,6 @@ public class GuestPlayer {
     return fastestWord;
   }
 
-
   public Map<String, String> getGamedifficulty() {
     return gamedifficulty;
   }
@@ -72,8 +71,6 @@ public class GuestPlayer {
   public void setGamedifficulty(Map<String, String> gamedifficulty) {
     this.gamedifficulty = gamedifficulty;
   }
-
-
 
   public Map<String, Map<String, Boolean>> getBadges() {
     return badges;
