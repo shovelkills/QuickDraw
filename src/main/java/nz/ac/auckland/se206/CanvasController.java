@@ -30,13 +30,12 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.stage.FileChooser;
 import javafx.util.Duration;
 import javax.imageio.ImageIO;
@@ -62,16 +61,22 @@ public class CanvasController {
   @FXML private Canvas canvas;
   @FXML private Label titleLabel;
   @FXML private Label wordLabel;
+  @FXML private Label timerBarLabel;
   @FXML private Label timerLabel;
+  @FXML private Label predictionLabel;
   @FXML private GridPane predictionGrid;
-  @FXML private Button startButton;
-  @FXML private Button restartButton;
-  @FXML private Button brushButton;
   @FXML private HBox canvasPane;
+  @FXML private Button startButton;
+  @FXML private Button brushButton;
+  @FXML private Button eraseButton;
   @FXML private Button clearButton;
-
-  @FXML private Button backToMenuButton;
+  @FXML private Button restartButton;
+  @FXML private Button backToMenuButtonStart;
+  @FXML private Button backToMenuButtonEnd;
   @FXML private Button saveButton;
+  @FXML private HBox preGameHBox;
+  @FXML private HBox postGameHBox;
+  @FXML private VBox drawingToolsVBox;
 
   // Define game object
   private Game game;
@@ -86,6 +91,7 @@ public class CanvasController {
   private Color predictionHighlightColor = Color.web("#008079");
   private Color predictionTextColor = Color.WHITE;
   private GameMode currentGameMode;
+  private Font maybeNext;
 
   // Task for alternating colour of the title and word label concurrently
   private Task<Void> alternateColoursTask =
@@ -94,8 +100,7 @@ public class CanvasController {
         @Override
         protected Void call() throws Exception {
           // Set two labels to alternate between colours
-          alternateColours(titleLabel, Color.BEIGE, Color.RED);
-          alternateColours(wordLabel, Color.web("#CAE5EB"), Color.web("EFFBF5"));
+          alternateColours(titleLabel, Color.web("#006969"), Color.web("#E20F58"));
           return null;
         }
       };
@@ -112,10 +117,8 @@ public class CanvasController {
   public void initialize() throws IOException, URISyntaxException, CsvException, ModelException {
     // Get the graphic from the canvas
     graphic = canvas.getGraphicsContext2D();
-    // Load in the font
-    Font font = Font.loadFont("file:src/main/resources/fonts/somethingwild-Regular.ttf", 100);
-    // Update title's font
-    titleLabel.setFont(font);
+    // Load font
+    maybeNext = Font.loadFont(App.class.getResourceAsStream("/fonts/Maybe-Next.ttf"), 0);
     // Create a new thread for the alternating colours task
     Thread colourThread = new Thread(alternateColoursTask);
     // Allow the task to be cancelled on closing of application
@@ -150,15 +153,16 @@ public class CanvasController {
           }
           // Set UI elements for pre-game
           canvas.setDisable(true);
-          restartButton.setVisible(false);
-          // Turn off start button
-          startButton.setVisible(true);
-          startButton.setDisable(false);
-          brushButton.setDisable(true);
-          // Disable save image
-          saveButton.setVisible(false);
-          backToMenuButton.setVisible(true);
-          clearButton.setDisable(true);
+          // Enable pre-game button panel
+          preGameHBox.setMouseTransparent(false);
+          preGameHBox.setVisible(true);
+          // Disable post-game button panel
+          postGameHBox.setMouseTransparent(true);
+          postGameHBox.setVisible(false);
+          // Disable drawing tools
+          drawingToolsVBox.setDisable(true);
+          // Set timer bar max width
+          timerBarLabel.setMaxWidth(600.0);
         });
   }
 
@@ -173,10 +177,24 @@ public class CanvasController {
 
   /** This function toggles from brush to eraser */
   @FXML
-  private void onBrushChange() {
-    // Toggle the brush
-    brush = !brush;
-    brushButton.setText(brush ? "Eraser" : "Brush");
+  private void onBrush() {
+    // Enable the brush
+    brush = true;
+    // Update button styles to show selection
+    brushButton.getStyleClass().clear();
+    brushButton.getStyleClass().add("brushButtonSelected");
+    eraseButton.getStyleClass().clear();
+    eraseButton.getStyleClass().add("eraserButton");
+  }
+
+  @FXML
+  private void onErase() {
+    // Disable the brush (Enables erase)
+    brush = false;
+    brushButton.getStyleClass().clear();
+    brushButton.getStyleClass().add("brushButton");
+    eraseButton.getStyleClass().clear();
+    eraseButton.getStyleClass().add("eraserButtonSelected");
   }
 
   /** This method is called when the "Clear" button is pressed. Resets brush to "Brush" mode. */
@@ -186,10 +204,8 @@ public class CanvasController {
     graphic.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
     clearPredictionGrid();
     isDrawing = false;
-    // Check if we are on brush
-    if (brushButton.getText().equals("Brush")) {
-      onBrushChange();
-    }
+    // Switch to brush
+    onBrush();
   }
 
   /**
@@ -223,19 +239,25 @@ public class CanvasController {
    * @return Label object
    */
   private Label createPredictionLabel(String labelText, boolean isPrompt, int index) {
-    // Set color for label depending on whether it is the prompt word
-    Color labelColor = isPrompt ? predictionHighlightColor : predictionListColor;
     // Create new label and configure formatting
     Label label = new Label();
+    label.getStyleClass().add("predictionGridLabel");
     label.setText(labelText);
     label.setTextFill(predictionTextColor);
-    label.setFont(
-        Font.font(
-            Font.getDefault().getFamily(), isPrompt ? FontWeight.BOLD : FontWeight.MEDIUM, 16));
     label.setPadding(new Insets(0, 0, 0, 10));
+    // Configure special formatting for top and bottom labels in the grid
+    if (index == 0 && !isPrompt) {
+      label.getStyleClass().add("predictionGridLabelTop");
+    }
+    if (index == 9 && !isPrompt) {
+      label.getStyleClass().add("predictionGridLabelBottom");
+    }
+    // Colour label depending on whether it is the prompt word
+    label
+        .getStyleClass()
+        .add(isPrompt ? "predictionGridLabelIsPrompt" : "predictionGridLabelDefault");
     // Ensure the label background fills the entire cell
     label.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-    label.setBackground(new Background(new BackgroundFill(labelColor, null, null)));
     return label;
   }
 
@@ -269,6 +291,8 @@ public class CanvasController {
     game.resetGame();
     // Reset UI elements
     setPreGameInterface();
+    // Reset Timer
+    resetTimerBar();
   }
 
   /**
@@ -347,11 +371,13 @@ public class CanvasController {
   }
 
   public void decrementTimerBar() {
-    wordLabel.setMaxWidth(wordLabel.getWidth() - (600 / 70));
+    timerBarLabel.setPrefWidth(timerBarLabel.getWidth() - (600 - wordLabel.getWidth()) / 60);
   }
 
   public void resetTimerBar() {
-    wordLabel.setMaxWidth(600.0);
+    timerBarLabel.getStyleClass().clear();
+    timerBarLabel.getStyleClass().add("timerBarDefault");
+    timerBarLabel.setPrefWidth(600.0);
   }
 
   /**
@@ -367,16 +393,18 @@ public class CanvasController {
   public void onEndGame(boolean isWin) {
     Platform.runLater(
         () -> {
+          // Stop drawing and prediction
           isDrawing = false;
-          // Set UI elements for post-game
-          resetTimerBar();
           canvas.setDisable(true);
-          brushButton.setDisable(true);
-          clearButton.setDisable(true);
-          restartButton.setVisible(true);
-          backToMenuButton.setVisible(true);
-          saveButton.setVisible(true);
-
+          // Set UI elements for post-game
+          // Enable post-game button panel
+          postGameHBox.setMouseTransparent(false);
+          postGameHBox.setVisible(true);
+          // Disable pre-game button panel
+          preGameHBox.setMouseTransparent(true);
+          preGameHBox.setVisible(false);
+          // Disable drawing tools
+          drawingToolsVBox.setDisable(true);
           // Unbind label properties bound to game properties
           wordLabel.textProperty().unbind();
           timerLabel.textProperty().unbind();
@@ -386,12 +414,17 @@ public class CanvasController {
           // game.
           if (isWin) {
             wordLabel.setText(getWinMessage());
+            timerBarLabel.getStyleClass().clear();
+            timerBarLabel.getStyleClass().add("timerBarWin");
             Users.increaseWins();
           } else {
             System.out.println("LOST");
             wordLabel.setText(getLossMessage());
+            timerBarLabel.getStyleClass().clear();
+            timerBarLabel.getStyleClass().add("timerBarLoss");
             Users.increaseLosses();
           }
+          timerBarLabel.setPrefWidth(20000.0);
           Users.saveUser();
         });
   }
@@ -415,7 +448,7 @@ public class CanvasController {
    * @return A string that is polite, professional, and honest.
    */
   private String getLossMessage() {
-    return "You lost! Press restart to try another word!";
+    return "Out of time! Play again?";
   }
 
   /** This method sets up a new game to be started */
@@ -425,19 +458,13 @@ public class CanvasController {
 
     canvas.setDisable(false);
     // Turn on to brush mode regardless of what it was
-    brush = true;
-    brushButton.setText("Eraser");
+    onBrush();
 
-    // Change the visibilities of buttons according to brief
-    clearButton.setDisable(false);
-    startButton.setVisible(false);
-    brushButton.setDisable(false);
-    // Check for game mode
-    if (currentGameMode != GameMode.ZEN) {
-      backToMenuButton.setVisible(false);
-    } else {
-      saveButton.setVisible(true);
-    }
+    // Enable drawing tools
+    drawingToolsVBox.setDisable(false);
+
+    // Hide pre-game buttons
+    preGameHBox.setVisible(false);
 
     // Get eraser colour
     Background currentBackground = canvasPane.getBackground();
@@ -467,7 +494,7 @@ public class CanvasController {
             } else {
 
               graphic.setFill(eraserColour);
-              size = 10.0;
+              size = 20.0;
               graphic.fillOval(x, y, size, size);
             }
             currentX = x;
@@ -486,6 +513,35 @@ public class CanvasController {
    * @throws CsvException
    * @throws ModelException
    */
+  @FXML
+  private void onBackToMenuStart(ActionEvent event)
+      throws IOException, URISyntaxException, CsvException, ModelException {
+
+    // If not in zen mode, cancelling the game counts as a loss
+    if (currentGameMode != GameMode.ZEN) {
+      // Create a new alert
+      Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+      // Set up the alert accordingly
+      alert.setTitle("Quit To Menu");
+      alert.setHeaderText("Quitting now will count as a loss! Are you sure?");
+      alert.setResizable(false);
+      alert.setContentText("Select OK or Cancel.");
+
+      // Show the alert
+      Optional<ButtonType> result = alert.showAndWait();
+      // Check if the person presses yes
+      if (result.get() == ButtonType.OK) {
+        onEndGame(false);
+        onBackToMenu(event);
+      } else if (result.get() == ButtonType.CANCEL) {
+        // Do nothing if no is pressed
+        return;
+      }
+    } else {
+      onBackToMenu(event);
+    }
+  }
+
   @FXML
   private void onBackToMenu(ActionEvent event)
       throws IOException, URISyntaxException, CsvException, ModelException {
