@@ -16,6 +16,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
+import nz.ac.auckland.se206.GameSelectController.GameMode;
 import nz.ac.auckland.se206.ml.DoodlePrediction;
 import nz.ac.auckland.se206.speech.TextToSpeech;
 import nz.ac.auckland.se206.words.CategorySelector;
@@ -45,6 +46,7 @@ public class Game {
   private float confidence;
   private boolean spoken = false;
   private boolean hasWon = false;
+  private GameMode currentGame;
 
   // Initialise the speech task
   private Task<Void> speechTask =
@@ -89,16 +91,19 @@ public class Game {
           return new Task<Void>() {
             protected Void call() throws InterruptedException {
               // Check that the timer is running
-              while (timer.intValue() > 1) {
+              while (timer == null || timer.intValue() > 1) {
                 // Wait 1 second
                 Thread.sleep(1000);
 
                 Platform.runLater(
                     () -> {
-                      // Decrement timer
-                      timer.set(timer.get() - 1);
-                      // Decrement timer bar
-                      canvas.decrementTimerBar();
+                      // For all game modes other than zen
+                      if (currentGame != GameMode.ZEN) {
+                        // Decrement timer
+                        timer.set(timer.get() - 1);
+                        // Decrement timer bar
+                        canvas.decrementTimerBar();
+                      }
 
                       try {
                         // Check if the player is currently drawing
@@ -107,11 +112,8 @@ public class Game {
                           List<Classifications.Classification> currentPredictions =
                               model.getPredictions(canvas.getCurrentSnapshot(), 10);
                           // Update the predictions
-                          System.out.println(confidence);
+                          canvas.updatePredictionGridDisplay(currentPredictions);
                           for (int i = 0; i < topMatch; i++) {
-                            canvas.updatePredictionGridDisplay(currentPredictions);
-                            System.out.println(currentPredictions.get(i).getProbability());
-                            System.out.println(CategorySelector.getTime());
                             // Check if the top words are what we are drawing based on difficulty
                             if (currentPredictions.get(i).getProbability() > confidence
                                 && getCurrentPrompt()
@@ -153,8 +155,29 @@ public class Game {
    * @throws CsvException reading spreadsheet exceptions
    * @throws ModelException doodle prediction exception
    */
-  public Game(CanvasController canvas)
-      throws IOException, URISyntaxException, CsvException, ModelException {
+  public Game(CanvasController canvas, GameMode gameMode) throws ModelException, IOException {
+    // Set the current game mode
+    currentGame = gameMode;
+    switch (gameMode) {
+      case DEFINITION:
+        // TODO add in hidden word gamemode
+        break;
+      case NORMAL:
+        // Set the normal game
+        setNormalGame(canvas);
+        break;
+      case ZEN:
+        // Set the zen game
+        setZenGame(canvas);
+        break;
+      default:
+        // Default game set
+        setNormalGame(canvas);
+        break;
+    }
+  }
+
+  private void setNormalGame(CanvasController canvas) throws ModelException, IOException {
     // Set the canvas
     this.canvas = canvas;
     model = new DoodlePrediction();
@@ -170,6 +193,20 @@ public class Game {
     Thread ttsThread = new Thread(speechTask);
     ttsThread.setDaemon(true);
     ttsThread.start();
+  }
+
+  private void setZenGame(CanvasController canvas) throws ModelException, IOException {
+    // Set the canvas
+    this.canvas = canvas;
+    model = new DoodlePrediction();
+    // Get the current difficulty's word
+    currentSelection = CategorySelector.getWordSelection();
+    String word = currentSelection.get(DifficultyBuilder.getWordsDifficulty());
+    // Set the difficulty settings
+    timer = null;
+    topMatch = 0;
+    confidence = 1;
+    currentPrompt.setValue(word);
   }
 
   /**
@@ -212,9 +249,14 @@ public class Game {
    * Resets the concurrent game service. Resets the timer. Gets a new selection of prompts.
    */
   public void resetGame() {
+    // Check if the service is running
+    if (service.isRunning()) {
+      service.cancel();
+    }
+    // Reset the service so the game is reset
     service.reset();
     resetTimer(difficulty);
-    currentSelection = CategorySelector.getWordSelection();
+    // currentSelection = CategorySelector.getWordSelection();
   }
 
   /**
@@ -223,7 +265,10 @@ public class Game {
    * @param difficulty
    */
   public void resetTimer(Difficulty difficulty) {
-    timer.set(CategorySelector.getTime());
+    // Check the current game mode
+    if (currentGame != GameMode.ZEN) {
+      timer.set(CategorySelector.getTime());
+    }
   }
 
   /**

@@ -40,6 +40,7 @@ import javafx.scene.text.FontWeight;
 import javafx.stage.FileChooser;
 import javafx.util.Duration;
 import javax.imageio.ImageIO;
+import nz.ac.auckland.se206.GameSelectController.GameMode;
 import nz.ac.auckland.se206.SceneManager.AppUi;
 import nz.ac.auckland.se206.words.CategorySelector;
 
@@ -84,6 +85,7 @@ public class CanvasController {
   private Color predictionListColor = Color.DARKSLATEBLUE;
   private Color predictionHighlightColor = Color.web("#008079");
   private Color predictionTextColor = Color.WHITE;
+  private GameMode currentGameMode;
 
   // Task for alternating colour of the title and word label concurrently
   private Task<Void> alternateColoursTask =
@@ -132,14 +134,20 @@ public class CanvasController {
    */
   public void setPreGameInterface()
       throws IOException, CsvException, URISyntaxException, ModelException {
+    currentGameMode = GameSelectController.getCurrentGameMode();
     // Instantiate a new game object on first opening the scene
     CategorySelector.loadCategories();
-    game = new Game(this);
+    game = new Game(this, currentGameMode);
     Platform.runLater(
         () -> {
           // Bind label properties to game properties
           wordLabel.textProperty().bind(game.getCurrentPromptProperty());
-          timerLabel.textProperty().bind(game.getTimeRemainingAsStringBinding());
+          if (currentGameMode != GameMode.ZEN) {
+            timerLabel.textProperty().bind(game.getTimeRemainingAsStringBinding());
+            timerLabel.setVisible(true);
+          } else {
+            timerLabel.setVisible(false);
+          }
           // Set UI elements for pre-game
           canvas.setDisable(true);
           restartButton.setVisible(false);
@@ -178,6 +186,7 @@ public class CanvasController {
     graphic.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
     clearPredictionGrid();
     isDrawing = false;
+    // Check if we are on brush
     if (brushButton.getText().equals("Brush")) {
       onBrushChange();
     }
@@ -423,7 +432,12 @@ public class CanvasController {
     clearButton.setDisable(false);
     startButton.setVisible(false);
     brushButton.setDisable(false);
-    backToMenuButton.setVisible(false);
+    // Check for game mode
+    if (currentGameMode != GameMode.ZEN) {
+      backToMenuButton.setVisible(false);
+    } else {
+      saveButton.setVisible(true);
+    }
 
     // Get eraser colour
     Background currentBackground = canvasPane.getBackground();
@@ -436,30 +450,30 @@ public class CanvasController {
         });
 
     canvas.setOnMouseDragged(
-      e -> {
+        e -> {
 
-        // Brush size (you can change this, it should not be too small or too large).
-        double size = 5.0;
+          // Brush size (you can change this, it should not be too small or too large).
+          double size = 5.0;
 
-        final double x = e.getX() - size / 2;
-        final double y = e.getY() - size / 2;
-        if (isDrawing == true) {
-          // This is the colour of the brush.
-          if (brush) {
-            graphic.setFill(Color.BLACK);
-            graphic.setLineWidth(size);
-            graphic.strokeLine(currentX, currentY, x, y);
+          final double x = e.getX() - size / 2;
+          final double y = e.getY() - size / 2;
+          if (isDrawing == true) {
+            // This is the colour of the brush.
+            if (brush) {
+              graphic.setFill(Color.BLACK);
+              graphic.setLineWidth(size);
+              graphic.strokeLine(currentX, currentY, x, y);
 
-          } else {
+            } else {
 
-            graphic.setFill(eraserColour);
-            size = 10.0;
-            graphic.fillOval(x, y, size, size);
-        }
-        currentX = x;
-        currentY = y;
-      }
-    });
+              graphic.setFill(eraserColour);
+              size = 10.0;
+              graphic.fillOval(x, y, size, size);
+            }
+            currentX = x;
+            currentY = y;
+          }
+        });
   }
 
   /**
