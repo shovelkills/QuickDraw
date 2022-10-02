@@ -1,87 +1,203 @@
-.canvasPanel{
-	-fx-background-color: #F0A88E;
-	-fx-background-radius: 50 50 0 0;
+/* SCENE SETUP */
+
+.canvasBackground{
+	-fx-background-image: url(../images/SoftPaper.png);
 }
 
-.canvasBox{
-	-fx-background-color: white;
-}
-
-.predictionGrid{
-	-fx-background-color: #483D8B;
-}
-
-.drawingButton{
-	-fx-background-radius: 20 0 0 20;
-	-fx-background-color: linear-gradient(to top, #2AA1D0, #EFFBF5 2%);
-}
-
-.drawingButton:hover{
-	-fx-background-color: linear-gradient(to top, #2AA1D0, #CAE5EB 5%);
-}
-
-.drawingButton:pressed{
-	-fx-background-color: linear-gradient(to top, #2AA1D0, #05668D 5%);
-}
-
-.promptLabel{
-	-fx-background-color: #DE6449;
-	-fx-background-radius: 0 20 20 0;
-}
-
-.startButton{
-	-fx-background-radius: 0 10 10 0;
-	-fx-text-fill: white;
-	-fx-background-color: #DE6449;
-}
-
-.startButton:hover{
-	-fx-background-color: #E76637;
-}
-
-.startButton:pressed{
-	-fx-background-color: #B35A70;
-}
-
-.backToMenuButton{
-	-fx-background-color: #874F96;
-	-fx-background-radius: 0 10 10 0;
-}
-
-.backToMenuButton:hover{
-	-fx-background-color: #985995;
-}
-
-.backToMenuButton:pressed{
-	-fx-background-color: #87466F;
-}
-
-.restartButton{
-	-fx-background-color: #05668D;
-	-fx-background-radius: 10 0 0 10;
-}
-
-.restartButton:hover{
-	-fx-background-color: #2AA1D0;
-}
-
-.restartButton:pressed{
-	-fx-background-color: #20647F;
-}
-
-.saveButton{
-	-fx-background-color: #CAE5EB;
-}
-
-.saveButton:hover{
-	-fx-background-color: #EFFBF5;
-}
-
-.saveButton:pressed{
-	-fx-background-color: #E5D8EA;
+.canvasTitle{
+	-fx-font-family: "Maybe Next";
+	-fx-font-size: 100;
 }
 
 .timerLabel{
-	-fx-background-color: #20647F;
-	-fx-background-radius: 10 10 10 10;
+	-fx-font-family: "Maybe Next";
+	-fx-background-image: url(../images/timerLabel.png);
+}
+
+.timerBarDefault{
+	-fx-background-color: #008080;
+	-fx-background-radius: 0 20 20 0;
+}
+
+.timerBarWin{
+	-fx-background-color: #40BF4A;
+}
+
+.timerBarLoss{
+	-fx-background-color: #F45B69;
+}
+
+.wordLabel{
+	-fx-font-family: "Maybe Next";
+}
+
+.canvasBox{
+	-fx-background-color: #FCEFE8;
+	-fx-background-radius: 10 10 20 10;
+}
+
+.predictionLabel{
+	-fx-font-family: "Maybe Next";
+}
+
+.predictionGridLabel{
+	-fx-font-family: "Maybe Next";
+	-fx-font-fill: white;
+	-fx-font-size: 16;
+}
+
+.predictionGridLabelTop{
+	-fx-background-radius: 0 30 0 0;
+}
+
+.predictionGridLabelBottom{
+	-fx-background-radius: 0 0 30 0;
+}
+
+.predictionGridLabelDefault{
+	-fx-background-color: #406DBF;
+	-fx-background-insets: 0 15 0 0;
+}
+
+.predictionGridLabelIsPrompt{
+	-fx-background-color: #40BF4A;
+	-fx-background-radius: 0 20 20 0;
+}
+
+.predictionGrid{
+	-fx-background-color: #406DBF;
+	-fx-background-radius: 0 30 30 0;
+	-fx-background-insets: 0 15 0 0;
+}
+
+/*DRAWING CONTROL BUTTONS */
+
+.brushButton{
+	-fx-background-color: transparent;
+	-fx-background-image: url(../images/buttons/brushButtonDefault.png);
+}
+
+.brushButton:hover{
+	-fx-background-image: url(../images/buttons/brushButtonHover.png);
+	-fx-cursor: hand;
+}
+
+.brushButton:pressed{
+	-fx-background-image: url(../images/buttons/brushButtonDown.png);
+	-fx-pref-width: 102;
+	-fx-pref-height: 102;
+}
+
+.brushButtonSelected{
+	-fx-background-image: url(../images/buttons/brushButtonSelected.png);
+	-fx-pref-width: 102;
+	-fx-pref-height: 102;
+}
+
+.eraserButton{
+	-fx-background-color: transparent;
+	-fx-background-image: url(../images/buttons/eraserButtonDefault.png);
+}
+
+.eraserButton:hover{
+	-fx-background-image: url(../images/buttons/eraserButtonHover.png);
+	-fx-cursor: hand;
+}
+
+.eraserButton:pressed{
+	-fx-background-image: url(../images/buttons/eraserButtonDown.png);
+	-fx-pref-width: 102;
+	-fx-pref-height: 102;
+}
+
+.eraserButtonSelected{
+	-fx-background-image: url(../images/buttons/eraserButtonSelected.png);
+	-fx-pref-width: 102;
+	-fx-pref-height: 102;
+}
+
+.clearButton{
+	-fx-background-color: transparent;
+	-fx-background-image: url(../images/buttons/clearButtonDefault.png);
+}
+
+.clearButton:hover{
+	-fx-background-image: url(../images/buttons/clearButtonHover.png);
+	-fx-cursor: hand;
+}
+
+.clearButton:pressed{
+	-fx-background-image: url(../images/buttons/clearButtonDown.png);
+	-fx-pref-width: 102;
+	-fx-pref-height: 102;
+}
+
+/* PRE / POST GAME BUTTONS */
+
+/*START BUTTON */
+.startButton{
+	-fx-background-color: transparent;
+	-fx-background-image: url(../images/buttons/startButtonDefault.png);
+}
+
+.startButton:hover{
+	-fx-background-image: url(../images/buttons/startButtonHover.png);
+	-fx-cursor: hand;
+}
+
+.startButton:pressed{
+	-fx-background-image: url(../images/buttons/startButtonDown.png);
+	-fx-pref-width: 145;
+	-fx-pref-height: 43;
+}
+
+/*MENU BUTTON */
+.backToMenuButton{
+	-fx-background-color: transparent;
+	-fx-background-image: url(../images/buttons/menuButtonDefault.png);
+}
+
+.backToMenuButton:hover{
+	-fx-background-image: url(../images/buttons/menuButtonHover.png);
+	-fx-cursor: hand;
+}
+
+.backToMenuButton:pressed{
+	-fx-background-image: url(../images/buttons/menuButtonDown.png);
+	-fx-pref-width: 142;
+	-fx-pref-height: 42;
+}
+
+/*RESTART BUTTON */
+.restartButton{
+	-fx-background-color: transparent;
+	-fx-background-image: url(../images/buttons/restartButtonDefault.png);
+}
+
+.restartButton:hover{
+	-fx-background-image: url(../images/buttons/restartButtonHover.png);
+	-fx-cursor: hand;
+}
+
+.restartButton:pressed{
+	-fx-background-image: url(../images/buttons/restartButtonDown.png);
+	-fx-pref-width: 122;
+	-fx-pref-height: 42;
+}
+
+/*SAVE BUTTON */
+.saveButton{
+	-fx-background-color: transparent;
+	-fx-background-image: url(../images/buttons/saveButtonDefault.png);
+}
+
+.saveButton:hover{
+	-fx-background-image: url(../images/buttons/saveButtonHover.png);
+	-fx-cursor: hand;
+}
+
+.saveButton:pressed{
+	-fx-background-image: url(../images/buttons/saveButtonDown.png);
+	-fx-pref-width: 142;
+	-fx-pref-height: 42;
 }
