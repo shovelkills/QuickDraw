@@ -131,10 +131,10 @@ public class Users {
 
       // Creates the default difficulty
       Map<String, String> difficulty = new HashMap<>();
-      difficulty.put("accuracyDifficulty", "easy");
-      difficulty.put("wordsDifficulty", "easy");
-      difficulty.put("timeDifficulty", "easy");
-      difficulty.put("confidenceDifficulty", "easy");
+      difficulty.put("accuracyDifficulty", "EASY");
+      difficulty.put("wordsDifficulty", "EASY");
+      difficulty.put("timeDifficulty", "EASY");
+      difficulty.put("confidenceDifficulty", "EASY");
       userMap.put("gameDifficulty", difficulty);
 
       userMap.put("Badges", createBadges());
@@ -217,7 +217,6 @@ public class Users {
    *     special characters in the string
    */
   public static boolean isValidUsername(String username) {
-
     Pattern validCharacters = Pattern.compile("[^a-z0-9-]", Pattern.CASE_INSENSITIVE);
     Matcher matchCharacters = validCharacters.matcher(username);
     return matchCharacters.find();
@@ -390,6 +389,8 @@ public class Users {
     fastestTime = guestPlayer.getFastestTime();
     wordHistory = guestPlayer.getWordHistroy();
     timeHistory = guestPlayer.getTimeHistory();
+    gameDifficulty = guestPlayer.getGamedifficulty();
+    badges = guestPlayer.getBadges();
     setRecentUser(userName);
   }
 
@@ -502,8 +503,8 @@ public class Users {
     return fastestWord;
   }
 
-  public static void setFastestWord(String fastestWord) {
-    Users.fastestWord = fastestWord;
+  public static void setFastestWord(String fastestword) {
+    Users.fastestWord = fastestword;
   }
 
   public static String getRecentList() {
@@ -518,8 +519,8 @@ public class Users {
     return profilePicture;
   }
 
-  public static void setProfilePicture(String profilePicture) {
-    Users.profilePicture = profilePicture;
+  public static void setProfilePicture(String profilepicture) {
+    Users.profilePicture = profilepicture;
   }
 
   /**
@@ -528,11 +529,19 @@ public class Users {
    *
    * @return
    */
-  public static Map<String, String> getGameDifficulty() {
+  public static String getIndividualDifficulty(String difficulty) {
+    return gameDifficulty.get(difficulty);
+  }
+
+  public static Map<String, String> getIndividualDifficulty() {
     return gameDifficulty;
   }
 
   public static Map<String, Map<String, Boolean>> getBadges() {
     return badges;
+  }
+
+  public static void winIndividualBadge(String badgecategory, String badgelevel) {
+    Users.badges.get(badgecategory).get(badgelevel);
   }
 }

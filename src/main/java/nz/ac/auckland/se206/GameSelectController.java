@@ -85,9 +85,9 @@ public class GameSelectController {
       if (menu != accuracyMenu) {
         menu.getItems().add(difficultyMap.get(Difficulty.MS));
       }
-      // Set the default values to easy
-      menu.setValue(difficultyMap.get(Difficulty.E));
     }
+    // Sets the menus to the defaults
+
   }
 
   /**
@@ -103,11 +103,18 @@ public class GameSelectController {
   private void onStartGame(ActionEvent event)
       throws IOException, CsvException, URISyntaxException, ModelException {
     if (currentGameMode != GameMode.ZEN) {
-      DifficultyBuilder.difficultySetter(
+      // Sets the game difficulty to the user
+      Users.setGameDifficulty(
           accuracyMenu.getValue(),
           wordsMenu.getValue(),
           timeMenu.getValue(),
           confidenceMenu.getValue());
+
+      DifficultyBuilder.difficultySetter(
+          Users.getIndividualDifficulty("accuracyDifficulty"),
+          Users.getIndividualDifficulty("wordsDifficulty"),
+          Users.getIndividualDifficulty("timeDifficulty"),
+          Users.getIndividualDifficulty("confidenceDifficulty"));
     }
     started = true;
 
@@ -137,11 +144,11 @@ public class GameSelectController {
       case "Normal":
         // Switch to normal game mode
         accuracyMenu.setDisable(false);
-        accuracyMenu.setValue("EASY");
+        accuracyMenu.setValue(Users.getIndividualDifficulty("accuracyDifficulty"));
         confidenceMenu.setDisable(false);
-        confidenceMenu.setValue("EASY");
+        confidenceMenu.setValue(Users.getIndividualDifficulty("confidenceDifficulty"));
         timeMenu.setDisable(false);
-        timeMenu.setValue("EASY");
+        timeMenu.setValue(Users.getIndividualDifficulty("timeDifficulty"));
         setCurrentGameMode(GameMode.NORMAL);
         break;
       case "Zen":
@@ -158,11 +165,11 @@ public class GameSelectController {
       case "Definition":
         // Switch to hidden word game mode
         accuracyMenu.setDisable(false);
-        accuracyMenu.setValue("EASY");
+        accuracyMenu.setValue(Users.getIndividualDifficulty("accuracyDifficulty"));
         confidenceMenu.setDisable(false);
-        confidenceMenu.setValue("EASY");
+        confidenceMenu.setValue(Users.getIndividualDifficulty("confidenceDifficulty"));
         timeMenu.setDisable(false);
-        timeMenu.setValue("EASY");
+        timeMenu.setValue(Users.getIndividualDifficulty("timeDifficulty"));
         setCurrentGameMode(GameMode.DEFINITION);
         break;
       default:
@@ -170,5 +177,14 @@ public class GameSelectController {
         setCurrentGameMode(GameMode.NORMAL);
         break;
     }
+  }
+
+  /** Sets the difficulties of the choice menus of the users previous difficulties selected */
+  public void setUserDifficulties() {
+
+    accuracyMenu.setValue(Users.getIndividualDifficulty("accuracyDifficulty"));
+    confidenceMenu.setValue(Users.getIndividualDifficulty("confidenceDifficulty"));
+    wordsMenu.setValue(Users.getIndividualDifficulty("wordsDifficulty"));
+    timeMenu.setValue(Users.getIndividualDifficulty("timeDifficulty"));
   }
 }

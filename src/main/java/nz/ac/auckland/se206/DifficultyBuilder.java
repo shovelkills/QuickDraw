@@ -16,8 +16,8 @@ public class DifficultyBuilder {
    * @param time the difficulty for the time
    * @param confidence the difficulty for the confidence
    */
-  public static void difficultySetter(String accuracy, String words, String time,
-      String confidence) {
+  public static void difficultySetter(
+      String accuracy, String words, String time, String confidence) {
     // Convert all the String difficulties to actual difficulties
     setAccDifficulty(difficultySelect(accuracy));
     setWordsDifficulty(difficultySelect(words));

@@ -110,6 +110,8 @@ public class MenuController {
     Scene sceneButtonIsIn = button.getScene();
     // Move to the next scene
     sceneButtonIsIn.setRoot(SceneManager.getUiRoot(AppUi.GAMESELECT));
+    // Gets the difficulties that the user previously selected
+    App.getGameSelectController().setUserDifficulties();
   }
 
   @FXML
