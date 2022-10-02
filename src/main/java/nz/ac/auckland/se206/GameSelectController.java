@@ -1,12 +1,12 @@
 package nz.ac.auckland.se206;
 
-import ai.djl.ModelException;
-import com.opencsv.exceptions.CsvException;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import com.opencsv.exceptions.CsvException;
+import ai.djl.ModelException;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -19,9 +19,7 @@ import nz.ac.auckland.se206.words.CategorySelector.Difficulty;
 public class GameSelectController {
 
   public enum GameMode {
-    NORMAL,
-    ZEN,
-    DEFINITION
+    NORMAL, ZEN, DEFINITION
   }
 
   protected static GameMode currentGameMode = GameMode.NORMAL;
@@ -35,13 +33,20 @@ public class GameSelectController {
   }
 
   // Define FXML fields
-  @FXML private ChoiceBox<String> accuracyMenu;
-  @FXML private ChoiceBox<String> wordsMenu;
-  @FXML private ChoiceBox<String> timeMenu;
-  @FXML private ChoiceBox<String> confidenceMenu;
-  @FXML private Button definitionButton;
-  @FXML private Button normalButton;
-  @FXML private Button zenButton;
+  @FXML
+  private ChoiceBox<String> accuracyMenu;
+  @FXML
+  private ChoiceBox<String> wordsMenu;
+  @FXML
+  private ChoiceBox<String> timeMenu;
+  @FXML
+  private ChoiceBox<String> confidenceMenu;
+  @FXML
+  private Button definitionButton;
+  @FXML
+  private Button normalButton;
+  @FXML
+  private Button zenButton;
   private boolean started = false;
 
   private ArrayList<Button> gameModes = new ArrayList<Button>();
@@ -49,21 +54,20 @@ public class GameSelectController {
   private final HashMap<Difficulty, String> difficultyMap = new HashMap<Difficulty, String>();
   private ArrayList<ChoiceBox<String>> difficultyMenu = new ArrayList<ChoiceBox<String>>();
   // Task for alternating colour of the title and word label concurrently
-  private Task<Void> preGameTask =
-      new Task<Void>() {
+  private Task<Void> preGameTask = new Task<Void>() {
 
-        @Override
-        protected Void call() throws Exception {
-          // Set up the pre-game UI elements that are in common with restarting the game
-          while (true) {
-            if (started) {
-              App.getCanvasController().setPreGameInterface();
-              started = false;
-            }
-            Thread.sleep(1);
-          }
+    @Override
+    protected Void call() throws Exception {
+      // Set up the pre-game UI elements that are in common with restarting the game
+      while (true) {
+        if (started) {
+          App.getCanvasController().setPreGameInterface();
+          started = false;
         }
-      };
+        Thread.sleep(1);
+      }
+    }
+  };
 
   public void initialize() {
     Thread preGameThread = new Thread(preGameTask);
@@ -85,9 +89,9 @@ public class GameSelectController {
       if (menu != accuracyMenu) {
         menu.getItems().add(difficultyMap.get(Difficulty.MS));
       }
-      // Set the default values to easy
-      menu.setValue(difficultyMap.get(Difficulty.E));
     }
+    // Sets the menus to the defaults
+
   }
 
   /**
@@ -103,11 +107,14 @@ public class GameSelectController {
   private void onStartGame(ActionEvent event)
       throws IOException, CsvException, URISyntaxException, ModelException {
     if (currentGameMode != GameMode.ZEN) {
-      DifficultyBuilder.difficultySetter(
-          accuracyMenu.getValue(),
-          wordsMenu.getValue(),
-          timeMenu.getValue(),
+      // Sets the game difficulty to the user
+      Users.setGameDifficulty(accuracyMenu.getValue(), wordsMenu.getValue(), timeMenu.getValue(),
           confidenceMenu.getValue());
+
+      DifficultyBuilder.difficultySetter(Users.getIndividualDifficulty("accuracyDifficulty"),
+          Users.getIndividualDifficulty("wordsDifficulty"),
+          Users.getIndividualDifficulty("timeDifficulty"),
+          Users.getIndividualDifficulty("confidenceDifficulty"));
     }
     started = true;
 
@@ -137,11 +144,11 @@ public class GameSelectController {
       case "Normal":
         // Switch to normal game mode
         accuracyMenu.setDisable(false);
-        accuracyMenu.setValue("EASY");
+        accuracyMenu.setValue(Users.getIndividualDifficulty("accuracyDifficulty"));
         confidenceMenu.setDisable(false);
-        confidenceMenu.setValue("EASY");
+        confidenceMenu.setValue(Users.getIndividualDifficulty("confidenceDifficulty"));
         timeMenu.setDisable(false);
-        timeMenu.setValue("EASY");
+        timeMenu.setValue(Users.getIndividualDifficulty("timeDifficulty"));
         setCurrentGameMode(GameMode.NORMAL);
         break;
       case "Zen":
@@ -158,11 +165,11 @@ public class GameSelectController {
       case "Definition":
         // Switch to hidden word game mode
         accuracyMenu.setDisable(false);
-        accuracyMenu.setValue("EASY");
+        accuracyMenu.setValue(Users.getIndividualDifficulty("accuracyDifficulty"));
         confidenceMenu.setDisable(false);
-        confidenceMenu.setValue("EASY");
+        confidenceMenu.setValue(Users.getIndividualDifficulty("confidenceDifficulty"));
         timeMenu.setDisable(false);
-        timeMenu.setValue("EASY");
+        timeMenu.setValue(Users.getIndividualDifficulty("timeDifficulty"));
         setCurrentGameMode(GameMode.DEFINITION);
         break;
       default:
@@ -170,5 +177,17 @@ public class GameSelectController {
         setCurrentGameMode(GameMode.NORMAL);
         break;
     }
+  }
+
+  /**
+   * Sets the difficulties of the choice menus of the users previous difficulties selected
+   */
+  public void setUserDifficulties() {
+
+    accuracyMenu.setValue(Users.getIndividualDifficulty("accuracyDifficulty"));
+    confidenceMenu.setValue(Users.getIndividualDifficulty("confidenceDifficulty"));
+    wordsMenu.setValue(Users.getIndividualDifficulty("wordsDifficulty"));
+    timeMenu.setValue(Users.getIndividualDifficulty("timeDifficulty"));
+
   }
 }
