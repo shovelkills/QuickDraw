@@ -161,7 +161,7 @@
                            <children>
                               <Label alignment="BOTTOM_RIGHT" layoutX="596.0" layoutY="20.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="46.0" prefWidth="146.0">
                                  <graphic>
-                                    <Button fx:id="backToMenuButtonEnd" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onBackToMenu" prefHeight="46.0" prefWidth="146.0" styleClass="backToMenuButton" stylesheets="@../css/canvas.css" textFill="WHITE">
+                                    <Button fx:id="backToMenuButtonEnd" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onBack" prefHeight="46.0" prefWidth="146.0" styleClass="backToMenuButton" stylesheets="@../css/canvas.css" textFill="WHITE">
                                        <font>
                                           <Font name="System Bold" size="16.0" />
                                        </font>

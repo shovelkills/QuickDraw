@@ -16,6 +16,7 @@ public class App extends Application {
   private static StatsController statsController;
   private static MenuController menuController;
   private static UsersController usersController;
+  private static UserCreationController userCreationController;
   private static GameSelectController gameSelectController;
   private static CanvasController canvasController;
 
@@ -68,6 +69,13 @@ public class App extends Application {
       // return the root for switching scenes
       return root;
     }
+    if (fxml == "usercreation") {
+      FXMLLoader loader = new FXMLLoader(App.class.getResource("/fxml/" + fxml + ".fxml"));
+      Parent root = (Parent) loader.load();
+      userCreationController = loader.getController();
+      // return the root for switching scenes
+      return root;
+    }
     // For other FXMLs just return the root
     return new FXMLLoader(App.class.getResource("/fxml/" + fxml + ".fxml")).load();
   }
@@ -90,6 +98,10 @@ public class App extends Application {
 
   public static CanvasController getCanvasController() {
     return canvasController;
+  }
+
+  public static UserCreationController getCreationController() {
+    return userCreationController;
   }
 
   /**

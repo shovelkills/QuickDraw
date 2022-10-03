@@ -1,5 +1,12 @@
 package nz.ac.auckland.se206;
 
+import ai.djl.ModelException;
+import com.opencsv.exceptions.CsvException;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collections;
 import javafx.event.Event;
@@ -8,8 +15,10 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import nz.ac.auckland.se206.GameSelectController.GameMode;
 import nz.ac.auckland.se206.ProfileBuilder.UserType;
 import nz.ac.auckland.se206.SceneManager.AppUi;
 
@@ -47,6 +56,33 @@ public class UserCreationController {
             onSetImage(e);
           });
     }
+    userImage.addEventHandler(
+        MouseEvent.MOUSE_CLICKED,
+        e -> {
+          try {
+            onCreateImage(e);
+          } catch (IOException | CsvException | URISyntaxException | ModelException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+          }
+        });
+  }
+
+  public void updateImage() throws FileNotFoundException {
+    // creating the image object
+    String dir = Users.folderDirectory + "/src/main/resources/images/tempImage.bmp";
+    InputStream stream = new FileInputStream(dir);
+    Image image = new Image(stream);
+    userImage.setImage(image);
+  }
+
+  private void onCreateImage(MouseEvent event)
+      throws IOException, CsvException, URISyntaxException, ModelException {
+    GameSelectController.setCurrentGameMode(GameMode.PROFILE);
+    ImageView image = (ImageView) event.getSource();
+    Scene sceneButtonIsIn = image.getScene();
+    GameSelectController.started = true;
+    sceneButtonIsIn.setRoot(SceneManager.getUiRoot(AppUi.GAME));
   }
 
   /** onSetImage will set the users image to the one clicked */

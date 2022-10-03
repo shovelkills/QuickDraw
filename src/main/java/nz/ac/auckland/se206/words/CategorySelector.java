@@ -1,5 +1,7 @@
 package nz.ac.auckland.se206.words;
 
+import com.opencsv.CSVReader;
+import com.opencsv.exceptions.CsvException;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -11,8 +13,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import com.opencsv.CSVReader;
-import com.opencsv.exceptions.CsvException;
 import nz.ac.auckland.se206.DifficultyBuilder;
 import nz.ac.auckland.se206.Users;
 
@@ -20,7 +20,10 @@ public class CategorySelector {
 
   // Global constnats of the difficulties
   public enum Difficulty {
-    E, M, H, MS
+    E,
+    M,
+    H,
+    MS
   }
 
   private static Map<Difficulty, List<String>> difficulty2categories =

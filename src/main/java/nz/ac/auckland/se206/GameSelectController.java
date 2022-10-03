@@ -19,12 +19,16 @@ import nz.ac.auckland.se206.words.CategorySelector.Difficulty;
 public class GameSelectController {
 
   public enum GameMode {
+    DEFINITION,
     NORMAL,
     ZEN,
-    DEFINITION
+    PROFILE,
   }
 
-  protected static GameMode currentGameMode = GameMode.NORMAL;
+  private static GameMode currentGameMode = GameMode.NORMAL;
+  // Local game mode will remember the last game played (not including profile)
+  private static GameMode localGameMode = GameMode.NORMAL;
+  protected static boolean started = false;
 
   public static GameMode getCurrentGameMode() {
     return currentGameMode;
@@ -42,7 +46,6 @@ public class GameSelectController {
   @FXML private Button definitionButton;
   @FXML private Button normalButton;
   @FXML private Button zenButton;
-  private boolean started = false;
 
   private ArrayList<Button> gameModes = new ArrayList<Button>();
 
@@ -87,7 +90,8 @@ public class GameSelectController {
       }
     }
     // Sets the menus to the defaults
-
+    // Set the local game mode
+    setLocalGameMode();
   }
 
   /**
@@ -149,7 +153,8 @@ public class GameSelectController {
         confidenceMenu.setValue(Users.getIndividualDifficulty("confidenceDifficulty"));
         timeMenu.setDisable(false);
         timeMenu.setValue(Users.getIndividualDifficulty("timeDifficulty"));
-        setCurrentGameMode(GameMode.NORMAL);
+        // Change the local game mode
+        localGameMode = GameMode.NORMAL;
         break;
       case "Zen":
         // Switch to zen game mode
@@ -160,7 +165,8 @@ public class GameSelectController {
         timeMenu.setDisable(true);
         timeMenu.setValue("N/A");
         DifficultyBuilder.difficultySetter("-1", wordsMenu.getValue(), "-1", "-1");
-        setCurrentGameMode(GameMode.ZEN);
+        // Change the local game mode
+        localGameMode = GameMode.ZEN;
         break;
       case "Definition":
         // Switch to hidden word game mode
@@ -170,13 +176,15 @@ public class GameSelectController {
         confidenceMenu.setValue(Users.getIndividualDifficulty("confidenceDifficulty"));
         timeMenu.setDisable(false);
         timeMenu.setValue(Users.getIndividualDifficulty("timeDifficulty"));
-        setCurrentGameMode(GameMode.DEFINITION);
+        // Change the local game mode
+        localGameMode = GameMode.DEFINITION;
         break;
       default:
         // Set the default game mode to normal
-        setCurrentGameMode(GameMode.NORMAL);
+        localGameMode = GameMode.NORMAL;
         break;
     }
+    setLocalGameMode();
   }
 
   /** Sets the difficulties of the choice menus of the users previous difficulties selected */
@@ -191,5 +199,10 @@ public class GameSelectController {
       timeMenu.setValue(Users.getIndividualDifficulty("timeDifficulty"));
     }
     wordsMenu.setValue(Users.getIndividualDifficulty("wordsDifficulty"));
+  }
+
+  /** Sets the local game mode */
+  public static void setLocalGameMode() {
+    setCurrentGameMode(localGameMode);
   }
 }

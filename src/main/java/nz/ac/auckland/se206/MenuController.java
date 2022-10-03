@@ -108,10 +108,12 @@ public class MenuController {
     // Get the scene currently in
     Button button = (Button) event.getSource();
     Scene sceneButtonIsIn = button.getScene();
-    // Move to the next scene
-    sceneButtonIsIn.setRoot(SceneManager.getUiRoot(AppUi.GAMESELECT));
+
+    GameSelectController.setLocalGameMode();
     // Gets the difficulties that the user previously selected
     App.getGameSelectController().setUserDifficulties();
+    // Move to the next scene
+    sceneButtonIsIn.setRoot(SceneManager.getUiRoot(AppUi.GAMESELECT));
   }
 
   @FXML

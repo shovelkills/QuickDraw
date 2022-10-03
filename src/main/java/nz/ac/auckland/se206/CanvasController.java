@@ -92,6 +92,7 @@ public class CanvasController {
   private Color predictionTextColor = Color.WHITE;
   private GameMode currentGameMode;
   private Font maybeNext;
+  private boolean savedImage = false;
 
   // Task for alternating colour of the title and word label concurrently
   private Task<Void> alternateColoursTask =
@@ -140,30 +141,71 @@ public class CanvasController {
     currentGameMode = GameSelectController.getCurrentGameMode();
     // Instantiate a new game object on first opening the scene
     CategorySelector.loadCategories();
+    // Reset the timer bar's css
+    timerBarLabel.getStyleClass().clear();
+    timerBarLabel.getStyleClass().add("timerBarDefault");
     game = new Game(this, currentGameMode);
-    Platform.runLater(
-        () -> {
-          // Bind label properties to game properties
-          wordLabel.textProperty().bind(game.getCurrentPromptProperty());
-          if (currentGameMode != GameMode.ZEN) {
-            timerLabel.textProperty().bind(game.getTimeRemainingAsStringBinding());
-            timerLabel.setVisible(true);
-          } else {
-            timerLabel.setVisible(false);
-          }
-          // Set UI elements for pre-game
-          canvas.setDisable(true);
-          // Enable pre-game button panel
-          preGameHBox.setMouseTransparent(false);
-          preGameHBox.setVisible(true);
-          // Disable post-game button panel
-          postGameHBox.setMouseTransparent(true);
-          postGameHBox.setVisible(false);
-          // Disable drawing tools
-          drawingToolsVBox.setDisable(true);
-          // Set timer bar max width
-          timerBarLabel.setMaxWidth(600.0);
-        });
+
+    if (currentGameMode != GameMode.PROFILE) {
+      Platform.runLater(
+          () -> {
+            titleLabel.setText("Quick, Draw!");
+            isDrawing = false;
+            // Bind label properties to game properties
+            wordLabel.textProperty().bind(game.getCurrentPromptProperty());
+            if (currentGameMode != GameMode.ZEN) {
+              timerLabel.textProperty().bind(game.getTimeRemainingAsStringBinding());
+              timerLabel.setVisible(true);
+            } else {
+              timerLabel.setVisible(false);
+            }
+            // Set UI elements for pre-game
+            canvas.setDisable(true);
+            // Enable pre-game button panel
+            preGameHBox.setMouseTransparent(false);
+            preGameHBox.setVisible(true);
+            // Disable post-game button panel
+            postGameHBox.setMouseTransparent(true);
+            postGameHBox.setVisible(false);
+            // Disable drawing tools
+            drawingToolsVBox.setDisable(true);
+            // Set timer bar max width
+            timerBarLabel.setMaxWidth(600.0);
+
+            timerBarLabel.setVisible(true);
+            predictionLabel.setVisible(true);
+            predictionGrid.setVisible(true);
+            restartButton.setVisible(true);
+          });
+    } else {
+      Platform.runLater(
+          () -> {
+            setProfile();
+          });
+    }
+  }
+
+  private void setProfile() {
+    // Set the drawing to true instantly
+    isDrawing = true;
+    // Allow the player to use the canvas
+    canvas.setDisable(false);
+    // Hide other things
+    timerLabel.setVisible(false);
+    postGameHBox.setMouseTransparent(true);
+    postGameHBox.setVisible(false);
+    // Enable pre-game button panel
+    postGameHBox.setMouseTransparent(false);
+    postGameHBox.setVisible(true);
+    // Hide some more
+    timerBarLabel.setVisible(false);
+    predictionLabel.setVisible(false);
+    predictionGrid.setVisible(false);
+    restartButton.setVisible(false);
+    // Change the text of the title
+    titleLabel.setText("Draw a Picture!");
+    // Enable them to draw
+    onStartGame();
   }
 
   /**
@@ -282,11 +324,8 @@ public class CanvasController {
   @FXML
   private void onRestartGame()
       throws IOException, URISyntaxException, CsvException, ModelException {
-
     // Clear the canvas
     onClear();
-    // Clear the prediction grid
-    clearPredictionGrid();
     // Reset game variables and concurrent service
     game.resetGame();
     // Reset UI elements
@@ -325,19 +364,32 @@ public class CanvasController {
    * @throws IOException If the image cannot be saved.
    */
   private File saveCurrentSnapshotOnFile() throws IOException {
-    // Create a file chooser
-    FileChooser fileChooser = new FileChooser();
-    // Set extension filter for bmp files
-    FileChooser.ExtensionFilter extFilter =
-        new FileChooser.ExtensionFilter("BMP files (*.bmp)", "*.bmp");
-    fileChooser.getExtensionFilters().add(extFilter);
-    // Set the initial file name
-    fileChooser.setInitialFileName("snapshot" + System.currentTimeMillis());
-    // Set the initial directory
-    String currentPath = Paths.get(".").toAbsolutePath().normalize().toString();
-    fileChooser.setInitialDirectory(new File(currentPath));
-    // Show save file dialog
-    File file = fileChooser.showSaveDialog(null);
+    File file = null;
+    if (currentGameMode != GameMode.PROFILE) {
+      // Create a file chooser
+      FileChooser fileChooser = new FileChooser();
+      // Set extension filter for bmp files
+      FileChooser.ExtensionFilter extFilter =
+          new FileChooser.ExtensionFilter("BMP files (*.bmp)", "*.bmp");
+      fileChooser.getExtensionFilters().add(extFilter);
+      // Set the initial file name
+      fileChooser.setInitialFileName("snapshot" + System.currentTimeMillis());
+      // Set the initial directory
+      String currentPath = Paths.get(".").toAbsolutePath().normalize().toString();
+      fileChooser.setInitialDirectory(new File(currentPath));
+      // Show save file dialog
+      file = fileChooser.showSaveDialog(null);
+    } else {
+      // Gets the file directory to save to and runs the load user method
+      File dir = new File(Users.folderDirectory + "/src/main/resources/images/");
+      // We save the image to a file in the tmp folder.
+      file = new File(Users.folderDirectory + "/src/main/resources/images/tempImage.bmp");
+      if (!file.exists()) {
+        dir.mkdir();
+        file.createNewFile();
+      }
+      savedImage = true;
+    }
     // Write it to the location
     if (file != null) {
       ImageIO.write(getCurrentSnapshot(), "bmp", file);
@@ -454,7 +506,9 @@ public class CanvasController {
   /** This method sets up a new game to be started */
   @FXML
   private void onStartGame() {
-    game.startGame();
+    if (currentGameMode != GameMode.PROFILE) {
+      game.startGame();
+    }
 
     canvas.setDisable(false);
     // Turn on to brush mode regardless of what it was
@@ -532,21 +586,40 @@ public class CanvasController {
       // Check if the person presses yes
       if (result.get() == ButtonType.OK) {
         onEndGame(false);
-        onBackToMenu(event);
+        onBack(event);
       } else if (result.get() == ButtonType.CANCEL) {
         // Do nothing if no is pressed
         return;
       }
     } else {
-      onBackToMenu(event);
+      // For profile go back
+      onBack(event);
     }
   }
 
   @FXML
-  private void onBackToMenu(ActionEvent event)
+  private void onBack(ActionEvent event)
       throws IOException, URISyntaxException, CsvException, ModelException {
-    // Reset the game
+
+    if (currentGameMode == GameMode.PROFILE) {
+      // Check if the player saved the image
+      if (savedImage) {
+        // update the user's image in the create scene
+        App.getCreationController().updateImage();
+        savedImage = false;
+      }
+      // Go back to the creation scene
+      onBackToCreation(event);
+    } else {
+      // Go back to main menu
+      onBackToMenu(event);
+    }
+    // Restart the game
     onRestartGame();
+  }
+
+  @FXML
+  private void onBackToMenu(ActionEvent event) {
     // Get the current scene
     Button backButton = (Button) event.getSource();
     Scene currentScene = backButton.getScene();
@@ -554,36 +627,47 @@ public class CanvasController {
     currentScene.setRoot(SceneManager.getUiRoot(AppUi.MAIN_MENU));
   }
 
+  @FXML
+  private void onBackToCreation(ActionEvent event)
+      throws IOException, URISyntaxException, CsvException, ModelException {
+    // Get the current scene
+    Button backButton = (Button) event.getSource();
+    Scene currentScene = backButton.getScene();
+    // Move back to main menu
+    currentScene.setRoot(SceneManager.getUiRoot(AppUi.USERCREATE));
+  }
+
   /**
    * onSaveImage will ask the user if they want to save their image and then allow the user to save
    * the image on their computer
    *
    * @param event the Action Event taken in from FXML
+   * @throws IOException
    */
   @FXML
-  private void onSaveImage(ActionEvent event) {
-    // Create a new alert
-    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-    // Set up the alert accordingly
-    alert.setTitle("Save File");
-    alert.setHeaderText("Would you like to save your image?");
-    alert.setResizable(false);
-    alert.setContentText("Select OK or Cancel.");
+  private void onSaveImage(ActionEvent event) throws IOException {
+    if (currentGameMode != GameMode.PROFILE) {
+      // Create a new alert
+      Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+      // Set up the alert accordingly
+      alert.setTitle("Save File");
+      alert.setHeaderText("Would you like to save your image?");
+      alert.setResizable(false);
+      alert.setContentText("Select OK or Cancel.");
 
-    // Show the alert
-    Optional<ButtonType> result = alert.showAndWait();
-    // Check if the person presses yes
-    if (result.get() == ButtonType.OK) {
-      try {
+      // Show the alert
+      Optional<ButtonType> result = alert.showAndWait();
+      // Check if the person presses yes
+      if (result.get() == ButtonType.OK) {
         // Save the current canvas as a file in the tmp folder
         saveCurrentSnapshotOnFile();
-      } catch (IOException e) {
-
-        e.printStackTrace();
+      } else if (result.get() == ButtonType.CANCEL) {
+        // Do nothing if no is pressed
+        return;
       }
-    } else if (result.get() == ButtonType.CANCEL) {
-      // Do nothing if no is pressed
-      return;
+    } else {
+      // This is called for profile picture creation
+      saveCurrentSnapshotOnFile();
     }
   }
 }
