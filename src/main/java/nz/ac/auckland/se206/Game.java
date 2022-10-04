@@ -170,11 +170,20 @@ public class Game {
         // Set the zen game
         setZenGame(canvas);
         break;
+      case PROFILE:
+        // Set the profile picture canvas
+        setProfileCanvas(canvas);
+        break;
       default:
         // Default game set
         setNormalGame(canvas);
         break;
     }
+  }
+
+  private void setProfileCanvas(CanvasController canvas) {
+    this.canvas = canvas;
+    timer = new SimpleIntegerProperty(gameTime);
   }
 
   private void setNormalGame(CanvasController canvas) throws ModelException, IOException {
@@ -266,7 +275,7 @@ public class Game {
    */
   public void resetTimer(Difficulty difficulty) {
     // Check the current game mode
-    if (currentGame != GameMode.ZEN) {
+    if (currentGame != GameMode.ZEN && currentGame != GameMode.PROFILE) {
       timer.set(CategorySelector.getTime());
     }
   }
