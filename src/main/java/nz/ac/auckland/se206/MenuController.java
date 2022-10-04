@@ -30,12 +30,12 @@ public class MenuController {
   @FXML private Label titleLabel;
   @FXML private Label usernameLabel;
   @FXML private Button startButton;
-  @FXML private Button startTipButton;
   @FXML private Button statsButton;
-  @FXML private Button statsTipButton;
   @FXML private Button exitButton;
   @FXML private Button exitTipButton;
   @FXML private Button selectedUserButton;
+
+  private Font titleFont;
 
   /**
    * This method alternates alternates colours for a label
@@ -57,8 +57,7 @@ public class MenuController {
 
   public void initialize() {
     // Load in a new font and set it to the tile
-    Font font = Font.loadFont("file:src/main/resources/fonts/somethingwild-Regular.ttf", 120);
-    titleLabel.setFont(font);
+    titleFont = Font.loadFont("file:src/main/resources/fonts/Maybe-Next.ttf", 60);
     // Set default guest login label
     usernameLabel.setText("Guest");
     // Load in the guest image

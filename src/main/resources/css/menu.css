@@ -1,42 +1,70 @@
-.menuButton{
-	-fx-background-radius: 0;
-	-fx-min-width: 300;
+.mainMenuTitle{
+	-fx-font-family: "Maybe Next";
 }
 
-.menuButton:hover{
-	-fx-min-width: 350;
+.userNameLabel{
+	-fx-font-family: "Maybe Next";
 }
 
-.menuButton:pressed{
-	-fx-min-width: 360;
+.newGameButton{
+	-fx-background-color: transparent;
+	-fx-background-image: url(../images/buttons/newGameButtonDefault.png);
+}
+
+.newGameButton:hover{
+	-fx-background-image: url(../images/buttons/newGameButtonHover.png);
+}
+
+.newGameButton:pressed{
+	-fx-background-image: url(../images/buttons/newGameButtonDown.png);
+}
+
+.statsMenuButton{
+	-fx-background-color: transparent;
+	-fx-background-image: url(../images/buttons/statsMenuButtonDefault.png);
+}
+
+.statsMenuButton:hover{
+	-fx-background-image: url(../images/buttons/statsMenuButtonHover.png);
+}
+
+.statsMenuButton:pressed{
+	-fx-background-image: url(../images/buttons/statsMenuButtonDown.png);
+}
+
+.quitMenuButton{
+	-fx-background-color: transparent;
+	-fx-background-image: url(../images/buttons/quitMenuButtonDefault.png);
+}
+
+.quitMenuButton:hover{
+	-fx-background-image: url(../images/buttons/quitMenuButtonHover.png);
+}
+
+.quitMenuButton:pressed{
+	-fx-background-image: url(../images/buttons/quitMenuButtonDown.png);
 }
 
 .profileButton{
 	-fx-background-radius: 10;
-	-fx-background-color: #F0A88E;
+	-fx-background-color: #51D4D0;
 }
 
 .profileButton:hover{
-	-fx-background-color: #2AA1D0;
+	-fx-background-color: #00E8E8;
 }
 
 .profileButton:pressed{
 	-fx-background-color: #05668D;
 }
 
-.pencilTip{
-	-fx-shape: "M 100 400 L 100 200 L 350 300 Z";
-	-fx-pref-width: 70;
-	-fx-max-height: Infinity;
-}
-
-.background{
-	-fx-background-image: url("../images/drawn_wallpaper.png");
+.mainMenuBackground{
+	-fx-background-image: url(../images/SoftPaper.png);
 	-fx-background-size: 1920 1080;
 }
 
 .menuBox{
-	-fx-background-color: #F0A88E;
-	-fx-background-radius: 50 50 0 0;
-	-fx-effect: dropshadow(gaussian, black, 40, 0.05, 0.0, 0.0);
+	-fx-background-color: #FCEFE8;
+	-fx-background-radius: 10 10 0 0;
+	-fx-background-insets: 0 0 0 10;
 }
