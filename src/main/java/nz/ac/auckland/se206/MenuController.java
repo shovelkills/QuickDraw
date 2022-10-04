@@ -36,7 +36,7 @@ public class MenuController {
   @FXML private Button selectedUserButton;
 
   private Font titleFont;
-  
+
   /**
    * This method alternates alternates colours for a label
    *
