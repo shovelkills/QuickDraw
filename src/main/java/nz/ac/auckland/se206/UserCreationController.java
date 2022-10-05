@@ -9,11 +9,13 @@ import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collections;
+import javafx.concurrent.Task;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -76,13 +78,50 @@ public class UserCreationController {
     userImage.setImage(image);
   }
 
+  /**
+   * onCreateImage will allow the user to create their own image via drawing It will load the
+   * profile picture creation scene
+   *
+   * @param event
+   * @throws IOException
+   * @throws CsvException
+   * @throws URISyntaxException
+   * @throws ModelException
+   */
   private void onCreateImage(MouseEvent event)
       throws IOException, CsvException, URISyntaxException, ModelException {
     GameSelectController.setCurrentGameMode(GameMode.PROFILE);
     ImageView image = (ImageView) event.getSource();
     Scene sceneButtonIsIn = image.getScene();
-    GameSelectController.started = true;
-    sceneButtonIsIn.setRoot(SceneManager.getUiRoot(AppUi.GAME));
+    Task<Void> preDrawTask =
+        new Task<Void>() {
+          @Override
+          protected Void call() throws Exception {
+            // Set up the pre-game UI elements that are in common with restarting the game
+            updateProgress(0, 1);
+            sceneButtonIsIn.setRoot(SceneManager.getUiRoot(AppUi.LOADING));
+            System.out.println("Loading");
+            App.getCanvasController().setPreGameInterface();
+            updateProgress(1, 1);
+            Thread.sleep(50);
+            return null;
+          }
+        };
+    // Find progress bar on loading screen
+    ProgressBar progressBar = App.getLoadingController().getProgressBar();
+    progressBar.progressProperty().unbind();
+    // Bind progress bar
+    progressBar.progressProperty().bind(preDrawTask.progressProperty());
+    // On finish loading move from loading screen to game screen
+    preDrawTask.setOnSucceeded(
+        e -> {
+          progressBar.progressProperty().unbind();
+          sceneButtonIsIn.setRoot(SceneManager.getUiRoot(AppUi.GAME));
+        });
+    Thread preGameThread = new Thread(preDrawTask);
+    // Allow the task to be cancelled on closing of application
+    preGameThread.setDaemon(true);
+    preGameThread.start();
   }
 
   /** onSetImage will set the users image to the one clicked */

@@ -29,7 +29,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
-import javafx.scene.layout.Background;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -523,8 +522,7 @@ public class CanvasController {
     preGameHBox.setVisible(false);
 
     // Get eraser colour
-    Background currentBackground = canvasPane.getBackground();
-    Paint eraserColour = currentBackground.getFills().get(0).getFill();
+    Paint eraserColour = Color.web("#FCEFE8");
     canvas.setOnMousePressed(
         e -> {
           currentX = e.getX();
