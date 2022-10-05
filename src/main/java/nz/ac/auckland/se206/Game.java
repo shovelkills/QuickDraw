@@ -89,7 +89,8 @@ public class Game {
         protected Task<Void> createTask() {
           // Main game loop thread
           return new Task<Void>() {
-            protected Void call() throws InterruptedException {
+            protected Void call() throws InterruptedException, TranslateException {
+
               // Check that the timer is running
               while (timer == null || timer.intValue() > 1) {
                 // Wait 1 second
@@ -289,6 +290,7 @@ public class Game {
   private void endGame(boolean isWin) throws InterruptedException {
     // Cancel service and end game
     canvas.onEndGame(isWin);
+    speechTask.cancel();
     service.cancel();
   }
 }
