@@ -3,10 +3,11 @@ package nz.ac.auckland.se206;
 import nz.ac.auckland.se206.words.CategorySelector.Difficulty;
 
 public class Badges {
+  private static boolean drawUserPicture;
 
   /**
    * Changes the badges hasmap so that the user has won the badge
-   * 
+   *
    * @param catergory the category of the badge
    * @param level the level of the badge
    */
@@ -17,7 +18,7 @@ public class Badges {
 
   /**
    * Checks if the user has met any of the time requirements that the user has won
-   * 
+   *
    * @param time the time it took for the user to win the badge
    */
   public static void checkWinTime(int time) {
@@ -30,20 +31,18 @@ public class Badges {
     if (time == 59) {
       winBadge("Timed Wins", "Last Second");
     }
-
   }
-
 
   /**
    * Wins badges depending on the different difficulties that the user has selected
-   * 
+   *
    * @param accuracy the accuracy difficulty
    * @param word the word difficulty
    * @param time the time difficulty
    * @param confidence the confidence difficulty
    */
-  public static void winDifficultyBadges(Difficulty accuracy, Difficulty word, Difficulty time,
-      Difficulty confidence) {
+  public static void winDifficultyBadges(
+      Difficulty accuracy, Difficulty word, Difficulty time, Difficulty confidence) {
 
     Users.getBadges().get("Accuracy").put(accuracy.toString(), true);
     Users.getBadges().get("Words").put(word.toString(), true);
@@ -53,15 +52,13 @@ public class Badges {
     checkAllDifficultiesBadge("M");
     checkAllDifficultiesBadge("H");
     checkAllDifficultiesBadge("MS");
-
   }
 
-  /**
-   * Checks if the difficulties accross all aspects of the game are meet
-   */
+  /** Checks if the difficulties accross all aspects of the game are meet */
   public static void checkAllDifficultiesBadge(String Difficulty) {
     // Checks if the Accuracy, words, time and confidence levels are the are all won
-    if (!Difficulty.equals("MS") && Users.getBadges().get("Accuracy").get(Difficulty)
+    if (!Difficulty.equals("MS")
+        && Users.getBadges().get("Accuracy").get(Difficulty)
         && Users.getBadges().get("Words").get(Difficulty)
         && Users.getBadges().get("Time").get(Difficulty)
         && Users.getBadges().get("Confidence").get(Difficulty)) {
@@ -71,8 +68,23 @@ public class Badges {
         && Users.getBadges().get("Confidence").get(Difficulty)) {
       winBadge("All difficulties", Difficulty);
     }
-
-
   }
 
+  public static void checkConsistentWins(int consistentwins) {
+    if (consistentwins == 2) {
+      winBadge("Wins", "2 consecutive wins");
+    } else if (consistentwins == 5) {
+      winBadge("Wins", "5 consecutive wins");
+    }
+  }
+
+  public static void checkDrawnUserPicture() {
+    if (drawUserPicture) {
+      winBadge("Misc", "Draw User Profile");
+    }
+  }
+
+  public static void setDrawUserPicture(boolean drawUserPicture) {
+    Badges.drawUserPicture = drawUserPicture;
+  }
 }

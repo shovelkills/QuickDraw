@@ -1,5 +1,7 @@
 package nz.ac.auckland.se206;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -14,16 +16,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.imageio.ImageIO;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
+import javax.imageio.ImageIO;
 import nz.ac.auckland.se206.words.CategorySelector;
 
 public class Users {
   // Stores the information in the JSON file as individual variables
 
+  private static int consistentWins;
   private static int fastestTime;
   private static int losses;
   private static int wins;
@@ -82,6 +83,8 @@ public class Users {
 
       fastestTime = (int) (double) userInfo.get("fastestGame");
 
+      consistentWins = (int) (double) userInfo.get("consistentWins");
+
       wordHistory = (List<String>) userInfo.get("wordHistory");
 
       timeHistory = (List<Double>) userInfo.get("timeHistory");
@@ -129,6 +132,7 @@ public class Users {
       userMap.put("fastestGame", -1);
       userMap.put("fastestWord", " ");
       userMap.put("timeHistory", new ArrayList<Double>());
+      userMap.put("consistentWins", 0);
 
       // Creates the default difficulty
       Map<String, String> difficulty = new HashMap<>();
@@ -154,6 +158,7 @@ public class Users {
         loadUser(username);
         // Save the user's image selected
         saveProfilePicture(bufferedImage);
+        Badges.checkDrawnUserPicture();
       } catch (IOException e1) {
         // TODO Auto-generated catch block
         e1.printStackTrace();
@@ -215,7 +220,7 @@ public class Users {
    *
    * @param username the username the user inputted
    * @return boolean of if there are special characters in the username. True means there are
-   *         special characters in the string
+   *     special characters in the string
    */
   public static boolean isValidUsername(String username) {
     Pattern validCharacters = Pattern.compile("[^a-z0-9-]", Pattern.CASE_INSENSITIVE);
@@ -260,6 +265,7 @@ public class Users {
       userMap.put("timeHistory", timeHistory);
       userMap.put("gameDifficulty", gameDifficulty);
       userMap.put("Badges", badges);
+      userMap.put("consistentWins", consistentWins);
 
       // Creates a writer object to write and save the file
       Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -427,9 +433,11 @@ public class Users {
     saveUserList();
   }
 
-  // Increases current user's wins by 1
+  // Increases current user's wins by 1, consistentWins by 1 and check the number of consistent wins
   public static void increaseWins() {
     Users.wins++;
+    Users.consistentWins++;
+    Badges.checkConsistentWins(consistentWins);
   }
 
   // Increases current user's losses by 1
@@ -445,8 +453,11 @@ public class Users {
    * @param timedifficulty the time difficulty
    * @param confidencedifficulty the confidence difficulty
    */
-  public static void setGameDifficulty(String accuracydifficulty, String worddifficulty,
-      String timedifficulty, String confidencedifficulty) {
+  public static void setGameDifficulty(
+      String accuracydifficulty,
+      String worddifficulty,
+      String timedifficulty,
+      String confidencedifficulty) {
     // Sets each of the difficulty
     Users.gameDifficulty.put("accuracyDifficulty", accuracydifficulty);
     Users.gameDifficulty.put("wordsDifficulty", worddifficulty);
@@ -540,7 +551,15 @@ public class Users {
     return badges;
   }
 
-  public static void winIndividualBadge(String badgecategory, String badgelevel) {
+  public static void getIndividualBadge(String badgecategory, String badgelevel) {
     Users.badges.get(badgecategory).get(badgelevel);
+  }
+
+  public static int getConsistentWins() {
+    return consistentWins;
+  }
+
+  public static void setConsistentWins(int consistentWins) {
+    Users.consistentWins = consistentWins;
   }
 }

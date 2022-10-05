@@ -120,6 +120,9 @@ public class GameSelectController {
           Users.getIndividualDifficulty("timeDifficulty"),
           Users.getIndividualDifficulty("confidenceDifficulty"));
     }
+    if (currentGameMode == GameMode.ZEN) {
+      Badges.winBadge("Misc", "Play Zen Mode");
+    }
     started = true;
 
     // Get the scene currently in
