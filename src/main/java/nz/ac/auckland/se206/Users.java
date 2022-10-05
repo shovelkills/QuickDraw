@@ -1,7 +1,5 @@
 package nz.ac.auckland.se206;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -16,9 +14,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.imageio.ImageIO;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
-import javax.imageio.ImageIO;
 import nz.ac.auckland.se206.words.CategorySelector;
 
 public class Users {
@@ -177,11 +177,11 @@ public class Users {
     Map<String, Map<String, Boolean>> badgeList = new HashMap<>();
     Map<String, Boolean> difficulty = new HashMap<>();
     // Generates the badges
-    difficulty.put("Easy", false);
-    difficulty.put("Medium", false);
-    difficulty.put("Hard", false);
+    difficulty.put("E", false);
+    difficulty.put("M", false);
+    difficulty.put("H", false);
     badgeList.put("Accuracy", difficulty);
-    difficulty.put("Master", false);
+    difficulty.put("MS", false);
     // Adds to badge list based of difficulty
     badgeList.put("Words", difficulty);
     badgeList.put("Time", difficulty);
@@ -215,7 +215,7 @@ public class Users {
    *
    * @param username the username the user inputted
    * @return boolean of if there are special characters in the username. True means there are
-   *     special characters in the string
+   *         special characters in the string
    */
   public static boolean isValidUsername(String username) {
     Pattern validCharacters = Pattern.compile("[^a-z0-9-]", Pattern.CASE_INSENSITIVE);
@@ -407,6 +407,7 @@ public class Users {
    * @param word the word the user had to draw
    */
   public static void checkFastestTime(int time, String word) {
+    Badges.checkWinTime(time);
     // Checks if it is the fastest time
     if (time <= Users.fastestTime || (Users.fastestTime == -1 && time != 60)) {
       Users.fastestTime = time;
@@ -444,11 +445,8 @@ public class Users {
    * @param timedifficulty the time difficulty
    * @param confidencedifficulty the confidence difficulty
    */
-  public static void setGameDifficulty(
-      String accuracydifficulty,
-      String worddifficulty,
-      String timedifficulty,
-      String confidencedifficulty) {
+  public static void setGameDifficulty(String accuracydifficulty, String worddifficulty,
+      String timedifficulty, String confidencedifficulty) {
     // Sets each of the difficulty
     Users.gameDifficulty.put("accuracyDifficulty", accuracydifficulty);
     Users.gameDifficulty.put("wordsDifficulty", worddifficulty);

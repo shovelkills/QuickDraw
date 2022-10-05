@@ -1,7 +1,5 @@
 package nz.ac.auckland.se206;
 
-import ai.djl.ModelException;
-import com.opencsv.exceptions.CsvException;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -9,6 +7,8 @@ import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collections;
+import com.opencsv.exceptions.CsvException;
+import ai.djl.ModelException;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
@@ -25,47 +25,46 @@ import nz.ac.auckland.se206.SceneManager.AppUi;
 public class UserCreationController {
 
   // Initialise FXML items
-  @FXML private Button createButton;
-  @FXML private TextField usernameField;
-  @FXML private ImageView userImage;
-  @FXML private ImageView imageOption0;
-  @FXML private ImageView imageOption1;
-  @FXML private ImageView imageOption2;
-  @FXML private ImageView imageOption3;
-  @FXML private ImageView imageOption4;
-  @FXML private ImageView imageOption5;
+  @FXML
+  private Button createButton;
+  @FXML
+  private TextField usernameField;
+  @FXML
+  private ImageView userImage;
+  @FXML
+  private ImageView imageOption0;
+  @FXML
+  private ImageView imageOption1;
+  @FXML
+  private ImageView imageOption2;
+  @FXML
+  private ImageView imageOption3;
+  @FXML
+  private ImageView imageOption4;
+  @FXML
+  private ImageView imageOption5;
   // Initliase array for image options
   private ArrayList<ImageView> imageOptions = new ArrayList<ImageView>();
 
   /** initialize will be called on start up */
   public void initialize() {
     // Add all the image options into the array
-    Collections.addAll(
-        imageOptions,
-        imageOption0,
-        imageOption1,
-        imageOption2,
-        imageOption3,
-        imageOption4,
-        imageOption5);
+    Collections.addAll(imageOptions, imageOption0, imageOption1, imageOption2, imageOption3,
+        imageOption4, imageOption5);
     // Loop through them and set event handlers onto them
     for (ImageView option : imageOptions) {
-      option.addEventHandler(
-          MouseEvent.MOUSE_CLICKED,
-          e -> {
-            onSetImage(e);
-          });
+      option.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
+        onSetImage(e);
+      });
     }
-    userImage.addEventHandler(
-        MouseEvent.MOUSE_CLICKED,
-        e -> {
-          try {
-            onCreateImage(e);
-          } catch (IOException | CsvException | URISyntaxException | ModelException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-          }
-        });
+    userImage.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
+      try {
+        onCreateImage(e);
+      } catch (IOException | CsvException | URISyntaxException | ModelException e1) {
+        // TODO Auto-generated catch block
+        e1.printStackTrace();
+      }
+    });
   }
 
   public void updateImage() throws FileNotFoundException {

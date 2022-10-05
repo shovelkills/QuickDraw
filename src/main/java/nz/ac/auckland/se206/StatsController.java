@@ -13,17 +13,28 @@ import nz.ac.auckland.se206.SceneManager.AppUi;
 
 public class StatsController {
   // Declare all the FXML fields
-  @FXML private Button backButton;
-  @FXML private Button statsTabButton;
-  @FXML private Button wordsTabButton;
-  @FXML private Label titleLabel;
-  @FXML private Label winsLabel;
-  @FXML private Label lossesLabel;
-  @FXML private Label fastestWordLabel;
-  @FXML private Label fastestTimeLabel;
-  @FXML private GridPane statsGridPane;
-  @FXML private VBox wordsListPaneVBox;
-  @FXML private VBox wordsListVBox;
+  @FXML
+  private Button backButton;
+  @FXML
+  private Button statsTabButton;
+  @FXML
+  private Button wordsTabButton;
+  @FXML
+  private Label titleLabel;
+  @FXML
+  private Label winsLabel;
+  @FXML
+  private Label lossesLabel;
+  @FXML
+  private Label fastestWordLabel;
+  @FXML
+  private Label fastestTimeLabel;
+  @FXML
+  private GridPane statsGridPane;
+  @FXML
+  private VBox wordsListPaneVBox;
+  @FXML
+  private VBox wordsListVBox;
 
   public void initialize() {
     // Updates all the stats
@@ -72,8 +83,8 @@ public class StatsController {
     // Show special message if no games have been played
     if (Users.getWordHistory().size() == 0) {
       Label wordLabel = new Label();
-      wordLabel.setText(
-          "Once you've played Quick Draw, every word you have drawn will be shown here!");
+      wordLabel
+          .setText("Once you've played Quick Draw, every word you have drawn will be shown here!");
       wordLabel.setMaxWidth(Integer.MAX_VALUE);
       wordLabel.alignmentProperty().set(Pos.CENTER);
       Font font = Font.loadFont("file:src/main/resources/fonts/somethingwild-Regular.ttf", 42);
@@ -121,8 +132,8 @@ public class StatsController {
     } else {
       // update stats according to current user variables
       fastestWordLabel.setText(Users.getFastestWord());
-      fastestTimeLabel.setText(
-          "drawn in " + Integer.toString(Users.getFastestTime()) + " seconds!");
+      fastestTimeLabel
+          .setText("drawn in " + Integer.toString(Users.getFastestTime()) + " seconds!");
     }
   }
 
