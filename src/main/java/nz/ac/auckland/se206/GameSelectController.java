@@ -13,6 +13,7 @@ import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ProgressBar;
 import nz.ac.auckland.se206.SceneManager.AppUi;
 import nz.ac.auckland.se206.words.CategorySelector.Difficulty;
 
@@ -28,7 +29,6 @@ public class GameSelectController {
   private static GameMode currentGameMode = GameMode.NORMAL;
   // Local game mode will remember the last game played (not including profile)
   private static GameMode localGameMode = GameMode.NORMAL;
-  protected static boolean started = false;
 
   public static GameMode getCurrentGameMode() {
     return currentGameMode;
@@ -52,27 +52,9 @@ public class GameSelectController {
   private final HashMap<Difficulty, String> difficultyMap = new HashMap<Difficulty, String>();
   private ArrayList<ChoiceBox<String>> difficultyMenu = new ArrayList<ChoiceBox<String>>();
   // Task for alternating colour of the title and word label concurrently
-  private Task<Void> preGameTask =
-      new Task<Void>() {
-
-        @Override
-        protected Void call() throws Exception {
-          // Set up the pre-game UI elements that are in common with restarting the game
-          while (true) {
-            if (started) {
-              App.getCanvasController().setPreGameInterface();
-              started = false;
-            }
-            Thread.sleep(1);
-          }
-        }
-      };
 
   public void initialize() {
-    Thread preGameThread = new Thread(preGameTask);
-    // Allow the task to be cancelled on closing of application
-    preGameThread.setDaemon(true);
-    preGameThread.start();
+
     Collections.addAll(gameModes, definitionButton, normalButton, zenButton);
     difficultyMap.put(Difficulty.E, "EASY");
     difficultyMap.put(Difficulty.M, "MEDIUM");
@@ -102,10 +84,36 @@ public class GameSelectController {
    * @throws CsvException
    * @throws URISyntaxException
    * @throws ModelException
+   * @throws InterruptedException
    */
   @FXML
   private void onStartGame(ActionEvent event)
-      throws IOException, CsvException, URISyntaxException, ModelException {
+      throws IOException, CsvException, URISyntaxException, ModelException, InterruptedException {
+
+    Button button = (Button) event.getSource();
+    Scene sceneButtonIsIn = button.getScene();
+
+    Task<Void> preGameTask =
+        new Task<Void>() {
+          @Override
+          protected Void call() throws Exception {
+            // Set up the pre-game UI elements that are in common with restarting the game
+            updateProgress(0, 1);
+            System.out.println("Loading");
+
+            App.getCanvasController().setPreGameInterface();
+            updateProgress(1, 1);
+            Thread.sleep(50);
+
+            return null;
+          }
+        };
+    // Find progress bar on loading screen
+    ProgressBar progressBar = App.getLoadingController().getProgressBar();
+    progressBar.progressProperty().unbind();
+    // Bind progress bar
+    progressBar.progressProperty().bind(preGameTask.progressProperty());
+    sceneButtonIsIn.setRoot(SceneManager.getUiRoot(AppUi.LOADING));
     if (currentGameMode != GameMode.ZEN) {
       // Sets the game difficulty to the user
       Users.setGameDifficulty(
@@ -123,13 +131,17 @@ public class GameSelectController {
     if (currentGameMode == GameMode.ZEN) {
       Badges.winBadge("Misc", "Play Zen Mode");
     }
-    started = true;
-
-    // Get the scene currently in
-    Button button = (Button) event.getSource();
-    Scene sceneButtonIsIn = button.getScene();
-    // Move to the next scene
-    sceneButtonIsIn.setRoot(SceneManager.getUiRoot(AppUi.GAME));
+    preGameTask.setOnSucceeded(
+        e -> {
+          System.out.println("Loaded!");
+          progressBar.progressProperty().unbind();
+          // Move to the next scene
+          sceneButtonIsIn.setRoot(SceneManager.getUiRoot(AppUi.GAME));
+        });
+    Thread preGameThread = new Thread(preGameTask);
+    // Allow the task to be cancelled on closing of application
+    preGameThread.setDaemon(true);
+    preGameThread.start();
   }
 
   /**

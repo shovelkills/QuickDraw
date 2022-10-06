@@ -29,7 +29,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
-import javafx.scene.layout.Background;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -154,9 +153,11 @@ public class CanvasController {
             // Bind label properties to game properties
             wordLabel.textProperty().bind(game.getCurrentPromptProperty());
             if (currentGameMode != GameMode.ZEN) {
+              timerBarLabel.setPrefWidth(600.0);
               timerLabel.textProperty().bind(game.getTimeRemainingAsStringBinding());
               timerLabel.setVisible(true);
             } else {
+              timerBarLabel.setPrefWidth(20000.0);
               timerLabel.setVisible(false);
             }
             // Set UI elements for pre-game
@@ -528,8 +529,7 @@ public class CanvasController {
     preGameHBox.setVisible(false);
 
     // Get eraser colour
-    Background currentBackground = canvasPane.getBackground();
-    Paint eraserColour = currentBackground.getFills().get(0).getFill();
+    Paint eraserColour = Color.web("#FCEFE8");
     canvas.setOnMousePressed(
         e -> {
           currentX = e.getX();
@@ -573,10 +573,11 @@ public class CanvasController {
    * @throws URISyntaxException
    * @throws CsvException
    * @throws ModelException
+   * @throws InterruptedException
    */
   @FXML
   private void onBackToMenuStart(ActionEvent event)
-      throws IOException, URISyntaxException, CsvException, ModelException {
+      throws IOException, URISyntaxException, CsvException, ModelException, InterruptedException {
 
     // If not in zen mode, cancelling the game counts as a loss
     if (currentGameMode != GameMode.ZEN) {
@@ -606,7 +607,7 @@ public class CanvasController {
 
   @FXML
   private void onBack(ActionEvent event)
-      throws IOException, URISyntaxException, CsvException, ModelException {
+      throws IOException, URISyntaxException, CsvException, ModelException, InterruptedException {
 
     if (currentGameMode == GameMode.PROFILE) {
       // Check if the player saved the image
