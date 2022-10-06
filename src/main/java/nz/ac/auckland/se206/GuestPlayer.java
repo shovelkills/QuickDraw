@@ -8,6 +8,7 @@ import java.util.Map;
 /** Special guest player class that is loaded as a session instance rather than from file. */
 public class GuestPlayer {
   // Declare the guest's fields
+  private int consistentWins;
   private int fastestTime;
   private int losses;
   private int wins;
@@ -28,6 +29,7 @@ public class GuestPlayer {
     fastestTime = -1;
     losses = 0;
     wins = 0;
+    consistentWins = 0;
     timeHistory = new ArrayList<Double>();
     wordHistory = new ArrayList<String>();
     fastestWord = " ";
@@ -80,6 +82,14 @@ public class GuestPlayer {
     this.badges = badges;
   }
 
+  public int getConsistentWins() {
+    return consistentWins;
+  }
+
+  public void setConsistentWins(int consistentWins) {
+    this.consistentWins = consistentWins;
+  }
+
   /** Saves all relevant current user stats to this instance of guestPlayer */
   public void saveGuest() {
     // Save all of the attributes into the guest temporary stats
@@ -91,5 +101,6 @@ public class GuestPlayer {
     fastestWord = Users.getFastestWord();
     gamedifficulty = Users.getIndividualDifficulty();
     badges = Users.getBadges();
+    consistentWins = Users.getConsistentWins();
   }
 }

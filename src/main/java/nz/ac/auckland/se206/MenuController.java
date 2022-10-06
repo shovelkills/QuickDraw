@@ -123,6 +123,9 @@ public class MenuController {
     // Get the scene currently in
     Button button = (Button) event.getSource();
     Scene sceneButtonIsIn = button.getScene();
+
+    // Wins badge that looks at stats
+    Badges.winBadge("Misc", "View Stats Page");
     // Move to the next scene
     sceneButtonIsIn.setRoot(SceneManager.getUiRoot(AppUi.STATS));
   }

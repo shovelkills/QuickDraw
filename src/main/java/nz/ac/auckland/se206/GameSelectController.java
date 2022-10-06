@@ -128,6 +128,9 @@ public class GameSelectController {
           Users.getIndividualDifficulty("timeDifficulty"),
           Users.getIndividualDifficulty("confidenceDifficulty"));
     }
+    if (currentGameMode == GameMode.ZEN) {
+      Badges.winBadge("Misc", "Play Zen Mode");
+    }
     preGameTask.setOnSucceeded(
         e -> {
           System.out.println("Loaded!");
@@ -135,7 +138,6 @@ public class GameSelectController {
           // Move to the next scene
           sceneButtonIsIn.setRoot(SceneManager.getUiRoot(AppUi.GAME));
         });
-
     Thread preGameThread = new Thread(preGameTask);
     // Allow the task to be cancelled on closing of application
     preGameThread.setDaemon(true);

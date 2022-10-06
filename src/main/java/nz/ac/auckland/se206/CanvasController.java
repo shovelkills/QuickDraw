@@ -469,6 +469,12 @@ public class CanvasController {
             wordLabel.setText(getWinMessage());
             timerBarLabel.getStyleClass().clear();
             timerBarLabel.getStyleClass().add("timerBarWin");
+            Badges.winBadge("Wins", "First Win");
+            Badges.winDifficultyBadges(
+                DifficultyBuilder.getAccDifficulty(),
+                DifficultyBuilder.getWordsDifficulty(),
+                DifficultyBuilder.getTimeDifficulty(),
+                DifficultyBuilder.getConfDifficulty());
             Users.increaseWins();
           } else {
             System.out.println("LOST");
@@ -476,6 +482,7 @@ public class CanvasController {
             timerBarLabel.getStyleClass().clear();
             timerBarLabel.getStyleClass().add("timerBarLoss");
             Users.increaseLosses();
+            Users.setConsistentWins(0);
           }
           timerBarLabel.setPrefWidth(20000.0);
           Users.saveUser();
@@ -667,7 +674,7 @@ public class CanvasController {
         return;
       }
     } else {
-      // This is called for profile picture creation
+      Badges.setDrawUserPicture(true);
       saveCurrentSnapshotOnFile();
     }
   }

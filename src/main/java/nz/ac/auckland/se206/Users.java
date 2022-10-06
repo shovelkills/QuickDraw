@@ -24,6 +24,7 @@ import nz.ac.auckland.se206.words.CategorySelector;
 public class Users {
   // Stores the information in the JSON file as individual variables
 
+  private static int consistentWins;
   private static int fastestTime;
   private static int losses;
   private static int wins;
@@ -82,6 +83,8 @@ public class Users {
 
       fastestTime = (int) (double) userInfo.get("fastestGame");
 
+      consistentWins = (int) (double) userInfo.get("consistentWins");
+
       wordHistory = (List<String>) userInfo.get("wordHistory");
 
       timeHistory = (List<Double>) userInfo.get("timeHistory");
@@ -129,6 +132,7 @@ public class Users {
       userMap.put("fastestGame", -1);
       userMap.put("fastestWord", " ");
       userMap.put("timeHistory", new ArrayList<Double>());
+      userMap.put("consistentWins", 0);
 
       // Creates the default difficulty
       Map<String, String> difficulty = new HashMap<>();
@@ -154,6 +158,7 @@ public class Users {
         loadUser(username);
         // Save the user's image selected
         saveProfilePicture(bufferedImage);
+        Badges.checkDrawnUserPicture();
       } catch (IOException e1) {
         // TODO Auto-generated catch block
         e1.printStackTrace();
@@ -177,11 +182,11 @@ public class Users {
     Map<String, Map<String, Boolean>> badgeList = new HashMap<>();
     Map<String, Boolean> difficulty = new HashMap<>();
     // Generates the badges
-    difficulty.put("Easy", false);
-    difficulty.put("Medium", false);
-    difficulty.put("Hard", false);
+    difficulty.put("E", false);
+    difficulty.put("M", false);
+    difficulty.put("H", false);
     badgeList.put("Accuracy", difficulty);
-    difficulty.put("Master", false);
+    difficulty.put("MS", false);
     // Adds to badge list based of difficulty
     badgeList.put("Words", difficulty);
     badgeList.put("Time", difficulty);
@@ -260,6 +265,7 @@ public class Users {
       userMap.put("timeHistory", timeHistory);
       userMap.put("gameDifficulty", gameDifficulty);
       userMap.put("Badges", badges);
+      userMap.put("consistentWins", consistentWins);
 
       // Creates a writer object to write and save the file
       Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -407,6 +413,7 @@ public class Users {
    * @param word the word the user had to draw
    */
   public static void checkFastestTime(int time, String word) {
+    Badges.checkWinTime(time);
     // Checks if it is the fastest time
     if (time <= Users.fastestTime || (Users.fastestTime == -1 && time != 60)) {
       Users.fastestTime = time;
@@ -426,9 +433,11 @@ public class Users {
     saveUserList();
   }
 
-  // Increases current user's wins by 1
+  // Increases current user's wins by 1, consistentWins by 1 and check the number of consistent wins
   public static void increaseWins() {
     Users.wins++;
+    Users.consistentWins++;
+    Badges.checkConsistentWins(consistentWins);
   }
 
   // Increases current user's losses by 1
@@ -542,7 +551,15 @@ public class Users {
     return badges;
   }
 
-  public static void winIndividualBadge(String badgecategory, String badgelevel) {
+  public static void getIndividualBadge(String badgecategory, String badgelevel) {
     Users.badges.get(badgecategory).get(badgelevel);
+  }
+
+  public static int getConsistentWins() {
+    return consistentWins;
+  }
+
+  public static void setConsistentWins(int consistentWins) {
+    Users.consistentWins = consistentWins;
   }
 }
