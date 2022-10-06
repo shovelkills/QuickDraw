@@ -19,6 +19,7 @@ public class App extends Application {
   private static UserCreationController userCreationController;
   private static GameSelectController gameSelectController;
   private static CanvasController canvasController;
+  private static LoadingController loadingController;
 
   public static void main(final String[] args) {
     launch();
@@ -62,6 +63,14 @@ public class App extends Application {
       // return the root for switching scenes
       return root;
     }
+
+    if (fxml == "loading") {
+      FXMLLoader loader = new FXMLLoader(App.class.getResource("/fxml/" + fxml + ".fxml"));
+      Parent root = (Parent) loader.load();
+      loadingController = loader.getController();
+      // return the root for switching scenes
+      return root;
+    }
     if (fxml == "canvas") {
       FXMLLoader loader = new FXMLLoader(App.class.getResource("/fxml/" + fxml + ".fxml"));
       Parent root = (Parent) loader.load();
@@ -80,28 +89,32 @@ public class App extends Application {
     return new FXMLLoader(App.class.getResource("/fxml/" + fxml + ".fxml")).load();
   }
 
-  public static StatsController getStatsController() {
-    return statsController;
+  public static CanvasController getCanvasController() {
+    return canvasController;
   }
 
   public static MenuController getMenuController() {
     return menuController;
   }
 
-  public static UsersController getUsersController() {
-    return usersController;
+  public static StatsController getStatsController() {
+    return statsController;
   }
 
   public static GameSelectController getGameSelectController() {
     return gameSelectController;
   }
 
-  public static CanvasController getCanvasController() {
-    return canvasController;
-  }
-
   public static UserCreationController getCreationController() {
     return userCreationController;
+  }
+
+  public static UsersController getUsersController() {
+    return usersController;
+  }
+
+  public static LoadingController getLoadingController() {
+    return loadingController;
   }
 
   /**
@@ -116,6 +129,7 @@ public class App extends Application {
     SceneManager.addUi(AppUi.MAIN_MENU, loadFxml("menu"));
     SceneManager.addUi(AppUi.GAME, loadFxml("canvas"));
     SceneManager.addUi(AppUi.GAMESELECT, loadFxml("gameselect"));
+    SceneManager.addUi(AppUi.LOADING, loadFxml("loading"));
     SceneManager.addUi(AppUi.USERSELECT, loadFxml("users"));
     SceneManager.addUi(AppUi.USERCREATE, loadFxml("usercreation"));
     SceneManager.addUi(AppUi.STATS, loadFxml("stats"));
