@@ -193,9 +193,7 @@ public class CanvasController {
     canvas.setDisable(false);
     // Hide other things
     timerLabel.setVisible(false);
-    postGameHBox.setMouseTransparent(true);
-    postGameHBox.setVisible(false);
-    // Enable pre-game button panel
+    // Enable post-game button panel
     postGameHBox.setMouseTransparent(false);
     postGameHBox.setVisible(true);
     // Hide some more
@@ -516,6 +514,10 @@ public class CanvasController {
   private void onStartGame() {
     if (currentGameMode != GameMode.PROFILE) {
       game.startGame();
+    }
+    if (currentGameMode == GameMode.ZEN) {
+      postGameHBox.setMouseTransparent(false);
+      postGameHBox.setVisible(true);
     }
 
     canvas.setDisable(false);

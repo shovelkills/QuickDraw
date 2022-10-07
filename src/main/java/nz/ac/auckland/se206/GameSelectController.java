@@ -144,6 +144,15 @@ public class GameSelectController {
     preGameThread.start();
   }
 
+  @FXML
+  private void onExitToMenu(ActionEvent event) {
+    // Get the current scene
+    Button backButton = (Button) event.getSource();
+    Scene currentScene = backButton.getScene();
+    // Move back to main menu
+    currentScene.setRoot(SceneManager.getUiRoot(AppUi.MAIN_MENU));
+  }
+
   /**
    * onSelectGameMode will change the current GameMode
    *
@@ -162,6 +171,8 @@ public class GameSelectController {
     switch (gameModeButton.getText()) {
       case "Normal":
         // Switch to normal game mode
+        wordsMenu.setDisable(false);
+        wordsMenu.setValue(Users.getIndividualDifficulty("wordsDifficulty"));
         accuracyMenu.setDisable(false);
         accuracyMenu.setValue(Users.getIndividualDifficulty("accuracyDifficulty"));
         confidenceMenu.setDisable(false);
@@ -173,6 +184,8 @@ public class GameSelectController {
         break;
       case "Zen":
         // Switch to zen game mode
+        wordsMenu.setDisable(true);
+        wordsMenu.setValue("HARD");
         accuracyMenu.setDisable(true);
         accuracyMenu.setValue("N/A");
         confidenceMenu.setDisable(true);
@@ -185,6 +198,8 @@ public class GameSelectController {
         break;
       case "Definition":
         // Switch to hidden word game mode
+        wordsMenu.setDisable(false);
+        wordsMenu.setValue(Users.getIndividualDifficulty("wordsDifficulty"));
         accuracyMenu.setDisable(false);
         accuracyMenu.setValue(Users.getIndividualDifficulty("accuracyDifficulty"));
         confidenceMenu.setDisable(false);
