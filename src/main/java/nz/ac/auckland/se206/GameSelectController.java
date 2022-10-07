@@ -100,7 +100,6 @@ public class GameSelectController {
           protected Void call() throws Exception {
             // Set up the pre-game UI elements that are in common with restarting the game
             updateProgress(0, 1);
-            System.out.println("Loading");
 
             CanvasController canvas = App.getCanvasController();
             canvas.setPreGameInterface();
@@ -154,7 +153,6 @@ public class GameSelectController {
     }
     preGameTask.setOnSucceeded(
         e -> {
-          System.out.println("Loaded!");
           progressBar.progressProperty().unbind();
           // Move to the next scene
           sceneButtonIsIn.setRoot(SceneManager.getUiRoot(AppUi.GAME));
@@ -163,6 +161,15 @@ public class GameSelectController {
     // Allow the task to be cancelled on closing of application
     preGameThread.setDaemon(true);
     preGameThread.start();
+  }
+
+  @FXML
+  private void onExitToMenu(ActionEvent event) {
+    // Get the current scene
+    Button backButton = (Button) event.getSource();
+    Scene currentScene = backButton.getScene();
+    // Move back to main menu
+    currentScene.setRoot(SceneManager.getUiRoot(AppUi.MAIN_MENU));
   }
 
   /**
@@ -183,6 +190,8 @@ public class GameSelectController {
     switch (gameModeButton.getText()) {
       case "Normal":
         // Switch to normal game mode
+        wordsMenu.setDisable(false);
+        wordsMenu.setValue(Users.getIndividualDifficulty("wordsDifficulty"));
         accuracyMenu.setDisable(false);
         accuracyMenu.setValue(Users.getIndividualDifficulty("accuracyDifficulty"));
         confidenceMenu.setDisable(false);
@@ -194,6 +203,8 @@ public class GameSelectController {
         break;
       case "Zen":
         // Switch to zen game mode
+        wordsMenu.setDisable(true);
+        wordsMenu.setValue("HARD");
         accuracyMenu.setDisable(true);
         accuracyMenu.setValue("N/A");
         confidenceMenu.setDisable(true);
@@ -206,6 +217,8 @@ public class GameSelectController {
         break;
       case "Definition":
         // Switch to hidden word game mode
+        wordsMenu.setDisable(false);
+        wordsMenu.setValue(Users.getIndividualDifficulty("wordsDifficulty"));
         accuracyMenu.setDisable(false);
         accuracyMenu.setValue(Users.getIndividualDifficulty("accuracyDifficulty"));
         confidenceMenu.setDisable(false);

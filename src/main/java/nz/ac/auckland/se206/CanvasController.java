@@ -27,6 +27,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
@@ -76,6 +77,7 @@ public class CanvasController {
   @FXML private HBox preGameHBox;
   @FXML private HBox postGameHBox;
   @FXML private VBox drawingToolsVBox;
+  @FXML private ColorPicker colourPicker;
 
   // Define game object
   private Game game;
@@ -147,6 +149,8 @@ public class CanvasController {
     // Reset the timer bar's css
     timerBarLabel.getStyleClass().clear();
     timerBarLabel.getStyleClass().add("timerBarDefault");
+    colourPicker.setValue(Color.BLACK);
+    colourPicker.setVisible(true);
     game = new Game(this, currentGameMode);
 
     if (currentGameMode != GameMode.PROFILE) {
@@ -160,9 +164,12 @@ public class CanvasController {
               timerBarLabel.setPrefWidth(600.0);
               timerLabel.textProperty().bind(game.getTimeRemainingAsStringBinding());
               timerLabel.setVisible(true);
+              colourPicker.setVisible(false);
             } else {
               timerBarLabel.setPrefWidth(20000.0);
               timerLabel.setVisible(false);
+              // Set visible to color picker
+              colourPicker.setVisible(true);
             }
             // Set UI elements for pre-game
             canvas.setDisable(true);
@@ -197,9 +204,7 @@ public class CanvasController {
     canvas.setDisable(false);
     // Hide other things
     timerLabel.setVisible(false);
-    postGameHBox.setMouseTransparent(true);
-    postGameHBox.setVisible(false);
-    // Enable pre-game button panel
+    // Enable post-game button panel
     postGameHBox.setMouseTransparent(false);
     postGameHBox.setVisible(true);
     // Hide some more
@@ -331,11 +336,7 @@ public class CanvasController {
     // Clear the canvas
     onClear();
     // Reset game variables and concurrent service
-    try {
-      game.resetGame();
-    } catch (Exception e) {
-      System.out.println("Failed to reset game!");
-    }
+    game.resetGame();
     // Reset UI elements (NOTE: CREATES NEW GAME OBJECT!)
     setPreGameInterface();
     // Reset Timer
@@ -353,7 +354,7 @@ public class CanvasController {
 
     // Convert into a binary image.
     final BufferedImage imageBinary =
-        new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_BYTE_BINARY);
+        new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_USHORT_565_RGB);
 
     final Graphics2D graphics = imageBinary.createGraphics();
 
@@ -530,8 +531,10 @@ public class CanvasController {
     if (currentGameMode != GameMode.PROFILE) {
       game.startGame();
     }
-
-    System.out.println("Starting game");
+    if (currentGameMode == GameMode.ZEN) {
+      postGameHBox.setMouseTransparent(false);
+      postGameHBox.setVisible(true);
+    }
 
     canvas.setDisable(false);
     // Turn on to brush mode regardless of what it was
@@ -560,10 +563,10 @@ public class CanvasController {
 
           final double x = e.getX() - size / 2;
           final double y = e.getY() - size / 2;
-          if (isDrawing == true) {
+          if (isDrawing) {
             // This is the colour of the brush.
             if (brush) {
-              graphic.setFill(Color.BLACK);
+              graphic.setStroke(colourPicker.getValue());
               graphic.setLineWidth(size);
               graphic.strokeLine(currentX, currentY, x, y);
 
