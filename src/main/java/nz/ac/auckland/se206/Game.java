@@ -47,41 +47,45 @@ public class Game {
   private boolean spoken = false;
   private boolean hasWon = false;
   private GameMode currentGame;
+  private boolean isGhostGame;
 
-  // Initialise the speech task
-  private Task<Void> speechTask =
-      new Task<Void>() {
-        @Override
-        protected Void call() throws Exception {
-          // Initialise a text to speech instance
-          TextToSpeech textToSpeech = new TextToSpeech();
-          // Run indefinitely
-          while (true) {
-            // When starting speak that its starting
-            if (timer.get() == gameTime - 1) {
-              textToSpeech.speak("Starting");
-            } else if (timer.get() == (gameTime / 2) + 1) {
-              // When half way speak thats it is halfway
-              textToSpeech.speak(
-                  String.format("%s Seconds Remaining"), Integer.toString(gameTime / 2));
-            }
-            // Speak if the person has won
-            if (hasWon && !spoken) {
-              textToSpeech.speak("You Won!");
-              // Set that it has spoken
-              spoken = true;
+  private Service<Void> ttsService =
+      new Service<Void>() {
+        protected Task<Void> createTask() {
+          return new Task<Void>() {
+            protected Void call() throws InterruptedException {
+              // Initialise a text to speech instance
+              TextToSpeech textToSpeech = new TextToSpeech();
+              // Run indefinitely
+              while (true) {
+                // When starting speak that its starting (Unless ghost game)
+                if (timer.get() == gameTime - 1 && !isGhostGame) {
+                  textToSpeech.speak("Starting");
+                } else if (timer.get() == (gameTime / 2) + 1) {
+                  // When half way speak thats it is halfway
+                  textToSpeech.speak(
+                      String.format("%s Seconds Remaining"), Integer.toString(gameTime / 2));
+                }
+                // Speak if the person has won
+                if (hasWon && !spoken) {
+                  textToSpeech.speak("You Won!");
+                  // Set that it has spoken
+                  spoken = true;
 
-            } else if (timer.get() == 0 && !spoken) {
-              // Speak if the person has lost
-              textToSpeech.speak("YOU LOST!");
-              // Set that it has spoken
-              spoken = true;
+                } else if (timer.get() == 0 && !spoken) {
+                  // Speak if the person has lost
+                  textToSpeech.speak("YOU LOST!");
+                  // Set that it has spoken
+                  spoken = true;
+                }
+                // Sleep for 10 ms
+                Thread.sleep(10);
+              }
             }
-            // Sleep for 10 ms
-            Thread.sleep(10);
-          }
+          };
         }
       };
+
   // Initialise a service routine
   private Service<Void> service =
       new Service<Void>() {
@@ -95,7 +99,6 @@ public class Game {
               while (timer == null || timer.intValue() > 1) {
                 // Wait 1 second
                 Thread.sleep(1000);
-
                 Platform.runLater(
                     () -> {
                       // For all game modes other than zen
@@ -125,8 +128,10 @@ public class Game {
                                             .replace("_", " "))) {
                               Users.addTimeHistory(timer.getValue().intValue(), getCurrentPrompt());
                               // End the game
-                              hasWon = true;
-                              endGame(true);
+                              if (!isGhostGame) {
+                                hasWon = true;
+                                endGame(true);
+                              }
                               return;
                             }
                           }
@@ -139,7 +144,9 @@ public class Game {
               System.out.println("LOST IN TASK");
               Users.addTimeHistory(0, getCurrentPrompt());
               // End the game
-              endGame(false);
+              if (!isGhostGame) {
+                endGame(false);
+              }
               return null;
             }
           };
@@ -187,6 +194,20 @@ public class Game {
     timer = new SimpleIntegerProperty(gameTime);
   }
 
+  public boolean getIsGhostGame() {
+    return isGhostGame;
+  }
+
+  /**
+   * While a game is a ghost game, it cannot be won or lost. Use this method for pre-loading the
+   * game services to avoid accidental wins or losses during loading.
+   *
+   * @param isGhost the value of isGhostGame to set
+   */
+  public void setIsGhostGame(boolean isGhost) {
+    isGhostGame = isGhost;
+  }
+
   private void setNormalGame(CanvasController canvas) throws ModelException, IOException {
     // Set the canvas
     this.canvas = canvas;
@@ -200,9 +221,9 @@ public class Game {
     timer = new SimpleIntegerProperty(gameTime);
     currentPrompt.setValue(word);
     // Start the text to speech thread
-    Thread ttsThread = new Thread(speechTask);
-    ttsThread.setDaemon(true);
-    ttsThread.start();
+    // Thread ttsThread = new Thread(speechTask);
+    // ttsThread.setDaemon(true);
+    // ttsThread.start();
   }
 
   private void setZenGame(CanvasController canvas) throws ModelException, IOException {
@@ -252,6 +273,7 @@ public class Game {
     spoken = false;
     hasWon = false;
     service.start();
+    ttsService.start();
   }
 
   /**
@@ -259,12 +281,8 @@ public class Game {
    * Resets the concurrent game service. Resets the timer. Gets a new selection of prompts.
    */
   public void resetGame() {
-    // Check if the service is running
-    if (service.isRunning()) {
-      service.cancel();
-    }
-    // Reset the service so the game is reset
-    service.reset();
+    ttsService.cancel();
+    service.cancel();
     resetTimer(difficulty);
     // currentSelection = CategorySelector.getWordSelection();
   }
@@ -290,7 +308,6 @@ public class Game {
   private void endGame(boolean isWin) throws InterruptedException {
     // Cancel service and end game
     canvas.onEndGame(isWin);
-    speechTask.cancel();
     service.cancel();
   }
 }

@@ -127,6 +127,10 @@ public class CanvasController {
     colourThread.start();
   }
 
+  public Game getGame() {
+    return game;
+  }
+
   /**
    * Sets UI elements which are common to the initialisation of the scene and restarting the game.
    *
@@ -323,13 +327,16 @@ public class CanvasController {
    * @throws IOException
    */
   @FXML
-  private void onRestartGame()
-      throws IOException, URISyntaxException, CsvException, ModelException {
+  public void onRestartGame() throws IOException, URISyntaxException, CsvException, ModelException {
     // Clear the canvas
     onClear();
     // Reset game variables and concurrent service
-    game.resetGame();
-    // Reset UI elements
+    try {
+      game.resetGame();
+    } catch (Exception e) {
+      System.out.println("Failed to reset game!");
+    }
+    // Reset UI elements (NOTE: CREATES NEW GAME OBJECT!)
     setPreGameInterface();
     // Reset Timer
     resetTimerBar();
@@ -513,10 +520,18 @@ public class CanvasController {
 
   /** This method sets up a new game to be started */
   @FXML
-  private void onStartGame() {
+  public void onStartGame() {
+    // Ghost game pretends it is drawing to load and call first update of game services to pre-load
+    // them
+    if (game.getIsGhostGame()) {
+      isDrawing = true;
+    }
+
     if (currentGameMode != GameMode.PROFILE) {
       game.startGame();
     }
+
+    System.out.println("Starting game");
 
     canvas.setDisable(false);
     // Turn on to brush mode regardless of what it was
