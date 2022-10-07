@@ -27,6 +27,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
@@ -76,6 +77,7 @@ public class CanvasController {
   @FXML private HBox preGameHBox;
   @FXML private HBox postGameHBox;
   @FXML private VBox drawingToolsVBox;
+  @FXML private ColorPicker colourPicker;
 
   // Define game object
   private Game game;
@@ -143,6 +145,8 @@ public class CanvasController {
     // Reset the timer bar's css
     timerBarLabel.getStyleClass().clear();
     timerBarLabel.getStyleClass().add("timerBarDefault");
+    colourPicker.setValue(Color.BLACK);
+    colourPicker.setVisible(true);
     game = new Game(this, currentGameMode);
 
     if (currentGameMode != GameMode.PROFILE) {
@@ -156,9 +160,12 @@ public class CanvasController {
               timerBarLabel.setPrefWidth(600.0);
               timerLabel.textProperty().bind(game.getTimeRemainingAsStringBinding());
               timerLabel.setVisible(true);
+              colourPicker.setVisible(false);
             } else {
               timerBarLabel.setPrefWidth(20000.0);
               timerLabel.setVisible(false);
+              // Set visible to color picker
+              colourPicker.setVisible(true);
             }
             // Set UI elements for pre-game
             canvas.setDisable(true);
@@ -344,7 +351,7 @@ public class CanvasController {
 
     // Convert into a binary image.
     final BufferedImage imageBinary =
-        new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_BYTE_BINARY);
+        new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_USHORT_565_RGB);
 
     final Graphics2D graphics = imageBinary.createGraphics();
 
@@ -547,10 +554,10 @@ public class CanvasController {
 
           final double x = e.getX() - size / 2;
           final double y = e.getY() - size / 2;
-          if (isDrawing == true) {
+          if (isDrawing) {
             // This is the colour of the brush.
             if (brush) {
-              graphic.setFill(Color.BLACK);
+              graphic.setStroke(colourPicker.getValue());
               graphic.setLineWidth(size);
               graphic.strokeLine(currentX, currentY, x, y);
 
