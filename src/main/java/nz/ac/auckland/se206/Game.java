@@ -36,7 +36,7 @@ public class Game {
   }
 
   // Declare fields used in the game
-  private DoodlePrediction model;
+  private DoodlePrediction model = new DoodlePrediction();
   private CanvasController canvas;
   private HashMap<Difficulty, String> currentSelection;
   private StringProperty currentPrompt = new SimpleStringProperty(" ");
@@ -58,7 +58,7 @@ public class Game {
           // Run indefinitely
           while (true) {
             // When starting speak that its starting
-            if (timer.get() == gameTime - 1) {
+            if (timer.get() == gameTime - 1 && !hasWon) {
               textToSpeech.speak("Starting");
             } else if (timer.get() == (gameTime / 2) + 1) {
               // When half way speak thats it is halfway
@@ -190,7 +190,6 @@ public class Game {
   private void setNormalGame(CanvasController canvas) throws ModelException, IOException {
     // Set the canvas
     this.canvas = canvas;
-    model = new DoodlePrediction();
     // Get the current difficulty's word
     currentSelection = CategorySelector.getWordSelection();
     String word = currentSelection.get(DifficultyBuilder.getWordsDifficulty());
