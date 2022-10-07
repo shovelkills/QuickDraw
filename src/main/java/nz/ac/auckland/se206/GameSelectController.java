@@ -7,6 +7,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -99,11 +100,30 @@ public class GameSelectController {
           protected Void call() throws Exception {
             // Set up the pre-game UI elements that are in common with restarting the game
             updateProgress(0, 1);
-            System.out.println("Loading");
 
-            App.getCanvasController().setPreGameInterface();
+            CanvasController canvas = App.getCanvasController();
+            canvas.setPreGameInterface();
+            canvas.getGame().setIsGhostGame(true);
+            updateProgress(0.5, 1);
+            Platform.runLater(
+                () -> {
+                  canvas.onStartGame();
+                });
+            // Wait for first cycle of game service
+            Thread.sleep(1500);
+            Platform.runLater(
+                () -> {
+                  try {
+                    canvas.onRestartGame();
+                  } catch (IOException | URISyntaxException | CsvException | ModelException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                  }
+                });
             updateProgress(1, 1);
-            Thread.sleep(50);
+            // Wait for UI elements to be in place on restart
+            Thread.sleep(500);
+            canvas.getGame().setIsGhostGame(false);
 
             return null;
           }
@@ -133,7 +153,6 @@ public class GameSelectController {
     }
     preGameTask.setOnSucceeded(
         e -> {
-          System.out.println("Loaded!");
           progressBar.progressProperty().unbind();
           // Move to the next scene
           sceneButtonIsIn.setRoot(SceneManager.getUiRoot(AppUi.GAME));
