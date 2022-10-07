@@ -1,12 +1,12 @@
 package nz.ac.auckland.se206;
 
+import ai.djl.ModelException;
+import com.opencsv.exceptions.CsvException;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import com.opencsv.exceptions.CsvException;
-import ai.djl.ModelException;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -20,7 +20,10 @@ import nz.ac.auckland.se206.words.CategorySelector.Difficulty;
 public class GameSelectController {
 
   public enum GameMode {
-    DEFINITION, NORMAL, ZEN, PROFILE,
+    DEFINITION,
+    NORMAL,
+    ZEN,
+    PROFILE,
   }
 
   private static GameMode currentGameMode = GameMode.NORMAL;
@@ -36,20 +39,13 @@ public class GameSelectController {
   }
 
   // Define FXML fields
-  @FXML
-  private ChoiceBox<String> accuracyMenu;
-  @FXML
-  private ChoiceBox<String> wordsMenu;
-  @FXML
-  private ChoiceBox<String> timeMenu;
-  @FXML
-  private ChoiceBox<String> confidenceMenu;
-  @FXML
-  private Button definitionButton;
-  @FXML
-  private Button normalButton;
-  @FXML
-  private Button zenButton;
+  @FXML private ChoiceBox<String> accuracyMenu;
+  @FXML private ChoiceBox<String> wordsMenu;
+  @FXML private ChoiceBox<String> timeMenu;
+  @FXML private ChoiceBox<String> confidenceMenu;
+  @FXML private Button definitionButton;
+  @FXML private Button normalButton;
+  @FXML private Button zenButton;
 
   private ArrayList<Button> gameModes = new ArrayList<Button>();
 
@@ -97,20 +93,21 @@ public class GameSelectController {
     Button button = (Button) event.getSource();
     Scene sceneButtonIsIn = button.getScene();
 
-    Task<Void> preGameTask = new Task<Void>() {
-      @Override
-      protected Void call() throws Exception {
-        // Set up the pre-game UI elements that are in common with restarting the game
-        updateProgress(0, 1);
-        System.out.println("Loading");
+    Task<Void> preGameTask =
+        new Task<Void>() {
+          @Override
+          protected Void call() throws Exception {
+            // Set up the pre-game UI elements that are in common with restarting the game
+            updateProgress(0, 1);
+            System.out.println("Loading");
 
-        App.getCanvasController().setPreGameInterface();
-        updateProgress(1, 1);
-        Thread.sleep(50);
+            App.getCanvasController().setPreGameInterface();
+            updateProgress(1, 1);
+            Thread.sleep(50);
 
-        return null;
-      }
-    };
+            return null;
+          }
+        };
     // Find progress bar on loading screen
     ProgressBar progressBar = App.getLoadingController().getProgressBar();
     progressBar.progressProperty().unbind();
@@ -119,10 +116,14 @@ public class GameSelectController {
     sceneButtonIsIn.setRoot(SceneManager.getUiRoot(AppUi.LOADING));
     if (currentGameMode != GameMode.ZEN) {
       // Sets the game difficulty to the user
-      Users.setGameDifficulty(accuracyMenu.getValue(), wordsMenu.getValue(), timeMenu.getValue(),
+      Users.setGameDifficulty(
+          accuracyMenu.getValue(),
+          wordsMenu.getValue(),
+          timeMenu.getValue(),
           confidenceMenu.getValue());
 
-      DifficultyBuilder.difficultySetter(Users.getIndividualDifficulty("accuracyDifficulty"),
+      DifficultyBuilder.difficultySetter(
+          Users.getIndividualDifficulty("accuracyDifficulty"),
           Users.getIndividualDifficulty("wordsDifficulty"),
           Users.getIndividualDifficulty("timeDifficulty"),
           Users.getIndividualDifficulty("confidenceDifficulty"));
@@ -130,12 +131,13 @@ public class GameSelectController {
     if (currentGameMode == GameMode.ZEN) {
       Badges.winBadge("Misc", "Play Zen Mode");
     }
-    preGameTask.setOnSucceeded(e -> {
-      System.out.println("Loaded!");
-      progressBar.progressProperty().unbind();
-      // Move to the next scene
-      sceneButtonIsIn.setRoot(SceneManager.getUiRoot(AppUi.GAME));
-    });
+    preGameTask.setOnSucceeded(
+        e -> {
+          System.out.println("Loaded!");
+          progressBar.progressProperty().unbind();
+          // Move to the next scene
+          sceneButtonIsIn.setRoot(SceneManager.getUiRoot(AppUi.GAME));
+        });
     Thread preGameThread = new Thread(preGameTask);
     // Allow the task to be cancelled on closing of application
     preGameThread.setDaemon(true);
