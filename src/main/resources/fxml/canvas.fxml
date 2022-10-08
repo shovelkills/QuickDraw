@@ -51,7 +51,7 @@
                         </Label>
                      </graphic>
                   </Label>
-                  <Label alignment="CENTER" contentDisplay="TOP" prefHeight="38.0" prefWidth="39.0" styleClass="labelBackground" stylesheets="@../css/gameselect.css">
+                  <Label fx:id="gameToolTipLabel" alignment="CENTER" contentDisplay="TOP" prefHeight="38.0" prefWidth="39.0" styleClass="labelBackground" stylesheets="@../css/gameselect.css">
                      <graphic>
                         <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                            <image>
