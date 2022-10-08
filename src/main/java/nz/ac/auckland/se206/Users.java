@@ -29,7 +29,12 @@ public class Users {
   private static int losses;
   private static int wins;
 
+  private static List<Boolean> winHistory;
   private static List<Double> timeHistory;
+  private static List<String> accuracyDifficultyHistory;
+  private static List<String> confidenceDifficultyHistory;
+  private static List<String> timeDifficultyHistory;
+  private static List<String> wordDifficultyHistory;
   private static List<String> userList;
   private static List<String> wordHistory;
 
@@ -93,6 +98,16 @@ public class Users {
 
       badges = (Map<String, Map<String, Boolean>>) userInfo.get("Badges");
 
+      accuracyDifficultyHistory = (List<String>) userInfo.get("accuracyDifficultyHistory");
+
+      wordDifficultyHistory = (List<String>) userInfo.get("wordDifficultyHistory");
+
+      timeDifficultyHistory = (List<String>) userInfo.get("timeDifficultyHistory");
+
+      confidenceDifficultyHistory = (List<String>) userInfo.get("confidenceDifficultyHistory");
+
+      winHistory = (List<Boolean>) userInfo.get("winHistory");
+
       setRecentUser(username);
 
       reader.close();
@@ -133,6 +148,11 @@ public class Users {
       userMap.put("fastestWord", " ");
       userMap.put("timeHistory", new ArrayList<Double>());
       userMap.put("consistentWins", 0);
+      userMap.put("accuracyDifficultyHistory", new ArrayList<String>());
+      userMap.put("wordDifficultyHistory", new ArrayList<String>());
+      userMap.put("timeDifficultyHistory", new ArrayList<String>());
+      userMap.put("confidenceDifficultyHistory", new ArrayList<String>());
+      userMap.put("winHistory", new ArrayList<Boolean>());
 
       // Creates the default difficulty
       Map<String, String> difficulty = new HashMap<>();
@@ -266,6 +286,11 @@ public class Users {
       userMap.put("gameDifficulty", gameDifficulty);
       userMap.put("Badges", badges);
       userMap.put("consistentWins", consistentWins);
+      userMap.put("accuracyDifficultyHistory", accuracyDifficultyHistory);
+      userMap.put("wordDifficultyHistory", wordDifficultyHistory);
+      userMap.put("timeDifficultyHistory", timeDifficultyHistory);
+      userMap.put("confidenceDifficultyHistory", confidenceDifficultyHistory);
+      userMap.put("winHistory", winHistory);
 
       // Creates a writer object to write and save the file
       Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -398,6 +423,11 @@ public class Users {
     timeHistory = guestPlayer.getTimeHistory();
     gameDifficulty = guestPlayer.getGamedifficulty();
     badges = guestPlayer.getBadges();
+    accuracyDifficultyHistory = guestPlayer.getAccuracyDifficultyHistory();
+    timeDifficultyHistory = guestPlayer.getTimeDifficultyHistory();
+    wordDifficultyHistory = guestPlayer.getWordDifficultyHistory();
+    confidenceDifficultyHistory = guestPlayer.getConfidenceDifficultyHistory();
+    winHistory = guestPlayer.getWinHistory();
     setRecentUser(userName);
   }
 
@@ -426,6 +456,15 @@ public class Users {
     }
   }
 
+  public static void addGameDifficultyHistory(
+      String accuracy, String word, String time, String confidence) {
+
+    accuracyDifficultyHistory.add(accuracy);
+    wordDifficultyHistory.add(word);
+    timeDifficultyHistory.add(time);
+    confidenceDifficultyHistory.add(confidence);
+  }
+
   // updates the userList by adding new user to list
   public static void addUserList(String user) {
     userList.add(user);
@@ -437,12 +476,14 @@ public class Users {
   public static void increaseWins() {
     Users.wins++;
     Users.consistentWins++;
+    Users.addWinHistory(true);
     Badges.checkConsistentWins(consistentWins);
   }
 
   // Increases current user's losses by 1
   public static void increaseLosses() {
     Users.losses++;
+    Users.addWinHistory(false);
   }
 
   /**
@@ -533,6 +574,10 @@ public class Users {
     Users.profilePicture = profilepicture;
   }
 
+  public static void addWinHistory(Boolean win) {
+    winHistory.add(win);
+  }
+
   /**
    * To get each difficulty, do Map.get(difficult) e.g. Map.get("timedifficulty") to get the time
    * difficulty
@@ -561,5 +606,25 @@ public class Users {
 
   public static void setConsistentWins(int consistentWins) {
     Users.consistentWins = consistentWins;
+  }
+
+  public static List<String> getAccuracyDifficultyHistory() {
+    return accuracyDifficultyHistory;
+  }
+
+  public static List<String> getConfidenceDifficultyHistory() {
+    return confidenceDifficultyHistory;
+  }
+
+  public static List<String> getTimeDifficultyHistory() {
+    return timeDifficultyHistory;
+  }
+
+  public static List<String> getWordDifficultyHistory() {
+    return wordDifficultyHistory;
+  }
+
+  public static List<Boolean> getWinHistory() {
+    return winHistory;
   }
 }
