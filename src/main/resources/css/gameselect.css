@@ -2,7 +2,18 @@
 	-fx-background-image: url("../images/drawn_wallpaper.png");
 	-fx-background-size: 1920 1080;
 }
+.labelBackground{
+	-fx-background-color: rgba(0,0,0,0.5);
+	-fx-background-radius: 100;
+	-fx-padding: -11;
+}
 .difficultyDropdown{
 	-fx-background-color: #EFFBF5;
 	-fx-background-radius: 10 0 0 10;
+}
+.toolTip{
+	-fx-background-color: BLACK;
+	-fx-background-radius: 10;
+	-fx-padding: 10;
+	-fx-position: absolute;
 }

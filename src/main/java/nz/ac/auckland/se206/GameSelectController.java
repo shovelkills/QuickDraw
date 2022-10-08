@@ -15,6 +15,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.control.Tooltip;
+import javafx.util.Duration;
 import nz.ac.auckland.se206.SceneManager.AppUi;
 import nz.ac.auckland.se206.words.CategorySelector.Difficulty;
 
@@ -47,15 +49,20 @@ public class GameSelectController {
   @FXML private Button definitionButton;
   @FXML private Button normalButton;
   @FXML private Button zenButton;
+  @FXML private Tooltip toolTip1;
+  @FXML private Tooltip toolTip2;
+  @FXML private Tooltip toolTip3;
+  @FXML private Tooltip toolTip4;
 
   private ArrayList<Button> gameModes = new ArrayList<Button>();
+  private ArrayList<Tooltip> toolTips = new ArrayList<Tooltip>();
 
   private final HashMap<Difficulty, String> difficultyMap = new HashMap<Difficulty, String>();
   private ArrayList<ChoiceBox<String>> difficultyMenu = new ArrayList<ChoiceBox<String>>();
   // Task for alternating colour of the title and word label concurrently
 
   public void initialize() {
-
+    Collections.addAll(toolTips, toolTip1, toolTip2, toolTip3, toolTip4);
     Collections.addAll(gameModes, definitionButton, normalButton, zenButton);
     difficultyMap.put(Difficulty.E, "EASY");
     difficultyMap.put(Difficulty.M, "MEDIUM");
@@ -75,6 +82,11 @@ public class GameSelectController {
     // Sets the menus to the defaults
     // Set the local game mode
     setLocalGameMode();
+    for (Tooltip toolTip : toolTips) {
+      toolTip.setShowDelay(Duration.ZERO);
+      toolTip.setWrapText(true);
+      toolTip.setAutoFix(true);
+    }
   }
 
   /**

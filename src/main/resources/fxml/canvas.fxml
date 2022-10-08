@@ -5,6 +5,9 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ColorPicker?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
@@ -47,6 +50,21 @@
                            </padding>
                         </Label>
                      </graphic>
+                  </Label>
+                  <Label alignment="CENTER" contentDisplay="TOP" prefHeight="38.0" prefWidth="39.0" styleClass="labelBackground" stylesheets="@../css/gameselect.css">
+                     <graphic>
+                        <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../images/qmark.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <tooltip>
+                        <Tooltip fx:id="gameToolTip" styleClass="toolTip" text="Draw the word and try to win!" />
+                     </tooltip>
+                     <HBox.margin>
+                        <Insets left="5.0" />
+                     </HBox.margin>
                   </Label>
                </children>
             </HBox>
