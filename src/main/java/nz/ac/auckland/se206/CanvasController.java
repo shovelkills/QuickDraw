@@ -29,6 +29,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -78,6 +79,8 @@ public class CanvasController {
   @FXML private HBox postGameHBox;
   @FXML private VBox drawingToolsVBox;
   @FXML private ColorPicker colourPicker;
+  @FXML private Tooltip gameToolTip;
+  @FXML private Label gameToolTipLabel;
 
   // Define game object
   private Game game;
@@ -127,6 +130,10 @@ public class CanvasController {
     colourThread.setDaemon(true);
     // Start the colour task
     colourThread.start();
+    // Set up the tool tip
+    gameToolTip.setShowDelay(Duration.ZERO);
+    gameToolTip.setWrapText(true);
+    gameToolTip.setAutoFix(true);
   }
 
   public Game getGame() {
@@ -158,6 +165,7 @@ public class CanvasController {
           () -> {
             titleLabel.setText("Quick, Draw!");
             isDrawing = false;
+            gameToolTipLabel.setVisible(true);
             // Bind label properties to game properties
             wordLabel.textProperty().bind(game.getCurrentPromptProperty());
             if (currentGameMode != GameMode.ZEN) {
@@ -214,6 +222,7 @@ public class CanvasController {
     restartButton.setVisible(false);
     // Change the text of the title
     titleLabel.setText("Draw a Picture!");
+    gameToolTipLabel.setVisible(false);
     // Enable them to draw
     onStartGame();
   }
