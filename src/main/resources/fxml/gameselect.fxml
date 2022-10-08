@@ -20,17 +20,17 @@
                <children>
                   <VBox alignment="CENTER" prefHeight="578.0" prefWidth="165.0" spacing="20.0">
                      <children>
-                        <Button fx:id="zenButton" mnemonicParsing="false" onAction="#onSelectGameMode" prefHeight="25.0" prefWidth="80.0" text="Zen" />
+                        <Button fx:id="zenButton" mnemonicParsing="false" onAction="#onSelectGameMode" prefHeight="25.0" prefWidth="110.0" text="Zen" />
                      </children>
                   </VBox>
                   <VBox alignment="CENTER" prefHeight="578.0" prefWidth="165.0" spacing="20.0">
                      <children>
-                        <Button fx:id="normalButton" disable="true" mnemonicParsing="false" onAction="#onSelectGameMode" prefHeight="25.0" prefWidth="80.0" text="Normal" />
+                        <Button fx:id="normalButton" disable="true" mnemonicParsing="false" onAction="#onSelectGameMode" prefHeight="25.0" prefWidth="110.0" text="Normal" />
                      </children>
                   </VBox>
                   <VBox alignment="CENTER" prefHeight="578.0" prefWidth="165.0" spacing="20.0">
                      <children>
-                        <Button fx:id="definitionButton" mnemonicParsing="false" onAction="#onSelectGameMode" prefHeight="25.0" prefWidth="80.0" text="Definition" />
+                        <Button fx:id="definitionButton" mnemonicParsing="false" onAction="#onSelectGameMode" prefHeight="25.0" prefWidth="110.0" text="Hidden Word" />
                      </children>
                   </VBox>
                </children>

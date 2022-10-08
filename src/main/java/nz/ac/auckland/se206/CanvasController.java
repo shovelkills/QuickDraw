@@ -42,6 +42,7 @@ import javafx.util.Duration;
 import javax.imageio.ImageIO;
 import nz.ac.auckland.se206.GameSelectController.GameMode;
 import nz.ac.auckland.se206.SceneManager.AppUi;
+import nz.ac.auckland.se206.dict.WordNotFoundException;
 import nz.ac.auckland.se206.words.CategorySelector;
 
 /**
@@ -120,6 +121,7 @@ public class CanvasController {
    * @throws CsvException If the Csv cannot be found
    */
   public void initialize() throws IOException, URISyntaxException, CsvException, ModelException {
+    Game.createModel();
     // Get the graphic from the canvas
     graphic = canvas.getGraphicsContext2D();
     // Load font
@@ -147,9 +149,10 @@ public class CanvasController {
    * @throws CsvException
    * @throws IOException
    * @throws ModelException
+   * @throws WordNotFoundException
    */
   public void setPreGameInterface()
-      throws IOException, CsvException, URISyntaxException, ModelException {
+      throws IOException, CsvException, URISyntaxException, ModelException, WordNotFoundException {
     currentGameMode = GameSelectController.getCurrentGameMode();
     // Instantiate a new game object on first opening the scene
     CategorySelector.loadCategories();
@@ -224,6 +227,7 @@ public class CanvasController {
     titleLabel.setText("Draw a Picture!");
     gameToolTipLabel.setVisible(false);
     // Enable them to draw
+
     onStartGame();
   }
 
@@ -280,7 +284,7 @@ public class CanvasController {
       String prediction = predictionList.get(i).getClassName();
       // Check if the prediction is the prompt word to determine label color
       boolean isPrompt =
-          prediction.replaceAll("_", " ").equals(game.getCurrentPrompt()) ? true : false;
+          prediction.replaceAll("_", " ").equals(game.getCurrentWord()) ? true : false;
       // Create a formatted String for the prediction label
       String predictionEntry =
           (i + 1) + ". " + predictionList.get(i).getClassName().replaceAll("_", " ");
@@ -339,9 +343,11 @@ public class CanvasController {
    * @throws CsvException
    * @throws URISyntaxException
    * @throws IOException
+   * @throws WordNotFoundException
    */
   @FXML
-  public void onRestartGame() throws IOException, URISyntaxException, CsvException, ModelException {
+  public void onRestartGame()
+      throws IOException, URISyntaxException, CsvException, ModelException, WordNotFoundException {
     // Clear the canvas
     onClear();
     // Reset game variables and concurrent service
@@ -513,7 +519,7 @@ public class CanvasController {
    */
   private String getWinMessage() {
     return "You won! You drew "
-        + game.getCurrentPrompt()
+        + game.getCurrentWord()
         + " in "
         + (CategorySelector.getTime() - game.getTimeRemaining())
         + " seconds!";
@@ -525,6 +531,10 @@ public class CanvasController {
    * @return A string that is polite, professional, and honest.
    */
   private String getLossMessage() {
+    // Create custom loss message
+    if (currentGameMode == GameMode.HIDDEN_WORD) {
+      return String.format("Out of time! The word was %s", game.getCurrentWord());
+    }
     return "Out of time! Play again?";
   }
 
@@ -601,10 +611,12 @@ public class CanvasController {
    * @throws CsvException
    * @throws ModelException
    * @throws InterruptedException
+   * @throws WordNotFoundException
    */
   @FXML
   private void onBackToMenuStart(ActionEvent event)
-      throws IOException, URISyntaxException, CsvException, ModelException, InterruptedException {
+      throws IOException, URISyntaxException, CsvException, ModelException, InterruptedException,
+          WordNotFoundException {
 
     // If not in zen mode, cancelling the game counts as a loss
     if (currentGameMode != GameMode.ZEN) {
@@ -634,7 +646,8 @@ public class CanvasController {
 
   @FXML
   private void onBack(ActionEvent event)
-      throws IOException, URISyntaxException, CsvException, ModelException, InterruptedException {
+      throws IOException, URISyntaxException, CsvException, ModelException, InterruptedException,
+          WordNotFoundException {
 
     if (currentGameMode == GameMode.PROFILE) {
       // Check if the player saved the image
@@ -649,8 +662,11 @@ public class CanvasController {
       // Go back to main menu
       onBackToMenu(event);
     }
-    // Restart the game
-    onRestartGame();
+    // Clear the canvas
+    onClear();
+    // Reset game variables and concurrent service
+    game.resetGame();
+    resetTimerBar();
   }
 
   @FXML
@@ -703,6 +719,27 @@ public class CanvasController {
     } else {
       Badges.setDrawUserPicture(true);
       saveCurrentSnapshotOnFile();
+    }
+  }
+
+  /** Update the tool tip in the hidden word game */
+  public void updateToolTip() {
+    switch (currentGameMode) {
+      case HIDDEN_WORD:
+        gameToolTip.setText(game.getCurrentPrompt());
+        break;
+      case NORMAL:
+        gameToolTip.setText("Draw the word and try to win!");
+        break;
+      case PROFILE:
+        gameToolTip.setText("Draw your profile picture!");
+        break;
+      case ZEN:
+        gameToolTip.setText("Feel free to draw!!!");
+        break;
+      default:
+        gameToolTip.setText("Draw the word and try to win!");
+        break;
     }
   }
 }

@@ -18,12 +18,13 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Tooltip;
 import javafx.util.Duration;
 import nz.ac.auckland.se206.SceneManager.AppUi;
+import nz.ac.auckland.se206.dict.WordNotFoundException;
 import nz.ac.auckland.se206.words.CategorySelector.Difficulty;
 
 public class GameSelectController {
 
   public enum GameMode {
-    DEFINITION,
+    HIDDEN_WORD,
     NORMAL,
     ZEN,
     PROFILE,
@@ -127,7 +128,11 @@ public class GameSelectController {
                 () -> {
                   try {
                     canvas.onRestartGame();
-                  } catch (IOException | URISyntaxException | CsvException | ModelException e) {
+                  } catch (IOException
+                      | URISyntaxException
+                      | CsvException
+                      | ModelException
+                      | WordNotFoundException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
                   }
@@ -227,7 +232,7 @@ public class GameSelectController {
         // Change the local game mode
         localGameMode = GameMode.ZEN;
         break;
-      case "Definition":
+      case "Hidden Word":
         // Switch to hidden word game mode
         wordsMenu.setDisable(false);
         wordsMenu.setValue(Users.getIndividualDifficulty("wordsDifficulty"));
@@ -238,7 +243,7 @@ public class GameSelectController {
         timeMenu.setDisable(false);
         timeMenu.setValue(Users.getIndividualDifficulty("timeDifficulty"));
         // Change the local game mode
-        localGameMode = GameMode.DEFINITION;
+        localGameMode = GameMode.HIDDEN_WORD;
         break;
       default:
         // Set the default game mode to normal

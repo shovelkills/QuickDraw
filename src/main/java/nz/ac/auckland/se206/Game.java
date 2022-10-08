@@ -17,6 +17,10 @@ import javafx.beans.property.StringProperty;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import nz.ac.auckland.se206.GameSelectController.GameMode;
+import nz.ac.auckland.se206.dict.DictionaryLookup;
+import nz.ac.auckland.se206.dict.WordEntry;
+import nz.ac.auckland.se206.dict.WordInfo;
+import nz.ac.auckland.se206.dict.WordNotFoundException;
 import nz.ac.auckland.se206.ml.DoodlePrediction;
 import nz.ac.auckland.se206.speech.TextToSpeech;
 import nz.ac.auckland.se206.words.CategorySelector;
@@ -29,17 +33,23 @@ import nz.ac.auckland.se206.words.CategorySelector.Difficulty;
  */
 public class Game {
   // Declare difficulty field
+  private static DoodlePrediction model;
   private static Difficulty difficulty;
+
+  public static void createModel() throws ModelException, IOException {
+    model = new DoodlePrediction();
+  }
 
   public static Difficulty getDifficulty() {
     return difficulty;
   }
 
   // Declare fields used in the game
-  private DoodlePrediction model = new DoodlePrediction();
+
   private CanvasController canvas;
   private HashMap<Difficulty, String> currentSelection;
   private StringProperty currentPrompt = new SimpleStringProperty(" ");
+  private String currentWord;
   private IntegerProperty timer;
   private int gameTime;
   private int topMatch;
@@ -120,13 +130,13 @@ public class Game {
                           for (int i = 0; i < topMatch; i++) {
                             // Check if the top words are what we are drawing based on difficulty
                             if (currentPredictions.get(i).getProbability() > confidence
-                                && getCurrentPrompt()
+                                && getCurrentWord()
                                     .equals(
                                         currentPredictions
                                             .get(i)
                                             .getClassName()
                                             .replace("_", " "))) {
-                              Users.addTimeHistory(timer.getValue().intValue(), getCurrentPrompt());
+                              Users.addTimeHistory(timer.getValue().intValue(), getCurrentWord());
                               // End the game
                               if (!isGhostGame) {
                                 hasWon = true;
@@ -142,7 +152,7 @@ public class Game {
                     });
               }
               System.out.println("LOST IN TASK");
-              Users.addTimeHistory(0, getCurrentPrompt());
+              Users.addTimeHistory(0, getCurrentWord());
               // End the game
               if (!isGhostGame) {
                 endGame(false);
@@ -154,6 +164,25 @@ public class Game {
         ;
       };
 
+  // Task for finding definition of a word
+  private Task<Void> getDefintionTask =
+      new Task<Void>() {
+
+        @Override
+        protected Void call() throws Exception {
+          String word = getCurrentWord();
+          WordInfo wordResult = DictionaryLookup.searchWordInfo(word);
+          List<WordEntry> entries = wordResult.getWordEntries();
+          String definition = entries.get(0).getDefinitions().get(0);
+          Platform.runLater(
+              () -> {
+                currentPrompt.setValue(definition);
+                App.getCanvasController().updateToolTip();
+              });
+          return null;
+        }
+      };
+
   /**
    * Game will set up a game based on the presets selected
    *
@@ -162,13 +191,15 @@ public class Game {
    * @throws URISyntaxException converting to link exception
    * @throws CsvException reading spreadsheet exceptions
    * @throws ModelException doodle prediction exception
+   * @throws WordNotFoundException
    */
-  public Game(CanvasController canvas, GameMode gameMode) throws ModelException, IOException {
+  public Game(CanvasController canvas, GameMode gameMode)
+      throws ModelException, IOException, WordNotFoundException {
     // Set the current game mode
     currentGame = gameMode;
     switch (gameMode) {
-      case DEFINITION:
-        // TODO add in hidden word gamemode
+      case HIDDEN_WORD:
+        setHiddenWordGame(canvas);
         break;
       case NORMAL:
         // Set the normal game
@@ -187,6 +218,7 @@ public class Game {
         setNormalGame(canvas);
         break;
     }
+    App.getCanvasController().updateToolTip();
   }
 
   private void setProfileCanvas(CanvasController canvas) {
@@ -218,13 +250,13 @@ public class Game {
     topMatch = CategorySelector.getAccuracy();
     confidence = ((float) CategorySelector.getConfidence() / 100);
     timer = new SimpleIntegerProperty(gameTime);
+    setCurrentWord(word);
     currentPrompt.setValue(word);
   }
 
   private void setZenGame(CanvasController canvas) throws ModelException, IOException {
     // Set the canvas
     this.canvas = canvas;
-    model = new DoodlePrediction();
     // Get the current difficulty's word
     currentSelection = CategorySelector.getWordSelection();
     String word = currentSelection.get(DifficultyBuilder.getWordsDifficulty());
@@ -232,7 +264,25 @@ public class Game {
     timer = null;
     topMatch = 0;
     confidence = 1;
+    setCurrentWord(word);
     currentPrompt.setValue(word);
+  }
+
+  private void setHiddenWordGame(CanvasController canvas)
+      throws ModelException, IOException, WordNotFoundException {
+    // Set the canvas
+    this.canvas = canvas;
+
+    // Get the current difficulty's word
+    currentSelection = CategorySelector.getWordSelection();
+    String word = currentSelection.get(DifficultyBuilder.getWordsDifficulty());
+    setCurrentWord(word);
+    gameTime = CategorySelector.getTime();
+    topMatch = CategorySelector.getAccuracy();
+    confidence = ((float) CategorySelector.getConfidence() / 100);
+    timer = new SimpleIntegerProperty(gameTime);
+    Thread definitionThread = new Thread(getDefintionTask);
+    definitionThread.start();
   }
 
   /**
@@ -260,6 +310,14 @@ public class Game {
 
   public StringBinding getTimeRemainingAsStringBinding() {
     return timer.asString();
+  }
+
+  public String getCurrentWord() {
+    return currentWord;
+  }
+
+  public void setCurrentWord(String currentWord) {
+    this.currentWord = currentWord;
   }
 
   /** startGame will initialize the game */
