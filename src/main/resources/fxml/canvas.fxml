@@ -19,12 +19,12 @@
 
 <VBox alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" styleClass="canvasBackground" stylesheets="@../css/canvas.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nz.ac.auckland.se206.CanvasController">
    <children>
-      <Label fx:id="titleLabel" alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="0.0" prefWidth="900.0" styleClass="canvasTitle" stylesheets="@../css/canvas.css" text="Quick, Draw!" textFill="WHITE">
+      <Label fx:id="titleLabel" alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="0.0" prefWidth="1280.0" styleClass="canvasTitle" stylesheets="@../css/canvas.css" text="Quick, Draw!" textFill="WHITE">
          <font>
             <Font name="System Bold" size="42.0" />
          </font>
       </Label>
-      <VBox alignment="TOP_CENTER" maxWidth="1.7976931348623157E308" prefHeight="602.0" prefWidth="900.0" stylesheets="@../css/canvas.css">
+      <VBox fx:id="aboveVbox" alignment="TOP_CENTER" maxWidth="1.7976931348623157E308" prefHeight="602.0" prefWidth="900.0" stylesheets="@../css/canvas.css">
          <children>
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                <children>
@@ -68,9 +68,9 @@
                   </Label>
                </children>
             </HBox>
-            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="1384.0">
                <children>
-                  <VBox fx:id="drawingToolsVBox" alignment="CENTER_RIGHT" prefHeight="200.0" prefWidth="260.0" spacing="5.0">
+                  <VBox fx:id="drawingToolsVBox" alignment="CENTER_RIGHT" prefHeight="400.0" prefWidth="176.0" spacing="5.0">
                      <children>
                         <ColorPicker fx:id="colourPicker" visible="false">
                            <value>

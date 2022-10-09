@@ -7,7 +7,6 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -88,6 +87,34 @@ public class GameSelectController {
       toolTip.setWrapText(true);
       toolTip.setAutoFix(true);
     }
+
+    CanvasController canvas = App.getCanvasController();
+    try {
+      canvas.setPreGameInterface();
+    } catch (IOException
+        | CsvException
+        | URISyntaxException
+        | ModelException
+        | WordNotFoundException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    canvas.getGame().setIsGhostGame(true);
+
+    canvas.onStartGame();
+
+    try {
+      canvas.onRestartGame();
+    } catch (IOException
+        | URISyntaxException
+        | CsvException
+        | ModelException
+        | WordNotFoundException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    // Wait for UI elements to be in place on restart
+    canvas.getGame().setIsGhostGame(false);
   }
 
   /**
@@ -104,43 +131,18 @@ public class GameSelectController {
   private void onStartGame(ActionEvent event)
       throws IOException, CsvException, URISyntaxException, ModelException, InterruptedException {
 
-    Button button = (Button) event.getSource();
-    Scene sceneButtonIsIn = button.getScene();
-
     Task<Void> preGameTask =
         new Task<Void>() {
           @Override
           protected Void call() throws Exception {
             // Set up the pre-game UI elements that are in common with restarting the game
             updateProgress(0, 1);
-
             CanvasController canvas = App.getCanvasController();
-            canvas.setPreGameInterface();
-            canvas.getGame().setIsGhostGame(true);
+            Thread.sleep(100);
             updateProgress(0.5, 1);
-            Platform.runLater(
-                () -> {
-                  canvas.onStartGame();
-                });
-            // Wait for first cycle of game service
-            Thread.sleep(1500);
-            Platform.runLater(
-                () -> {
-                  try {
-                    canvas.onRestartGame();
-                  } catch (IOException
-                      | URISyntaxException
-                      | CsvException
-                      | ModelException
-                      | WordNotFoundException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                  }
-                });
+            canvas.setPreGameInterface();
             updateProgress(1, 1);
-            // Wait for UI elements to be in place on restart
-            Thread.sleep(500);
-            canvas.getGame().setIsGhostGame(false);
+            Thread.sleep(100);
 
             return null;
           }
@@ -150,6 +152,10 @@ public class GameSelectController {
     progressBar.progressProperty().unbind();
     // Bind progress bar
     progressBar.progressProperty().bind(preGameTask.progressProperty());
+
+    Button button = (Button) event.getSource();
+    Scene sceneButtonIsIn = button.getScene();
+
     sceneButtonIsIn.setRoot(SceneManager.getUiRoot(AppUi.LOADING));
     if (currentGameMode != GameMode.ZEN) {
       // Sets the game difficulty to the user

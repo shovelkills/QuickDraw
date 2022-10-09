@@ -50,6 +50,7 @@ public class Game {
   private HashMap<Difficulty, String> currentSelection;
   private StringProperty currentPrompt = new SimpleStringProperty(" ");
   private String currentWord;
+  private String definition;
   private IntegerProperty timer;
   private int gameTime;
   private int topMatch;
@@ -164,25 +165,6 @@ public class Game {
         ;
       };
 
-  // Task for finding definition of a word
-  private Task<Void> getDefintionTask =
-      new Task<Void>() {
-
-        @Override
-        protected Void call() throws Exception {
-          String word = getCurrentWord();
-          WordInfo wordResult = DictionaryLookup.searchWordInfo(word);
-          List<WordEntry> entries = wordResult.getWordEntries();
-          String definition = entries.get(0).getDefinitions().get(0);
-          Platform.runLater(
-              () -> {
-                currentPrompt.setValue(definition);
-                App.getCanvasController().updateToolTip();
-              });
-          return null;
-        }
-      };
-
   /**
    * Game will set up a game based on the presets selected
    *
@@ -268,21 +250,33 @@ public class Game {
     currentPrompt.setValue(word);
   }
 
-  private void setHiddenWordGame(CanvasController canvas)
-      throws ModelException, IOException, WordNotFoundException {
+  private void setHiddenWordGame(CanvasController canvas) throws ModelException, IOException {
+    // Initialize variables
+    WordInfo wordResult = null;
+    String word;
     // Set the canvas
     this.canvas = canvas;
-
-    // Get the current difficulty's word
-    currentSelection = CategorySelector.getWordSelection();
-    String word = currentSelection.get(DifficultyBuilder.getWordsDifficulty());
-    setCurrentWord(word);
     gameTime = CategorySelector.getTime();
     topMatch = CategorySelector.getAccuracy();
     confidence = ((float) CategorySelector.getConfidence() / 100);
     timer = new SimpleIntegerProperty(gameTime);
-    Thread definitionThread = new Thread(getDefintionTask);
-    definitionThread.start();
+    while (true) {
+      // Get the current difficulty's word
+      currentSelection = CategorySelector.getWordSelection();
+      word = currentSelection.get(DifficultyBuilder.getWordsDifficulty());
+      try {
+        // Look up the word in dictionary
+        wordResult = DictionaryLookup.searchWordInfo(word);
+        break;
+      } catch (WordNotFoundException e) {
+        System.out.println("No word definition was found!");
+        continue;
+      }
+    }
+    setCurrentWord(word);
+    List<WordEntry> entries = wordResult.getWordEntries();
+    definition = entries.get(0).getDefinitions().get(0);
+    currentPrompt.setValue("Guess the word then draw it!");
   }
 
   /**
@@ -306,6 +300,10 @@ public class Game {
 
   public int getTimeRemaining() {
     return timer.get();
+  }
+
+  public String getDefinition() {
+    return definition;
   }
 
   public StringBinding getTimeRemainingAsStringBinding() {
