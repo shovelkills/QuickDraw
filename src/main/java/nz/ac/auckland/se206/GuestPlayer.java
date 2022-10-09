@@ -16,7 +16,12 @@ public class GuestPlayer {
   private Map<String, Map<String, Boolean>> badges;
   private Map<String, String> gamedifficulty;
 
+  private List<Boolean> winHistory;
   private List<Double> timeHistory;
+  private List<String> accuracyDifficultyHistory;
+  private List<String> timeDifficultyHistory;
+  private List<String> wordDifficultyHistory;
+  private List<String> confidenceDifficultyHistory;
   private List<String> wordHistory;
 
   private String fastestWord;
@@ -39,6 +44,11 @@ public class GuestPlayer {
     difficulty.put("timeDifficulty", "EASY");
     difficulty.put("confidenceDifficulty", "EASY");
     gamedifficulty = difficulty;
+    accuracyDifficultyHistory = new ArrayList<String>();
+    timeDifficultyHistory = new ArrayList<String>();
+    wordDifficultyHistory = new ArrayList<String>();
+    confidenceDifficultyHistory = new ArrayList<String>();
+    winHistory = new ArrayList<Boolean>();
     badges = Users.createBadges();
   }
 
@@ -90,6 +100,26 @@ public class GuestPlayer {
     this.consistentWins = consistentWins;
   }
 
+  public List<String> getAccuracyDifficultyHistory() {
+    return accuracyDifficultyHistory;
+  }
+
+  public List<String> getTimeDifficultyHistory() {
+    return timeDifficultyHistory;
+  }
+
+  public List<String> getWordDifficultyHistory() {
+    return wordDifficultyHistory;
+  }
+
+  public List<String> getConfidenceDifficultyHistory() {
+    return confidenceDifficultyHistory;
+  }
+
+  public List<Boolean> getWinHistory() {
+    return winHistory;
+  }
+
   /** Saves all relevant current user stats to this instance of guestPlayer */
   public void saveGuest() {
     // Save all of the attributes into the guest temporary stats
@@ -102,5 +132,10 @@ public class GuestPlayer {
     gamedifficulty = Users.getIndividualDifficulty();
     badges = Users.getBadges();
     consistentWins = Users.getConsistentWins();
+    accuracyDifficultyHistory = Users.getAccuracyDifficultyHistory();
+    timeDifficultyHistory = Users.getTimeDifficultyHistory();
+    wordDifficultyHistory = Users.getWordDifficultyHistory();
+    confidenceDifficultyHistory = Users.getConfidenceDifficultyHistory();
+    winHistory = Users.getWinHistory();
   }
 }

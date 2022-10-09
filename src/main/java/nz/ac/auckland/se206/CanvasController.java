@@ -502,6 +502,11 @@ public class CanvasController {
             Users.setConsistentWins(0);
           }
           timerBarLabel.setPrefWidth(20000.0);
+          Users.addGameDifficultyHistory(
+              DifficultyBuilder.getAccDifficulty().toString(),
+              DifficultyBuilder.getWordsDifficulty().toString(),
+              DifficultyBuilder.getTimeDifficulty().toString(),
+              DifficultyBuilder.getConfDifficulty().toString());
           Users.saveUser();
         });
   }
