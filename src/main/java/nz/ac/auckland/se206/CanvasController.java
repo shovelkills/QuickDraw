@@ -9,8 +9,10 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -33,6 +35,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -107,6 +110,7 @@ public class CanvasController {
   private Font maybeNext;
   private boolean savedImage = false;
   private Label definitionLabel;
+  private ArrayList<Integer> wordCharacters = new ArrayList();
 
   // Task for alternating colour of the title and word label concurrently
   private Task<Void> alternateColoursTask =
@@ -468,6 +472,7 @@ public class CanvasController {
     // Clear the canvas
     onClear();
     if (currentGameMode == GameMode.HIDDEN_WORD) {
+      wordCharacters.clear();
       restartHiddenGame();
       return;
     }
@@ -682,6 +687,7 @@ public class CanvasController {
     }
 
     canvas.setDisable(false);
+    updateToolTip();
     // Turn on to brush mode regardless of what it was
     onBrush();
 
@@ -774,10 +780,13 @@ public class CanvasController {
   private void onBack(ActionEvent event)
       throws IOException, URISyntaxException, CsvException, ModelException {
 
+    // Clear the hidden word game mode hints and labels
     if (currentGameMode == GameMode.HIDDEN_WORD) {
       destroyDefLabel();
+      wordCharacters.clear();
     }
 
+    // Clear the profile creation game modes
     if (currentGameMode == GameMode.PROFILE) {
       // Check if the player saved the image
       if (savedImage) {
@@ -855,7 +864,12 @@ public class CanvasController {
   public void updateToolTip() {
     switch (currentGameMode) {
       case HIDDEN_WORD:
-        gameToolTip.setText("The word is hidden! From the definition, draw the word!");
+        if (!canvas.isDisabled()) {
+          gameToolTip.setText("CLICK FOR A HINT!!!");
+        } else {
+          gameToolTip.setText(
+              "The word is hidden! From the definition, draw the word! Click this during the game for a hint!");
+        }
         break;
       case NORMAL:
         gameToolTip.setText("Draw the word and try to win!");
@@ -869,6 +883,38 @@ public class CanvasController {
       default:
         gameToolTip.setText("Draw the word and try to win!");
         break;
+    }
+  }
+
+  /**
+   * onWordHint will give a hint to the player upon request
+   *
+   * @param event
+   */
+  @FXML
+  private void onWordHint(MouseEvent event) {
+    int randomNumber = 0;
+    if (!canvas.isDisable() && currentGameMode == GameMode.HIDDEN_WORD) {
+      int wordLength = game.getCurrentWord().length();
+      String hiddenWord = String.format("%s", "_".repeat(wordLength));
+      if (game.getCurrentPrompt().equals("Guess the word then draw it!")) {
+        game.setCurrentPrompt(hiddenWord);
+      } else {
+        while (wordCharacters.size() != wordLength) {
+          randomNumber = new Random().nextInt(wordLength);
+          if (!wordCharacters.contains(randomNumber)) {
+            wordCharacters.add(randomNumber);
+            break;
+          }
+        }
+        char wordCharacter = game.getCurrentWord().charAt(randomNumber);
+        String currentPrompt = game.getCurrentPrompt();
+        currentPrompt =
+            currentPrompt.substring(0, randomNumber)
+                + wordCharacter
+                + currentPrompt.substring(randomNumber + 1);
+        game.setCurrentPrompt(currentPrompt);
+      }
     }
   }
 }
