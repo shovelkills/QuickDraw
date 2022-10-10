@@ -166,6 +166,9 @@ public class MenuController {
 
   @FXML
   private void onGraphButton(ActionEvent event) {
+    // Tells the controller to update the graph
+    GraphController graphController = App.getGraphController();
+    graphController.loadGraphData();
     // Get the scene currently in
     Button button = (Button) event.getSource();
     Scene sceneButtonIsIn = button.getScene();

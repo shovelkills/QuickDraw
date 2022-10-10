@@ -8,6 +8,10 @@ public class GraphController {
   private LineChart<String, Number> timeLineChart;
 
   public void initialize() {
+    loadGraphData();
+  }
+
+  public void loadGraphData() {
     timeLineChart.getData().add(Graph.getLineChartData());
   }
 }
