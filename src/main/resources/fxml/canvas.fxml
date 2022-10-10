@@ -111,7 +111,7 @@
                   </VBox>
                   <StackPane alignment="BOTTOM_RIGHT" prefHeight="150.0" prefWidth="200.0">
                      <children>
-                        <Label alignment="BOTTOM_RIGHT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="20.0" prefWidth="20.0" style="-fx-background-color: #406DBF;" />
+                        <Label fx:id="cornerLabel" alignment="BOTTOM_RIGHT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="20.0" prefWidth="20.0" style="-fx-background-color: #406DBF;" />
                         <HBox fx:id="canvasPane" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="500.0" styleClass="canvasBox" stylesheets="@../css/canvas.css">
                            <children>
                               <Canvas fx:id="canvas" height="400.0" styleClass="canvas" width="500.0" />
@@ -121,15 +121,18 @@
                   </StackPane>
                   <VBox minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="260.0">
                      <children>
-                        <Label fx:id="predictionLabel" styleClass="predictionLabel" stylesheets="@../css/canvas.css" text="I think it's...">
+                        <Label fx:id="predictionLabel" alignment="CENTER_RIGHT" nodeOrientation="RIGHT_TO_LEFT" prefHeight="35.0" prefWidth="260.0" styleClass="predictionLabel" stylesheets="@../css/canvas.css">
                            <font>
                               <Font size="26.0" />
                            </font>
                            <padding>
                               <Insets left="10.0" right="10.0" />
                            </padding>
+                           <graphic>
+                              <ImageView fx:id="predictionImage" fitHeight="31.0" fitWidth="36.0" pickOnBounds="true" preserveRatio="true" />
+                           </graphic>
                         </Label>
-                        <GridPane fx:id="predictionGrid" prefHeight="400.0" prefWidth="190.0" style="-fx-background-insets: 0 10 0 0;" styleClass="predictionGrid" stylesheets="@../css/canvas.css">
+                        <GridPane fx:id="predictionGrid" prefHeight="400.0" prefWidth="191.0" style="-fx-background-insets: 0 10 0 0;" styleClass="predictionGrid" stylesheets="@../css/canvas.css">
                           <columnConstraints>
                             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                           </columnConstraints>
