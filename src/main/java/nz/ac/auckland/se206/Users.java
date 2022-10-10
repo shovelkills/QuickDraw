@@ -1,7 +1,5 @@
 package nz.ac.auckland.se206;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -16,9 +14,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.imageio.ImageIO;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
-import javax.imageio.ImageIO;
 import nz.ac.auckland.se206.words.CategorySelector;
 
 public class Users {
@@ -240,7 +240,7 @@ public class Users {
    *
    * @param username the username the user inputted
    * @return boolean of if there are special characters in the username. True means there are
-   *     special characters in the string
+   *         special characters in the string
    */
   public static boolean isValidUsername(String username) {
     Pattern validCharacters = Pattern.compile("[^a-z0-9-]", Pattern.CASE_INSENSITIVE);
@@ -248,22 +248,7 @@ public class Users {
     return matchCharacters.find();
   }
 
-  /**
-   * Gets the sum of the remain time that the user has to draw each word
-   *
-   * @return the average time remaining that it user has when the game recognizes the word
-   */
-  public static double getAverageTime() {
-    double sum = 0;
-    // Checks if the list is empty and finds the average time
-    if (!timeHistory.isEmpty()) {
-      for (Double time : timeHistory) {
-        sum += time;
-      }
-      return sum / timeHistory.size();
-    }
-    return sum;
-  }
+
 
   /** Saves the data of the user to a JSON file after a game finishes */
   public static void saveUser() {
@@ -456,8 +441,8 @@ public class Users {
     }
   }
 
-  public static void addGameDifficultyHistory(
-      String accuracy, String word, String time, String confidence) {
+  public static void addGameDifficultyHistory(String accuracy, String word, String time,
+      String confidence) {
 
     accuracyDifficultyHistory.add(accuracy);
     wordDifficultyHistory.add(word);
@@ -494,11 +479,8 @@ public class Users {
    * @param timedifficulty the time difficulty
    * @param confidencedifficulty the confidence difficulty
    */
-  public static void setGameDifficulty(
-      String accuracydifficulty,
-      String worddifficulty,
-      String timedifficulty,
-      String confidencedifficulty) {
+  public static void setGameDifficulty(String accuracydifficulty, String worddifficulty,
+      String timedifficulty, String confidencedifficulty) {
     // Sets each of the difficulty
     Users.gameDifficulty.put("accuracyDifficulty", accuracydifficulty);
     Users.gameDifficulty.put("wordsDifficulty", worddifficulty);
