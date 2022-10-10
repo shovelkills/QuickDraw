@@ -290,6 +290,10 @@ public class Game {
     currentPrompt.setValue(currentSelection.get(difficulty));
   }
 
+  public void setCurrentPrompt(String prompt) {
+    currentPrompt.setValue(prompt);
+  }
+
   public StringProperty getCurrentPromptProperty() {
     return currentPrompt;
   }
