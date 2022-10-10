@@ -48,7 +48,10 @@
                               </ImageView>
                            </graphic>
                            <tooltip>
-                              <Tooltip fx:id="toolTip1" styleClass="toolTip" text="Switch to different levels of Accuracy!&#10;EASY: Win when in TOP 3!&#10;MEDIUM: Win when in TOP 2!&#10;HARD: Win when word is TOP 1!" />
+                              <Tooltip fx:id="toolTip1" styleClass="toolTip" text="Switch to different levels of Accuracy!&#10;EASY: Win when in TOP 3!&#10;MEDIUM: Win when in TOP 2!&#10;HARD: Win when word is TOP 1!">
+                                 <font>
+                                    <Font size="13.0" />
+                                 </font></Tooltip>
                            </tooltip>
                         </Label>
                         <Label alignment="CENTER" contentDisplay="TOP" text="Accuracy" />
@@ -66,7 +69,10 @@
                               </ImageView>
                            </graphic>
                            <tooltip>
-                              <Tooltip fx:id="toolTip2" styleClass="toolTip" text="Switch to different levels of Words!&#10;EASY: Only easy words&#10;MEDIUM: Either easy or medium words&#10;HARD: Either easy, medium, or hard words&#10;MASTER: Only hard words" />
+                              <Tooltip fx:id="toolTip2" styleClass="toolTip" text="Switch to different levels of Words!&#10;EASY: Only easy words&#10;MEDIUM: Either easy or medium words&#10;HARD: Either easy, medium, or hard words&#10;MASTER: Only hard words">
+                                 <font>
+                                    <Font size="13.0" />
+                                 </font></Tooltip>
                            </tooltip>
                         </Label>
                         <Label alignment="CENTER" contentDisplay="TOP" text="Words" />
@@ -84,7 +90,10 @@
                               </ImageView>
                            </graphic>
                            <tooltip>
-                              <Tooltip fx:id="toolTip3" styleClass="toolTip" text="Switch to different levels of Time!&#10;EASY: 60 Seconds to draw!&#10;MEDIUM: 45 Seconds to draw!&#10;HARD: 30 Seconds to draw!&#10;MASTER: 15 Seconds to draw!" />
+                              <Tooltip fx:id="toolTip3" styleClass="toolTip" text="Switch to different levels of Time!&#10;EASY: 60 Seconds to draw!&#10;MEDIUM: 45 Seconds to draw!&#10;HARD: 30 Seconds to draw!&#10;MASTER: 15 Seconds to draw!">
+                                 <font>
+                                    <Font size="13.0" />
+                                 </font></Tooltip>
                            </tooltip>
                         </Label>
                         <Label alignment="CENTER" contentDisplay="TOP" text="Time" />
@@ -102,7 +111,10 @@
                               </ImageView>
                            </graphic>
                            <tooltip>
-                              <Tooltip fx:id="toolTip4" styleClass="toolTip" text="Switch to different levels of Confidence!&#10;EASY: Drawing at least 1% match to prediction&#10;MEDIUM: Drawing at least 10% match to prediction&#10;HARD: Drawing at least 25% match to prediction&#10;MASTER: Drawing at least 50% match to prediction" />
+                              <Tooltip fx:id="toolTip4" styleClass="toolTip" text="Switch to different levels of Confidence!&#10;EASY: Drawing at least 1% match to prediction&#10;MEDIUM: Drawing at least 10% match to prediction&#10;HARD: Drawing at least 25% match to prediction&#10;MASTER: Drawing at least 50% match to prediction">
+                                 <font>
+                                    <Font size="13.0" />
+                                 </font></Tooltip>
                            </tooltip>
                         </Label>
                         <Label alignment="CENTER" contentDisplay="TOP" text="Confidence" />

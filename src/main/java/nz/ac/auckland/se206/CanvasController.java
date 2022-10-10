@@ -30,6 +30,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
@@ -62,6 +63,9 @@ import nz.ac.auckland.se206.words.CategorySelector;
  */
 public class CanvasController {
 
+  // Define the scaling in hovering
+  private static final String IDLE_STYLE = "-fx-scale-x: 1; -fx-scale-y: 1";
+  private static final String HOVERED_STYLE = "-fx-scale-x: 1.2; -fx-scale-y: 1.2";
   // Define FXML fields
   @FXML private Canvas canvas;
   @FXML private Label titleLabel;
@@ -142,6 +146,19 @@ public class CanvasController {
     gameToolTip.setWrapText(true);
     gameToolTip.setAutoFix(true);
     setUpDefLabel();
+
+    // Events for hovering on tool tip
+    // Event for hovering on
+    gameToolTipLabel.setOnMouseEntered(
+        e -> {
+          gameToolTipLabel.setStyle(HOVERED_STYLE);
+        });
+
+    // Event for hovering off
+    gameToolTipLabel.setOnMouseExited(
+        e -> {
+          gameToolTipLabel.setStyle(IDLE_STYLE);
+        });
   }
 
   public Game getGame() {
@@ -376,6 +393,66 @@ public class CanvasController {
     }
   }
 
+  /** restartHiddenGame will restart the hidden game mode after taking it to the loading screen */
+  private void restartHiddenGame() {
+
+    Task<Void> restartGameTask =
+        new Task<Void>() {
+          @Override
+          protected Void call() throws Exception {
+            // Set up the pre-game UI elements that are in common with restarting the game
+            updateProgress(0, 1);
+            destroyDefLabel();
+            Thread.sleep(100);
+            updateProgress(0.3, 1);
+            // Reset game variables and concurrent service
+            Platform.runLater(() -> game.resetGame());
+            updateProgress(0.5, 1);
+            Thread.sleep(100);
+            // Reset UI elements (NOTE: CREATES NEW GAME OBJECT!)
+            Platform.runLater(
+                () -> {
+                  try {
+                    setPreGameInterface();
+                  } catch (IOException
+                      | CsvException
+                      | URISyntaxException
+                      | ModelException
+                      | WordNotFoundException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                  }
+                });
+            ;
+            updateProgress(0.9, 1);
+            // Reset Timer
+            Platform.runLater(() -> resetTimerBar());
+            updateProgress(1, 1);
+            Thread.sleep(100);
+            return null;
+          }
+        };
+    // Find progress bar on loading screen
+    ProgressBar progressBar = App.getLoadingController().getProgressBar();
+    progressBar.progressProperty().unbind();
+    // Bind progress bar
+    progressBar.progressProperty().bind(restartGameTask.progressProperty());
+
+    Scene sceneButtonIsIn = restartButton.getScene();
+
+    sceneButtonIsIn.setRoot(SceneManager.getUiRoot(AppUi.LOADING));
+    restartGameTask.setOnSucceeded(
+        e -> {
+          progressBar.progressProperty().unbind();
+          // Move to the next scene
+          sceneButtonIsIn.setRoot(SceneManager.getUiRoot(AppUi.GAME));
+        });
+    Thread preGameThread = new Thread(restartGameTask);
+    // Allow the task to be cancelled on closing of application
+    preGameThread.setDaemon(true);
+    preGameThread.start();
+  }
+
   /**
    * This method will restart the game once the player presses the button
    *
@@ -391,7 +468,8 @@ public class CanvasController {
     // Clear the canvas
     onClear();
     if (currentGameMode == GameMode.HIDDEN_WORD) {
-      destroyDefLabel();
+      restartHiddenGame();
+      return;
     }
     // Reset game variables and concurrent service
     game.resetGame();
