@@ -694,8 +694,11 @@ public class CanvasController {
 
   @FXML
   private void onBack(ActionEvent event)
-      throws IOException, URISyntaxException, CsvException, ModelException, InterruptedException,
-          WordNotFoundException {
+      throws IOException, URISyntaxException, CsvException, ModelException {
+
+    if (currentGameMode == GameMode.HIDDEN_WORD) {
+      destroyDefLabel();
+    }
 
     if (currentGameMode == GameMode.PROFILE) {
       // Check if the player saved the image
