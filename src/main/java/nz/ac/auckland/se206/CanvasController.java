@@ -25,6 +25,7 @@ import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Alert;
@@ -40,7 +41,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
@@ -533,17 +533,26 @@ public class CanvasController {
       // Gets the file directory to save to and runs the load user method
       File dir = new File(Users.folderDirectory + "/src/main/resources/images/");
       // We save the image to a file in the tmp folder.
-      file = new File(Users.folderDirectory + "/src/main/resources/images/tempImage.bmp");
+      file = new File(Users.folderDirectory + "/src/main/resources/images/tempImage.png");
       if (!file.exists()) {
         dir.mkdir();
         file.createNewFile();
       }
       savedImage = true;
     }
-    // Write it to the location
-    if (file != null) {
+
+    if (file == null) {
+      return null;
+    }
+
+    if (currentGameMode == GameMode.PROFILE) {
+      SnapshotParameters sp = new SnapshotParameters();
+      sp.setFill(Color.TRANSPARENT);
+      ImageIO.write(SwingFXUtils.fromFXImage(canvas.snapshot(sp, null), null), "png", file);
+    } else {
       ImageIO.write(getCurrentSnapshot(), "bmp", file);
     }
+
     return file;
   }
 
@@ -697,8 +706,6 @@ public class CanvasController {
     // Hide pre-game buttons
     preGameHBox.setVisible(false);
 
-    // Get eraser colour
-    Paint eraserColour = Color.web("#FCEFE8");
     canvas.setOnMousePressed(
         e -> {
           currentX = e.getX();
@@ -722,10 +729,8 @@ public class CanvasController {
               graphic.strokeLine(currentX, currentY, x, y);
 
             } else {
-
-              graphic.setFill(eraserColour);
               size = 20.0;
-              graphic.fillOval(x, y, size, size);
+              graphic.clearRect(x, y, size, size);
             }
             currentX = x;
             currentY = y;

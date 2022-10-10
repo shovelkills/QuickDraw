@@ -21,14 +21,18 @@
                         <Font name="System Bold" size="75.0" />
                      </font>
                   </Label>
-                  <ImageView fx:id="userImage" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" styleClass="image-style">
-                     <image>
-                        <Image url="@../users/happy.png" />
-                     </image>
+                  <VBox fx:id="userImageVBox" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="150.0" prefWidth="150.0">
                      <VBox.margin>
                         <Insets />
                      </VBox.margin>
-                  </ImageView>
+                     <children>
+                        <ImageView fx:id="userImage" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" styleClass="image-style">
+                           <image>
+                              <Image url="@../users/happy.png" />
+                           </image>
+                        </ImageView>
+                     </children>
+                  </VBox>
                   <Label text="Enter Username" textFill="WHITE">
                      <VBox.margin>
                         <Insets />

@@ -11,9 +11,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import nz.ac.auckland.se206.ProfileBuilder.UserType;
 import nz.ac.auckland.se206.SceneManager.AppUi;
 
@@ -33,14 +33,14 @@ public class UsersController {
    * @param type Either a user profile or the guest profile
    */
   private static void onSelectProfile(Event event) {
-    ImageView image = null;
+    VBox image = null;
     int number;
     // Get the button pressed
     if (event.getSource().getClass().equals(profiles.get(0).deleteProfileButton.getClass())) {
       // guest was selected via creation or deletion
       number = profiles.size() - 2;
     } else {
-      image = (ImageView) event.getSource();
+      image = (VBox) event.getSource();
       String string = image.getId().toString();
       // Find out which profile was clicked
       number = (Integer.parseInt(String.valueOf(string.charAt(string.length() - 1))));
@@ -51,7 +51,7 @@ public class UsersController {
       // Check
       if (profile.type == UserType.ADD) {
         // Reset the cursor
-        profile.imageView.getScene().setCursor(Cursor.DEFAULT);
+        profile.userImageVBox.getScene().setCursor(Cursor.DEFAULT);
         break;
       }
       if (profile.userSelectedLabel.isVisible()) {
@@ -119,7 +119,6 @@ public class UsersController {
     Optional<ButtonType> result = alert.showAndWait();
     // Check if the person presses yes
     if (result.get() == ButtonType.OK) {
-
       // Find out which button was pressed
       Button button = (Button) event.getSource();
       String string = button.getId().toString();
@@ -152,9 +151,9 @@ public class UsersController {
    * @param deleteButton new profile's delete button
    * @param number new profile's slot
    */
-  protected static void addEvents(ImageView image, Button deleteButton, int number) {
+  protected static void addEvents(VBox imageBox, Button deleteButton, int number) {
     // Add the event handler to the image
-    image.addEventHandler(
+    imageBox.addEventHandler(
         MouseEvent.MOUSE_CLICKED,
         e -> {
           // Add select profile event
@@ -196,7 +195,7 @@ public class UsersController {
     // Add event handlers to the profiles
     for (ProfileBuilder profile : profiles) {
       // Add select profile event
-      profile.imageView.addEventHandler(
+      profile.userImageVBox.addEventHandler(
           MouseEvent.MOUSE_CLICKED,
           e -> {
             onSelectProfile(e);
