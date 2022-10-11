@@ -103,9 +103,10 @@ public class Graph {
         (double) (Collections.frequency(gameOutcomeDifficulty, "M") * 100 / totalGames));
     countDifficulty.put("Hard",
         (double) (Collections.frequency(gameOutcomeDifficulty, "H") * 100 / totalGames));
-    countDifficulty.put("Master",
-        (double) (Collections.frequency(gameOutcomeDifficulty, "MS") * 100 / totalGames));
-
+    if (!Difficulty.equals("accuracy")) {
+      countDifficulty.put("Master",
+          (double) (Collections.frequency(gameOutcomeDifficulty, "MS") * 100 / totalGames));
+    }
     ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList();
     // Adds data to the pieChart Data
     for (Entry<String, Double> entry : countDifficulty.entrySet()) {
