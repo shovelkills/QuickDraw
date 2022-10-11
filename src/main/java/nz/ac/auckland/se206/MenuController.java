@@ -25,27 +25,17 @@ import nz.ac.auckland.se206.SceneManager.AppUi;
 
 public class MenuController {
   // Declare the menu objects
-  @FXML
-  private Canvas canvas;
-  @FXML
-  private ImageView profileImageView;
-  @FXML
-  private Label titleLabel;
-  @FXML
-  private Label usernameLabel;
+  @FXML private Canvas canvas;
+  @FXML private ImageView profileImageView;
+  @FXML private Label titleLabel;
+  @FXML private Label usernameLabel;
 
-  @FXML
-  private Button graphButton;
-  @FXML
-  private Button startButton;
-  @FXML
-  private Button statsButton;
-  @FXML
-  private Button exitButton;
-  @FXML
-  private Button exitTipButton;
-  @FXML
-  private Button selectedUserButton;
+  @FXML private Button graphButton;
+  @FXML private Button startButton;
+  @FXML private Button statsButton;
+  @FXML private Button exitButton;
+  @FXML private Button exitTipButton;
+  @FXML private Button selectedUserButton;
 
   private Font titleFont;
 
@@ -56,15 +46,16 @@ public class MenuController {
    * @param colour1 the first colour to alternate between
    * @param colour2 the second colour to alternate between
    */
-  private Task<Void> backgroundTask = new Task<Void>() {
+  private Task<Void> backgroundTask =
+      new Task<Void>() {
 
-    @Override
-    protected Void call() throws Exception {
-      // Alternates colours
-      alternateColours(titleLabel, Color.BLACK, Color.web("#979797"));
-      return null;
-    }
-  };
+        @Override
+        protected Void call() throws Exception {
+          // Alternates colours
+          alternateColours(titleLabel, Color.BLACK, Color.web("#979797"));
+          return null;
+        }
+      };
 
   public void initialize() {
     // Load in a new font and set it to the tile
@@ -92,8 +83,12 @@ public class MenuController {
     // Loop three times
     for (int i = 0; i < 3; i++) {
       // Add a new keyframe accordingly
-      timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(2.5 * i),
-          new KeyValue(label.textFillProperty(), i != 1 ? colour1 : colour2)));
+      timeline
+          .getKeyFrames()
+          .add(
+              new KeyFrame(
+                  Duration.seconds(2.5 * i),
+                  new KeyValue(label.textFillProperty(), i != 1 ? colour1 : colour2)));
     }
     // Play the animation indefinitely
     timeline.setCycleCount(Animation.INDEFINITE);
@@ -174,6 +169,5 @@ public class MenuController {
     Scene sceneButtonIsIn = button.getScene();
     // Move to the next scene
     sceneButtonIsIn.setRoot(SceneManager.getUiRoot(AppUi.GRAPH));
-
   }
 }

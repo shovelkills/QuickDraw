@@ -11,40 +11,29 @@ import javafx.scene.input.MouseEvent;
 import nz.ac.auckland.se206.SceneManager.AppUi;
 
 public class GraphController {
-  @FXML
-  private Button accuracyButton;
+  @FXML private Button accuracyButton;
 
-  @FXML
-  private Button wordButton;
+  @FXML private Button wordButton;
 
-  @FXML
-  private Button timeButton;
+  @FXML private Button timeButton;
 
-  @FXML
-  private Button confidenceButton;
+  @FXML private Button confidenceButton;
 
-  @FXML
-  private Button lossButton;
+  @FXML private Button lossButton;
 
-  @FXML
-  private Button winButton;
+  @FXML private Button winButton;
 
-  @FXML
-  private Button menuButton;
+  @FXML private Button menuButton;
 
-  @FXML
-  private LineChart<String, Number> timeLineChart;
+  @FXML private LineChart<String, Number> timeLineChart;
 
-  @FXML
-  private PieChart winsLossPieChart;
+  @FXML private PieChart winsLossPieChart;
 
-  @FXML
-  private PieChart individualDifficultyPieChart;
+  @FXML private PieChart individualDifficultyPieChart;
 
   private static String difficulty = null;
 
   private static String gameOutcome;
-
 
   public void initialize() {
     loadGraphData();
@@ -56,19 +45,28 @@ public class GraphController {
     winsLossPieChart.setData(Graph.getWinsLossPieChart());
 
     // Makes it so when pressing on the winloss piechart is changes the difficulty piegraph
-    winsLossPieChart.getData().get(0).getNode().addEventHandler(MouseEvent.MOUSE_PRESSED,
-        new EventHandler<MouseEvent>() {
-          public void handle(MouseEvent e) {
-            onShowWins();
-          }
-
-        });
-    winsLossPieChart.getData().get(1).getNode().addEventHandler(MouseEvent.MOUSE_PRESSED,
-        new EventHandler<MouseEvent>() {
-          public void handle(MouseEvent e) {
-            onShowLoss();
-          }
-        });
+    winsLossPieChart
+        .getData()
+        .get(0)
+        .getNode()
+        .addEventHandler(
+            MouseEvent.MOUSE_PRESSED,
+            new EventHandler<MouseEvent>() {
+              public void handle(MouseEvent e) {
+                onShowWins();
+              }
+            });
+    winsLossPieChart
+        .getData()
+        .get(1)
+        .getNode()
+        .addEventHandler(
+            MouseEvent.MOUSE_PRESSED,
+            new EventHandler<MouseEvent>() {
+              public void handle(MouseEvent e) {
+                onShowLoss();
+              }
+            });
   }
 
   public void onShowWins() {
@@ -79,16 +77,14 @@ public class GraphController {
   public void onShowLoss() {
     gameOutcome = "Loss";
     loadIndividualDifficulyPieChart();
-
   }
 
   public void loadIndividualDifficulyPieChart() {
     if (difficulty == null) {
       difficulty = "accuracy";
     }
-    individualDifficultyPieChart
-        .setData(Graph.getIndividualDifficultyPieChart(gameOutcome, difficulty));
-
+    individualDifficultyPieChart.setData(
+        Graph.getIndividualDifficultyPieChart(gameOutcome, difficulty));
   }
 
   public void onAccuracyButton() {
@@ -118,5 +114,4 @@ public class GraphController {
     // Move back to main menu
     currentScene.setRoot(SceneManager.getUiRoot(AppUi.MAIN_MENU));
   }
-
 }
