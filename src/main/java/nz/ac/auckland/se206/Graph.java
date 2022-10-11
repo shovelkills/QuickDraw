@@ -57,12 +57,15 @@ public class Graph {
   }
 
   public static ObservableList<PieChart.Data> getWinsLossPieChart() {
+    // Gets the number of wins and losses and coverts it into a percentage
     int totalGames = Users.getWins() + Users.getLosses();
     double winPercentage = ((double) Users.getWins()) * 100 / totalGames;
     double lossPercentage = ((double) Users.getLosses()) * 100 / totalGames;
+    // Adds data to the piechart
     ObservableList<PieChart.Data> winLossPieChart = FXCollections.observableArrayList(
         new PieChart.Data("Wins", winPercentage), new PieChart.Data("Losses", lossPercentage));
     return winLossPieChart;
+
   }
 
   public static ObservableList<PieChart.Data> getIndividualDifficultyPieChart(String gameOutcome,
@@ -95,7 +98,7 @@ public class Graph {
       }
     }
 
-    // Counts the percentage of each difficulty in the game outcome
+    // Counts the percentage of each difficulty in the game outcome and adds it to a HashMap
     HashMap<String, Double> countDifficulty = new HashMap<String, Double>();
     countDifficulty.put("Easy",
         (double) (Collections.frequency(gameOutcomeDifficulty, "E") * 100 / totalGames));

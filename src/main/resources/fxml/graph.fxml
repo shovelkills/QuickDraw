@@ -27,5 +27,6 @@
       <Button fx:id="wordButton" layoutX="676.0" layoutY="563.0" mnemonicParsing="false" onAction="#onWordButton" text="Word" />
       <Button fx:id="timeButton" layoutX="775.0" layoutY="563.0" mnemonicParsing="false" onAction="#onTimeButton" text="Time" />
       <Button fx:id="confidenceButton" layoutX="857.0" layoutY="563.0" mnemonicParsing="false" onAction="#onConfidenceButton" text="Confidence" />
+      <Button fx:id="menuButton" layoutX="724.0" layoutY="660.0" mnemonicParsing="false" onAction="#onMenuButton" text="Menu" />
    </children>
 </AnchorPane>
