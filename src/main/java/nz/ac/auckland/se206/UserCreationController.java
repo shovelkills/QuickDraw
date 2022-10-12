@@ -20,6 +20,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.VBox;
 import nz.ac.auckland.se206.GameSelectController.GameMode;
 import nz.ac.auckland.se206.ProfileBuilder.UserType;
 import nz.ac.auckland.se206.SceneManager.AppUi;
@@ -29,6 +30,7 @@ public class UserCreationController {
   // Initialise FXML items
   @FXML private Button createButton;
   @FXML private TextField usernameField;
+  @FXML private VBox userImageVBox;
   @FXML private ImageView userImage;
   @FXML private ImageView imageOption0;
   @FXML private ImageView imageOption1;
@@ -58,7 +60,7 @@ public class UserCreationController {
             onSetImage(e);
           });
     }
-    userImage.addEventHandler(
+    userImageVBox.addEventHandler(
         MouseEvent.MOUSE_CLICKED,
         e -> {
           try {
@@ -72,7 +74,7 @@ public class UserCreationController {
 
   public void updateImage() throws FileNotFoundException {
     // creating the image object
-    String dir = Users.folderDirectory + "/src/main/resources/images/tempImage.bmp";
+    String dir = Users.folderDirectory + "/src/main/resources/images/tempImage.png";
     InputStream stream = new FileInputStream(dir);
     Image image = new Image(stream);
     userImage.setImage(image);
@@ -91,7 +93,7 @@ public class UserCreationController {
   private void onCreateImage(MouseEvent event)
       throws IOException, CsvException, URISyntaxException, ModelException {
     GameSelectController.setCurrentGameMode(GameMode.PROFILE);
-    ImageView image = (ImageView) event.getSource();
+    VBox image = (VBox) event.getSource();
     Scene sceneButtonIsIn = image.getScene();
     Task<Void> preDrawTask =
         new Task<Void>() {
@@ -173,7 +175,7 @@ public class UserCreationController {
     // Grab the new user
     ProfileBuilder newUser = profiles.get(index);
     // Set up new events to the new user
-    UsersController.addEvents(newUser.imageView, newUser.deleteProfileButton, index);
+    UsersController.addEvents(newUser.userImageVBox, newUser.deleteProfileButton, index);
     // Select the new user
     UsersController.currentlySelected = newUser;
     onExitSelection(event);

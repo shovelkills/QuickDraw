@@ -1,3 +1,11 @@
+.userSelectionBackground{
+	-fx-background-image: url(../images/SoftPaper.png);
+}
+
+.userSelectionTitle{
+	-fx-font-family: "Maybe Next";
+}
+
 .userSelectButton{
 	-fx-background-radius: 10 10 10 10;
 	-fx-background-color: #CAE5EB;

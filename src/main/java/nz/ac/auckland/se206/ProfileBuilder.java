@@ -33,7 +33,7 @@ public class ProfileBuilder {
 
   // Define the scaling in hovering
   private static final String IDLE_STYLE = "-fx-scale-x: 1; -fx-scale-y: 1";
-  private static final String HOVERED_STYLE = "-fx-scale-x: 1.2; -fx-scale-y: 1.2";
+  private static final String HOVERED_STYLE = "-fx-scale-x: 1.2; -fx-scale-y: 1.2; -fx-effect: dropshadow(gaussian, white, 30, 0.8, 0, 0);";
 
   /**
    * Get's the users current image
@@ -60,7 +60,7 @@ public class ProfileBuilder {
    */
   public static void setHbox(HBox hbox) {
     // Set the size of the hbox
-    hbox.setPrefSize(2000, 800);
+    hbox.setPrefSize(0, 0);
     hbox.setSpacing(100);
     ProfileBuilder.hbox = hbox;
   }
@@ -71,13 +71,14 @@ public class ProfileBuilder {
     // Reset all the ids
     for (ProfileBuilder profile : UsersController.profiles) {
       profile.deleteProfileButton.setId(String.format("deleteProfileButton%d", id));
-      profile.imageView.setId(String.format("image%d", id));
+      profile.userImageVBox.setId(String.format("image%d", id));
       id++;
     }
   }
 
   // Declare all fields that a user profile will have
   protected ImageView imageView;
+  protected VBox userImageVBox;
   protected Label userNameLabel;
   protected Label userSelectedLabel;
   protected Button deleteProfileButton;
@@ -140,26 +141,32 @@ public class ProfileBuilder {
   private void createImageView() {
     // Creates new Image View
     imageView = new ImageView();
-    vbox.getChildren().add(imageView);
-    // Constrains the image view in the grid
 
-    // Binds the height and width of the image in the grid
+    // Ensures image is not stretched
     imageView.setPreserveRatio(true);
-    // Set the image size
-    imageView.fitHeightProperty().bind(hbox.heightProperty().divide(7));
+    // Fit height determines maximum dimensions of image
+    imageView.fitHeightProperty().set(150);
+    // Fit width determines horizontal scaling with window size
     imageView.fitWidthProperty().bind(hbox.widthProperty().divide(7));
-    // Set the image id
-    imageView.setId(String.format("image%d", counter));
+
+    // Set up interactable box for image view
+    userImageVBox = new VBox();
+    userImageVBox.getChildren().add(imageView);
+    // Set the profile image box id as its position in the user list
+    userImageVBox.setId(String.format("image%d", counter));
+
+    // Add the image view to the scene
+    vbox.getChildren().add(userImageVBox);
 
     // Event for hovering on
-    imageView.setOnMouseEntered(
+    userImageVBox.setOnMouseEntered(
         e -> {
           imageView.setStyle(HOVERED_STYLE);
           imageView.getScene().setCursor(Cursor.HAND);
         });
 
     // Event for hovering off
-    imageView.setOnMouseExited(
+    userImageVBox.setOnMouseExited(
         e -> {
           imageView.setStyle(IDLE_STYLE);
           if (imageView.getScene() != null) {

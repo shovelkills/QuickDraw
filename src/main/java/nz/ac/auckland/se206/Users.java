@@ -366,7 +366,7 @@ public class Users {
    */
   public static Image loadProfilePicture(String user) {
     File profileFile =
-        new File(folderDirectory + "/src/main/resources/profilepictures/" + user + ".bmp");
+        new File(folderDirectory + "/src/main/resources/profilepictures/" + user + ".png");
     return new Image(profileFile.toURI().toString());
   }
 
@@ -378,7 +378,7 @@ public class Users {
   public static void saveProfilePicture(BufferedImage snapshot) {
     // Convert into a binary image.
     final BufferedImage imageBinary =
-        new BufferedImage(snapshot.getWidth(), snapshot.getHeight(), BufferedImage.TYPE_INT_RGB);
+        new BufferedImage(snapshot.getWidth(), snapshot.getHeight(), BufferedImage.TYPE_INT_ARGB);
 
     final Graphics2D graphics = imageBinary.createGraphics();
 
@@ -389,9 +389,9 @@ public class Users {
 
     // Write it to file
     File file =
-        new File(folderDirectory + "/src/main/resources/profilepictures/" + userName + ".bmp");
+        new File(folderDirectory + "/src/main/resources/profilepictures/" + userName + ".png");
     try {
-      ImageIO.write(imageBinary, "bmp", file);
+      ImageIO.write(imageBinary, "png", file);
 
     } catch (IOException e) {
       // TODO Auto-generated catch block
@@ -401,7 +401,7 @@ public class Users {
 
   /** Deletes the profile picture of the user */
   public static void deleteProfilePicture(String user) {
-    File file = new File(folderDirectory + "/src/main/resources/profilepictures/" + user + ".bmp");
+    File file = new File(folderDirectory + "/src/main/resources/profilepictures/" + user + ".png");
     file.delete();
   }
 
