@@ -76,6 +76,26 @@ public class CanvasController {
       new Image(Users.folderDirectory + "/src/main/resources/images/indicatorCloser.png");
   private static final Image INDICATOR_FURTHER =
       new Image(Users.folderDirectory + "/src/main/resources/images/indicatorFurther.png");
+  private static ImageView predictionImage = new ImageView();
+  ;
+
+  /** deleteIndicator will delete the indicator image */
+  private void deleteIndicator() {
+    // Check if the image is active
+    if (predictionLabel.getGraphic() != null) {
+      // Remove the image
+      predictionLabel.setGraphic(null);
+    }
+  }
+
+  /** addIndicator will add a closer or further image to prediction label */
+  private void addIndicator() {
+    // Check that there is no image set
+    if (predictionLabel.getGraphic() == null) {
+      // Place the image inside the label
+      predictionLabel.setGraphic(predictionImage);
+    }
+  }
 
   /**
    * updateIndicator will update the indicator on the canvas
@@ -86,23 +106,27 @@ public class CanvasController {
     // Switch between the indicators
     switch (indicator) {
       case CLOSER:
+        addIndicator();
+
         // Set the image and text for closer
         predictionImage.setImage(INDICATOR_CLOSER);
         predictionLabel.setText("Closer!");
         break;
       case FURTHER:
+        addIndicator();
+
         // Set the image and text for further
         predictionImage.setImage(INDICATOR_FURTHER);
         predictionLabel.setText("Further away!");
         break;
       case NOT_FOUND:
-        // Set the image and text for not in top 100
-        predictionImage.setImage(null);
+        deleteIndicator();
+        // Set the text for not in top 100
         predictionLabel.setText("Not in top 100!");
         break;
       case SAME:
-        // Set the image and text for not changed position
-        predictionImage.setImage(null);
+        deleteIndicator();
+        // Set the text for not changed position
         predictionLabel.setText("Haven't changed!");
         break;
       default:
@@ -134,7 +158,6 @@ public class CanvasController {
   @FXML private Tooltip gameToolTip;
   @FXML private Label gameToolTipLabel;
   @FXML private VBox aboveVbox;
-  @FXML private ImageView predictionImage;
   @FXML private Label cornerLabel;
 
   // Define game object
@@ -374,7 +397,8 @@ public class CanvasController {
     // Clear the canvas
     graphic.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
     clearPredictionGrid();
-    predictionImage.setImage(null);
+    deleteIndicator();
+    ;
     predictionLabel.setText("");
     isDrawing = false;
     // Switch to brush
