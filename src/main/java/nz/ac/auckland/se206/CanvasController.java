@@ -36,6 +36,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -47,6 +48,7 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.FileChooser;
 import javafx.util.Duration;
 import javax.imageio.ImageIO;
+import nz.ac.auckland.se206.Game.Indicator;
 import nz.ac.auckland.se206.GameSelectController.GameMode;
 import nz.ac.auckland.se206.SceneManager.AppUi;
 import nz.ac.auckland.se206.dict.WordNotFoundException;
@@ -69,6 +71,69 @@ public class CanvasController {
   // Define the scaling in hovering
   private static final String IDLE_STYLE = "-fx-scale-x: 1; -fx-scale-y: 1";
   private static final String HOVERED_STYLE = "-fx-scale-x: 1.2; -fx-scale-y: 1.2";
+  // Define higher or lower images
+  private static final Image INDICATOR_CLOSER =
+      new Image(Users.folderDirectory + "/src/main/resources/images/indicatorCloser.png");
+  private static final Image INDICATOR_FURTHER =
+      new Image(Users.folderDirectory + "/src/main/resources/images/indicatorFurther.png");
+  private static ImageView predictionImage = new ImageView();
+  ;
+
+  /** deleteIndicator will delete the indicator image */
+  private void deleteIndicator() {
+    // Check if the image is active
+    if (predictionLabel.getGraphic() != null) {
+      // Remove the image
+      predictionLabel.setGraphic(null);
+    }
+  }
+
+  /** addIndicator will add a closer or further image to prediction label */
+  private void addIndicator() {
+    // Check that there is no image set
+    if (predictionLabel.getGraphic() == null) {
+      // Place the image inside the label
+      predictionLabel.setGraphic(predictionImage);
+    }
+  }
+
+  /**
+   * updateIndicator will update the indicator on the canvas
+   *
+   * @param closer will be true if the word is moving up the predictions list
+   */
+  public void updateIndicator(Indicator indicator) {
+    // Switch between the indicators
+    switch (indicator) {
+      case CLOSER:
+        addIndicator();
+
+        // Set the image and text for closer
+        predictionImage.setImage(INDICATOR_CLOSER);
+        predictionLabel.setText("Closer!");
+        break;
+      case FURTHER:
+        addIndicator();
+
+        // Set the image and text for further
+        predictionImage.setImage(INDICATOR_FURTHER);
+        predictionLabel.setText("Further away!");
+        break;
+      case NOT_FOUND:
+        deleteIndicator();
+        // Set the text for not in top 100
+        predictionLabel.setText("Not in top 100!");
+        break;
+      case SAME:
+        deleteIndicator();
+        // Set the text for not changed position
+        predictionLabel.setText("Haven't changed!");
+        break;
+      default:
+        break;
+    }
+  }
+
   // Define FXML fields
   @FXML private Canvas canvas;
   @FXML private Label titleLabel;
@@ -93,6 +158,7 @@ public class CanvasController {
   @FXML private Tooltip gameToolTip;
   @FXML private Label gameToolTipLabel;
   @FXML private VBox aboveVbox;
+  @FXML private Label cornerLabel;
 
   // Define game object
   private Game game;
@@ -204,6 +270,7 @@ public class CanvasController {
     if (currentGameMode != GameMode.PROFILE) {
       Platform.runLater(
           () -> {
+            cornerLabel.setVisible(true);
             titleLabel.setText("Quick, Draw!");
             isDrawing = false;
             gameToolTipLabel.setVisible(true);
@@ -287,6 +354,7 @@ public class CanvasController {
     // Change the text of the title
     titleLabel.setText("Draw a Picture!");
     gameToolTipLabel.setVisible(false);
+    cornerLabel.setVisible(false);
     // Enable them to draw
 
     onStartGame();
@@ -329,6 +397,9 @@ public class CanvasController {
     // Clear the canvas
     graphic.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
     clearPredictionGrid();
+    deleteIndicator();
+    ;
+    predictionLabel.setText("");
     isDrawing = false;
     // Switch to brush
     onBrush();
@@ -341,7 +412,7 @@ public class CanvasController {
    */
   public void updatePredictionGridDisplay(List<Classification> predictionList) {
     clearPredictionGrid();
-    for (int i = 0; i < predictionList.size(); i++) {
+    for (int i = 0; i < 10; i++) {
       String prediction = predictionList.get(i).getClassName();
       // Check if the prediction is the prompt word to determine label color
       boolean isPrompt =

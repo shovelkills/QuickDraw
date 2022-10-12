@@ -16,6 +16,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
+import javafx.scene.image.Image;
 import nz.ac.auckland.se206.GameSelectController.GameMode;
 import nz.ac.auckland.se206.dict.DictionaryLookup;
 import nz.ac.auckland.se206.dict.WordEntry;
@@ -32,9 +33,22 @@ import nz.ac.auckland.se206.words.CategorySelector.Difficulty;
  * Runs the prediction model to determine win condition.
  */
 public class Game {
+
+  public enum Indicator {
+    CLOSER,
+    FURTHER,
+    SAME,
+    NOT_FOUND
+  }
+
   // Declare difficulty field
   private static DoodlePrediction model;
   private static Difficulty difficulty;
+  // Define higher or lower images
+  private static final Image indicatorCloser =
+      new Image(Users.folderDirectory + "/src/main/resources/images/indicatorCloser.png");
+  private static final Image indicatorFurther =
+      new Image(Users.folderDirectory + "/src/main/resources/images/indicatorFurther.png");
 
   public static void createModel() throws ModelException, IOException {
     model = new DoodlePrediction();
@@ -59,6 +73,8 @@ public class Game {
   private boolean hasWon = false;
   private GameMode currentGame;
   private boolean isGhostGame;
+  private int currentPos = 100;
+  private int newPos;
 
   private Service<Void> ttsService =
       new Service<Void>() {
@@ -125,9 +141,10 @@ public class Game {
                         if (canvas.getIsDrawing()) {
                           // Get the top 10 predictions
                           List<Classifications.Classification> currentPredictions =
-                              model.getPredictions(canvas.getCurrentSnapshot(), 10);
+                              model.getPredictions(canvas.getCurrentSnapshot(), 100);
                           // Update the predictions
                           canvas.updatePredictionGridDisplay(currentPredictions);
+                          updateIndicator(currentPredictions);
                           for (int i = 0; i < topMatch; i++) {
                             // Check if the top words are what we are drawing based on difficulty
                             if (currentPredictions.get(i).getProbability() > confidence
@@ -220,6 +237,39 @@ public class Game {
    */
   public void setIsGhostGame(boolean isGhost) {
     isGhostGame = isGhost;
+  }
+
+  private void updateIndicator(List<Classifications.Classification> predictions)
+      throws TranslateException {
+
+    // Reset the new position
+    newPos = -1;
+    // Loop through the predictions to see if the current word is in there
+    for (int i = 0; i < predictions.size(); i++) {
+      if (getCurrentWord().equals(predictions.get(i).getClassName().replace("_", " "))) {
+        // Get the index in the prediction list
+        newPos = i;
+        break;
+      }
+    }
+
+    // Check if an index was found
+    if (newPos == -1) {
+      App.getCanvasController().updateIndicator(Indicator.NOT_FOUND);
+      ;
+
+    } else if (newPos == currentPos) {
+      // Check if the position is the same
+      App.getCanvasController().updateIndicator(Indicator.SAME);
+    }
+    // Check if the player is closer to winning
+    else if (newPos < currentPos) {
+      App.getCanvasController().updateIndicator(Indicator.CLOSER);
+    } else if (currentPos < newPos) {
+      App.getCanvasController().updateIndicator(Indicator.FURTHER);
+    }
+    // update the current position
+    currentPos = newPos;
   }
 
   private void setNormalGame(CanvasController canvas) throws ModelException, IOException {
