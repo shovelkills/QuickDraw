@@ -161,6 +161,16 @@ public class MenuController {
 
   @FXML
   private void onGraphButton(ActionEvent event) {
+    if (Users.getWordHistory().size() == 0) {
+      Alert alert = new Alert(Alert.AlertType.WARNING);
+      alert.setTitle("No game played yet");
+      alert.setHeaderText("No games have been played yet so you cannot view data");
+      alert.setResizable(false);
+      Optional<ButtonType> result = alert.showAndWait();
+      if (result.get() == ButtonType.OK) {
+        return;
+      }
+    }
     // Tells the controller to update the graph
     GraphController graphController = App.getGraphController();
     graphController.loadGraphData();

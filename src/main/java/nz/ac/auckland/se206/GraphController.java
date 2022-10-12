@@ -35,10 +35,6 @@ public class GraphController {
 
   private static String gameOutcome;
 
-  public void initialize() {
-    loadGraphData();
-  }
-
   // Load Graph Data
   public void loadGraphData() {
     timeLineChart.getData().add(Graph.getLineChartData());
@@ -108,6 +104,7 @@ public class GraphController {
   }
 
   public void onMenuButton(ActionEvent event) {
+    timeLineChart.getData().clear();
     // Get the current scene
     Button backButton = (Button) event.getSource();
     Scene currentScene = backButton.getScene();
