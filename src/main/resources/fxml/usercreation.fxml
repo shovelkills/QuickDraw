@@ -10,20 +10,49 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<HBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="760.0" prefWidth="900.0" style="-fx-background-color: #96e7ff;" styleClass="background" stylesheets="@../css/menu.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nz.ac.auckland.se206.UserCreationController">
+<HBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: #96e7ff;" styleClass="userSelectionBackground" stylesheets="@../css/userselection.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nz.ac.auckland.se206.UserCreationController">
    <children>
       <HBox fx:id="userHbox" alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
          <children>
-            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="25.0">
+            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
                <children>
-                  <Label fx:id="titleLabel" alignment="CENTER" prefHeight="51.0" prefWidth="605.0" text="NEW USER" textFill="WHITE">
+                  <Label fx:id="titleLabel" alignment="CENTER" prefHeight="51.0" prefWidth="605.0" styleClass="userSelectionTitle" text="New Profile" textFill="#333333">
                      <font>
-                        <Font name="System Bold" size="75.0" />
+                        <Font name="System Bold" size="52.0" />
+                     </font>
+                  </Label>
+                  <Label styleClass="userSelectionTitle" text="Your Name:" textFill="#333333">
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                     <font>
+                        <Font name="System Bold" size="22.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="usernameField" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="400.0" promptText="Enter Name Here" styleClass="usernameTextEntry" stylesheets="@../css/userselection.css">
+                     <VBox.margin>
+                        <Insets top="10.0" />
+                     </VBox.margin>
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                  </TextField>
+                  <Label styleClass="userSelectionTitle" text="Your Sticker:" textFill="#333333">
+                     <font>
+                        <Font name="System Bold" size="22.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets top="20.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Label styleClass="userSelectionTitle" text="Click to create your own!" textFill="#333333">
+                     <font>
+                        <Font name="System Bold" size="18.0" />
                      </font>
                   </Label>
                   <VBox fx:id="userImageVBox" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="150.0" prefWidth="150.0">
                      <VBox.margin>
-                        <Insets />
+                        <Insets top="10.0" />
                      </VBox.margin>
                      <children>
                         <ImageView fx:id="userImage" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" styleClass="image-style">
@@ -33,27 +62,14 @@
                         </ImageView>
                      </children>
                   </VBox>
-                  <Label text="Enter Username" textFill="WHITE">
-                     <VBox.margin>
-                        <Insets />
-                     </VBox.margin>
+                  <Label styleClass="userSelectionTitle" text="Or choose one:" textFill="#333333">
                      <font>
-                        <Font name="System Bold" size="20.0" />
+                        <Font name="System Bold" size="18.0" />
                      </font>
+                     <VBox.margin>
+                        <Insets top="20.0" />
+                     </VBox.margin>
                   </Label>
-                  <TextField fx:id="usernameField" alignment="BOTTOM_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="193.0" promptText="Username">
-                     <VBox.margin>
-                        <Insets />
-                     </VBox.margin>
-                  </TextField>
-                  <Button fx:id="createButton" alignment="CENTER" mnemonicParsing="false" onAction="#onCreateProfile" prefHeight="40.0" prefWidth="160.0" style="-fx-cursor: hand;" styleClass="userSelectButton" stylesheets="@../css/userselection.css" text="Create">
-                     <VBox.margin>
-                        <Insets />
-                     </VBox.margin>
-                     <font>
-                        <Font name="System Bold" size="20.0" />
-                     </font>
-                  </Button>
                   <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0" spacing="30.0">
                      <children>
                         <ImageView fx:id="imageOption0" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" styleClass="image-style">
@@ -88,13 +104,26 @@
                         </ImageView>
                      </children>
                      <VBox.margin>
-                        <Insets />
+                        <Insets top="10.0" />
                      </VBox.margin>
                   </HBox>
-                  <Button fx:id="returnButton" mnemonicParsing="false" onAction="#onExitSelection" prefHeight="40.0" prefWidth="150.0" style="-fx-cursor: hand;" styleClass="userSelectButton" stylesheets="@../css/userselection.css" text="Go Back">
-                     <font>
-                        <Font name="System Bold" size="20.0" />
-                     </font></Button>
+                  <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
+                     <children>
+                        <Button fx:id="createButton" alignment="CENTER" mnemonicParsing="false" onAction="#onCreateProfile" prefHeight="40.0" prefWidth="160.0" style="-fx-cursor: hand;" styleClass="userSelectButton" stylesheets="@../css/userselection.css" text="Save Profile">
+                           <font>
+                              <Font name="System Bold" size="20.0" />
+                           </font>
+                        </Button>
+                        <Button fx:id="returnButton" mnemonicParsing="false" onAction="#onExitSelection" prefHeight="40.0" prefWidth="150.0" style="-fx-cursor: hand;" styleClass="userSelectButton" stylesheets="@../css/userselection.css" text="Cancel">
+                           <font>
+                              <Font name="System Bold" size="20.0" />
+                           </font>
+                        </Button>
+                     </children>
+                     <padding>
+                        <Insets bottom="20.0" top="20.0" />
+                     </padding>
+                  </HBox>
                </children>
             </VBox>
          </children>
