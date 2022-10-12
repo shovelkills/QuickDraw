@@ -22,8 +22,8 @@ public class StatsController {
   @FXML private Label fastestWordLabel;
   @FXML private Label fastestTimeLabel;
   @FXML private GridPane statsGridPane;
-  @FXML private VBox wordsListPaneVBox;
-  @FXML private VBox wordsListVBox;
+  @FXML private VBox wordsListPaneBox;
+  @FXML private VBox wordsListBox;
 
   public void initialize() {
     // Updates all the stats
@@ -39,7 +39,7 @@ public class StatsController {
     // Set tab title
     titleLabel.setText("Stats for: " + Users.getUserName());
     // Set style of elements to indicate tab is selected
-    wordsListPaneVBox.setVisible(false);
+    wordsListPaneBox.setVisible(false);
     statsGridPane.setVisible(true);
     statsTabButton.setStyle(
         "-fx-background-color: linear-gradient(to right, #FFCAE9, #E7AEE8); -fx-text-fill: #791E94;");
@@ -56,7 +56,7 @@ public class StatsController {
     titleLabel.setText("Word History for: " + Users.getUserName());
     // Set style of elements to indicate tab is selected
     statsGridPane.setVisible(false);
-    wordsListPaneVBox.setVisible(true);
+    wordsListPaneBox.setVisible(true);
     wordsTabButton.setStyle(
         "-fx-background-color: linear-gradient(to right, #FFCAE9, #E7AEE8); -fx-text-fill: #791E94;");
     statsTabButton.setStyle(".tabButton");
@@ -68,7 +68,7 @@ public class StatsController {
    */
   private void updateWordList() {
     // Clear the word list VBox and reset the index counter
-    wordsListVBox.getChildren().clear();
+    wordsListBox.getChildren().clear();
     // Show special message if no games have been played
     if (Users.getWordHistory().size() == 0) {
       Label wordLabel = new Label();
@@ -79,7 +79,7 @@ public class StatsController {
       Font font = Font.loadFont("file:src/main/resources/fonts/somethingwild-Regular.ttf", 42);
       wordLabel.setFont(font);
       wordLabel.setStyle("-fx-background-color: #FFCAE9");
-      wordsListVBox.getChildren().add(wordLabel);
+      wordsListBox.getChildren().add(wordLabel);
       return;
     }
     int index = 0;
@@ -101,7 +101,7 @@ public class StatsController {
       wordLabel.setFont(font);
 
       // Add labels to the VBox container within the scrollpane
-      wordsListVBox.getChildren().add(wordLabel);
+      wordsListBox.getChildren().add(wordLabel);
       index++;
     }
   }

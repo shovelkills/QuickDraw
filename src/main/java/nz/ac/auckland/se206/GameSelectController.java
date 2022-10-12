@@ -165,7 +165,7 @@ public class GameSelectController {
           timeMenu.getValue(),
           confidenceMenu.getValue());
 
-      DifficultyBuilder.difficultySetter(
+      DifficultyBuilder.setDifficulty(
           Users.getIndividualDifficulty("accuracyDifficulty"),
           Users.getIndividualDifficulty("wordsDifficulty"),
           Users.getIndividualDifficulty("timeDifficulty"),
@@ -234,7 +234,7 @@ public class GameSelectController {
         confidenceMenu.setValue("N/A");
         timeMenu.setDisable(true);
         timeMenu.setValue("N/A");
-        DifficultyBuilder.difficultySetter("-1", wordsMenu.getValue(), "-1", "-1");
+        DifficultyBuilder.setDifficulty("-1", wordsMenu.getValue(), "-1", "-1");
         // Change the local game mode
         localGameMode = GameMode.ZEN;
         break;
@@ -261,15 +261,19 @@ public class GameSelectController {
 
   /** Sets the difficulties of the choice menus of the users previous difficulties selected */
   public void setUserDifficulties() {
+    // Check if the current game mode is zen
     if (getCurrentGameMode() == GameMode.ZEN) {
+      // set all the menus to N/A
       accuracyMenu.setValue("N/A");
       confidenceMenu.setValue("N/A");
       timeMenu.setValue("N/A");
     } else {
+      // Otherwise load in the user's difficulties
       accuracyMenu.setValue(Users.getIndividualDifficulty("accuracyDifficulty"));
       confidenceMenu.setValue(Users.getIndividualDifficulty("confidenceDifficulty"));
       timeMenu.setValue(Users.getIndividualDifficulty("timeDifficulty"));
     }
+    // For the word menu set the words difficulty
     wordsMenu.setValue(Users.getIndividualDifficulty("wordsDifficulty"));
   }
 

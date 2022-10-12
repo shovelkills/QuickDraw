@@ -112,11 +112,11 @@
                         <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.rowIndex="3" />
                      </children>
                   </GridPane>
-                  <VBox fx:id="wordsListPaneVBox" prefHeight="617.0" prefWidth="1090.0" styleClass="tabPane" stylesheets="@../css/stats.css" visible="false">
+                  <VBox fx:id="wordsListPaneBox" prefHeight="617.0" prefWidth="1090.0" styleClass="tabPane" stylesheets="@../css/stats.css" visible="false">
                      <children>
                         <ScrollPane hbarPolicy="NEVER" prefHeight="400.0" prefWidth="450.0" style="-fx-fit-to-width: true;" styleClass="tabPane" stylesheets="@../css/stats.css" VBox.vgrow="ALWAYS">
                            <content>
-                              <VBox fx:id="wordsListVBox" alignment="TOP_CENTER" prefHeight="152.0" prefWidth="408.0" spacing="5.0">
+                              <VBox fx:id="wordsListBox" alignment="TOP_CENTER" prefHeight="152.0" prefWidth="408.0" spacing="5.0">
                                  <children>
                                     <Label alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="17.0" prefWidth="288.0" text="Label" />
                                  </children>

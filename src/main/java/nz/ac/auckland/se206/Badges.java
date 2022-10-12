@@ -1,9 +1,12 @@
 package nz.ac.auckland.se206;
 
+import java.util.Arrays;
+import java.util.List;
 import nz.ac.auckland.se206.words.CategorySelector.Difficulty;
 
 public class Badges {
   private static boolean drawUserPicture;
+  private static List<String> difficulties = Arrays.asList("E", "M", "H", "MS");
 
   /**
    * Changes the badges hasmap so that the user has won the badge
@@ -22,12 +25,15 @@ public class Badges {
    * @param time the time it took for the user to win the badge
    */
   public static void checkWinTime(int time) {
+    // Check if the time is less than 10 seconds
     if (time <= 10) {
       winBadge("Timed Wins", "10 Seconds");
     }
+    // Check if the time is less than 30 seconds
     if (time <= 30) {
       winBadge("Timed Wins", "30 Seconds");
     }
+    // Check if the time is less than 60 seconds
     if (time == 59) {
       winBadge("Timed Wins", "Last Second");
     }
@@ -43,29 +49,34 @@ public class Badges {
    */
   public static void winDifficultyBadges(
       Difficulty accuracy, Difficulty word, Difficulty time, Difficulty confidence) {
+    // Get the badges hash map
+    // Store the current difficulty badges in the user's profile
 
     Users.getBadges().get("Accuracy").put(accuracy.toString(), true);
     Users.getBadges().get("Words").put(word.toString(), true);
     Users.getBadges().get("Time").put(time.toString(), true);
     Users.getBadges().get("Confidence").put(confidence.toString(), true);
-    checkAllDifficultiesBadge("E");
-    checkAllDifficultiesBadge("M");
-    checkAllDifficultiesBadge("H");
-    checkAllDifficultiesBadge("MS");
+    // Check all the badges
+    for (String difficulty : difficulties) {
+      checkAllDifficultiesBadge(difficulty);
+    }
   }
 
   /** Checks if the difficulties accross all aspects of the game are meet */
   public static void checkAllDifficultiesBadge(String Difficulty) {
+    // This function comments probably need a rewrite
     // Checks if the Accuracy, words, time and confidence levels are the are all won
     if (!Difficulty.equals("MS")
         && Users.getBadges().get("Accuracy").get(Difficulty)
         && Users.getBadges().get("Words").get(Difficulty)
         && Users.getBadges().get("Time").get(Difficulty)
         && Users.getBadges().get("Confidence").get(Difficulty)) {
+      // Win the badge for all difficulties
       winBadge("All difficulties", Difficulty);
     } else if (Users.getBadges().get("Words").get(Difficulty)
         && Users.getBadges().get("Time").get(Difficulty)
         && Users.getBadges().get("Confidence").get(Difficulty)) {
+      // Not including accuracy
       winBadge("All difficulties", Difficulty);
     }
   }

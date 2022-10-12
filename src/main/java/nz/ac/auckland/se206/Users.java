@@ -415,19 +415,24 @@ public class Users {
   private static void loadGuest(GuestPlayer sessionGuest) {
     // Add the information to the guest
     userName = "Guest";
+    // Get the fastest word, wins, and losses
     fastestWord = guestPlayer.getFastestWord();
     wins = guestPlayer.getWins();
     losses = guestPlayer.getLosses();
+    // Get the fastest time, word history, time history, and game difficulty
     fastestTime = guestPlayer.getFastestTime();
     wordHistory = guestPlayer.getWordHistroy();
     timeHistory = guestPlayer.getTimeHistory();
     gameDifficulty = guestPlayer.getGamedifficulty();
+    // Get badges and all difficulty histories
     badges = guestPlayer.getBadges();
     accuracyDifficultyHistory = guestPlayer.getAccuracyDifficultyHistory();
     timeDifficultyHistory = guestPlayer.getTimeDifficultyHistory();
     wordDifficultyHistory = guestPlayer.getWordDifficultyHistory();
     confidenceDifficultyHistory = guestPlayer.getConfidenceDifficultyHistory();
+    // get the player's win history
     winHistory = guestPlayer.getWinHistory();
+    // Update the most recent user
     setRecentUser(userName);
   }
 

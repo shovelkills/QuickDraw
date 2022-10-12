@@ -151,9 +151,9 @@ public class CanvasController {
   @FXML private Button backToMenuButtonStart;
   @FXML private Button backToMenuButtonEnd;
   @FXML private Button saveButton;
-  @FXML private HBox preGameHBox;
-  @FXML private HBox postGameHBox;
-  @FXML private VBox drawingToolsVBox;
+  @FXML private HBox preGameBox;
+  @FXML private HBox postGameBox;
+  @FXML private VBox drawingToolsBox;
   @FXML private ColorPicker colourPicker;
   @FXML private Tooltip gameToolTip;
   @FXML private Label gameToolTipLabel;
@@ -290,13 +290,13 @@ public class CanvasController {
             // Set UI elements for pre-game
             canvas.setDisable(true);
             // Enable pre-game button panel
-            preGameHBox.setMouseTransparent(false);
-            preGameHBox.setVisible(true);
+            preGameBox.setMouseTransparent(false);
+            preGameBox.setVisible(true);
             // Disable post-game button panel
-            postGameHBox.setMouseTransparent(true);
-            postGameHBox.setVisible(false);
+            postGameBox.setMouseTransparent(true);
+            postGameBox.setVisible(false);
             // Disable drawing tools
-            drawingToolsVBox.setDisable(true);
+            drawingToolsBox.setDisable(true);
             // Set timer bar max width
             timerBarLabel.setMaxWidth(600.0);
 
@@ -344,8 +344,8 @@ public class CanvasController {
     // Hide other things
     timerLabel.setVisible(false);
     // Enable post-game button panel
-    postGameHBox.setMouseTransparent(false);
-    postGameHBox.setVisible(true);
+    postGameBox.setMouseTransparent(false);
+    postGameBox.setVisible(true);
     // Hide some more
     timerBarLabel.setVisible(false);
     predictionLabel.setVisible(false);
@@ -551,7 +551,7 @@ public class CanvasController {
     game.resetGame();
     // Reset UI elements (NOTE: CREATES NEW GAME OBJECT!)
     setPreGameInterface();
-    // Reset Timer
+    // Call the method that will restart the timer
     resetTimerBar();
   }
 
@@ -680,13 +680,13 @@ public class CanvasController {
           canvas.setDisable(true);
           // Set UI elements for post-game
           // Enable post-game button panel
-          postGameHBox.setMouseTransparent(false);
-          postGameHBox.setVisible(true);
+          postGameBox.setMouseTransparent(false);
+          postGameBox.setVisible(true);
           // Disable pre-game button panel
-          preGameHBox.setMouseTransparent(true);
-          preGameHBox.setVisible(false);
+          preGameBox.setMouseTransparent(true);
+          preGameBox.setVisible(false);
           // Disable drawing tools
-          drawingToolsVBox.setDisable(true);
+          drawingToolsBox.setDisable(true);
           // Unbind label properties bound to game properties
           wordLabel.textProperty().unbind();
           timerLabel.textProperty().unbind();
@@ -762,8 +762,8 @@ public class CanvasController {
       game.startGame();
     }
     if (currentGameMode == GameMode.ZEN) {
-      postGameHBox.setMouseTransparent(false);
-      postGameHBox.setVisible(true);
+      postGameBox.setMouseTransparent(false);
+      postGameBox.setVisible(true);
     }
 
     canvas.setDisable(false);
@@ -772,10 +772,10 @@ public class CanvasController {
     onBrush();
 
     // Enable drawing tools
-    drawingToolsVBox.setDisable(false);
+    drawingToolsBox.setDisable(false);
 
     // Hide pre-game buttons
-    preGameHBox.setVisible(false);
+    preGameBox.setVisible(false);
 
     canvas.setOnMousePressed(
         e -> {
@@ -938,25 +938,33 @@ public class CanvasController {
 
   /** Update the tool tip in the hidden word game */
   public void updateToolTip() {
+    // Check which game mode we are in
     switch (currentGameMode) {
       case HIDDEN_WORD:
+        // Check if the canvas is enabled
         if (!canvas.isDisabled()) {
+          // Set the tool tip to say there is a hint
           gameToolTip.setText("CLICK FOR A HINT!!!");
         } else {
+          // Otherwise say the default hidden_word message
           gameToolTip.setText(
               "The word is hidden! From the definition, draw the word! Click this during the game for a hint!");
         }
         break;
       case NORMAL:
+        // Normal tool tip message
         gameToolTip.setText("Draw the word and try to win!");
         break;
       case PROFILE:
+        // Profile tool tip message
         gameToolTip.setText("Draw your profile picture!");
         break;
       case ZEN:
+        // Zen tool tip message
         gameToolTip.setText("Feel free to draw!!!");
         break;
       default:
+        // Normal tool tip message
         gameToolTip.setText("Draw the word and try to win!");
         break;
     }
@@ -969,26 +977,37 @@ public class CanvasController {
    */
   @FXML
   private void onWordHint(MouseEvent event) {
+    // Initialise a random number at 0
     int randomNumber = 0;
+    // Check if the person is playing hidden word gamemode
     if (!canvas.isDisable() && currentGameMode == GameMode.HIDDEN_WORD) {
+      // Find the length of their current word
       int wordLength = game.getCurrentWord().length();
+      // Place underscores the length of their word as the first hint
       String hiddenWord = String.format("%s", "_".repeat(wordLength));
       if (game.getCurrentPrompt().equals("Guess the word then draw it!")) {
         game.setCurrentPrompt(hiddenWord);
       } else {
+        // loop until all the characters are filled in
         while (wordCharacters.size() != wordLength) {
+          // Generate a random number not in the word characters array
           randomNumber = new Random().nextInt(wordLength);
           if (!wordCharacters.contains(randomNumber)) {
+            // Add the random number into the array
             wordCharacters.add(randomNumber);
             break;
           }
         }
+        // Get the corresponding letter from the word at the position
         char wordCharacter = game.getCurrentWord().charAt(randomNumber);
+        // Get the current prompt (partially made up of dashes)
         String currentPrompt = game.getCurrentPrompt();
+        // Set up the current prompt to reveal a letter
         currentPrompt =
             currentPrompt.substring(0, randomNumber)
                 + wordCharacter
                 + currentPrompt.substring(randomNumber + 1);
+        // Update the current prompt
         game.setCurrentPrompt(currentPrompt);
       }
     }
