@@ -33,7 +33,7 @@ public class ProfileBuilder {
 
   // Define the scaling in hovering
   private static final String IDLE_STYLE = "-fx-scale-x: 1; -fx-scale-y: 1";
-  private static final String HOVERED_STYLE = "-fx-scale-x: 1.2; -fx-scale-y: 1.2";
+  private static final String HOVERED_STYLE = "-fx-scale-x: 1.2; -fx-scale-y: 1.2; -fx-effect: dropshadow(gaussian, white, 30, 0.8, 0, 0);";
 
   /**
    * Get's the users current image
