@@ -121,7 +121,7 @@
                   </StackPane>
                   <VBox minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="260.0">
                      <children>
-                        <Label fx:id="predictionLabel" alignment="CENTER_RIGHT" nodeOrientation="RIGHT_TO_LEFT" prefHeight="35.0" prefWidth="260.0" styleClass="predictionLabel" stylesheets="@../css/canvas.css">
+                        <Label fx:id="predictionLabel" contentDisplay="RIGHT" nodeOrientation="LEFT_TO_RIGHT" prefHeight="35.0" prefWidth="260.0" styleClass="predictionLabel" stylesheets="@../css/canvas.css">
                            <font>
                               <Font size="26.0" />
                            </font>
