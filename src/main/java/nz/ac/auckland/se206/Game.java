@@ -43,9 +43,36 @@ public class Game {
   // Declare difficulty field
   private static DoodlePrediction model;
   private static Difficulty difficulty;
+  private static int blitzCounter;
+  private static int blitzTime = CategorySelector.getTime();
 
+  /**
+   * createModel will create the doodle prediction model
+   *
+   * @throws ModelException model not found
+   * @throws IOException read write error
+   */
   public static void createModel() throws ModelException, IOException {
+    // Creates the model
     model = new DoodlePrediction();
+  }
+
+  /** resetBlitzCounter will reset the the counter after the game ends */
+  public static void resetBlitzCounter() {
+    blitzCounter = 0;
+  }
+
+  public static int getBlitzCounter() {
+    return blitzCounter;
+  }
+
+  /** resetBlitzTime will reset the the counter after the game ends */
+  public static void resetBlitzTime() {
+    blitzTime = 0;
+  }
+
+  public static int getBlitzTime() {
+    return blitzTime;
   }
 
   public static Difficulty getDifficulty() {
@@ -149,8 +176,21 @@ public class Game {
                                             .getClassName()
                                             .replace("_", " "))) {
                               Users.addTimeHistory(timer.getValue().intValue(), getCurrentWord());
+                              // Check if playing BLITZ
+                              if (currentGame == GameMode.BLITZ) {
+                                blitzTime = timer.getValue().intValue();
+                                currentSelection = CategorySelector.getWordSelection();
+                                String word =
+                                    currentSelection.get(DifficultyBuilder.getWordsDifficulty());
+                                // Reset the current prompt
+                                setCurrentWord(word);
+                                currentPrompt.setValue(word);
+                                canvas.onClear();
+                                // increment counter
+                                blitzCounter++;
+                              }
                               // End the game
-                              if (!isGhostGame) {
+                              if (!isGhostGame && currentGame != GameMode.BLITZ) {
                                 hasWon = true;
                                 endGame(true);
                               }
@@ -163,8 +203,16 @@ public class Game {
                       }
                     });
               }
-              System.out.println("LOST IN TASK");
+
               // End the game
+              if (currentGame == GameMode.BLITZ && blitzCounter > 0) {
+                endGame(true);
+                return null;
+              } else if (currentGame == GameMode.BLITZ && blitzCounter == 0) {
+                endGame(false);
+                return null;
+              }
+              System.out.println("LOST IN TASK");
               if (!isGhostGame) {
                 endGame(false);
               }
@@ -188,7 +236,7 @@ public class Game {
       throws ModelException, IOException, WordNotFoundException {
     // Set the current game mode
     currentGame = gameMode;
-    switch (gameMode) {
+    switch (currentGame) {
       case HIDDEN_WORD:
         setHiddenWordGame(canvas);
         break;
@@ -204,6 +252,9 @@ public class Game {
         // Set the profile picture canvas
         setProfileCanvas(canvas);
         break;
+      case BLITZ:
+        // Set the blitz canvas
+        setBlitzGame(canvas);
       default:
         // Default game set
         setNormalGame(canvas);
@@ -277,6 +328,27 @@ public class Game {
    * @throws IOException reading/writing exception
    */
   private void setNormalGame(CanvasController canvas) throws ModelException, IOException {
+    // Set the canvas
+    this.canvas = canvas;
+    // Get the current difficulty's word
+    currentSelection = CategorySelector.getWordSelection();
+    String word = currentSelection.get(DifficultyBuilder.getWordsDifficulty());
+    gameTime = CategorySelector.getTime();
+    topMatch = CategorySelector.getAccuracy();
+    confidence = ((float) CategorySelector.getConfidence() / 100);
+    timer = new SimpleIntegerProperty(gameTime);
+    setCurrentWord(word);
+    currentPrompt.setValue(word);
+  }
+
+  /**
+   * setBlitzGame will set up the backend of the blitz game
+   *
+   * @param canvas takes in the normal canvas
+   * @throws ModelException doodle prediction exception
+   * @throws IOException reading/writing exception
+   */
+  private void setBlitzGame(CanvasController canvas) throws ModelException, IOException {
     // Set the canvas
     this.canvas = canvas;
     // Get the current difficulty's word
@@ -406,6 +478,7 @@ public class Game {
   public void resetGame() {
     ttsService.cancel();
     service.cancel();
+
     resetTimer(difficulty);
   }
 
@@ -431,5 +504,10 @@ public class Game {
     // Cancel service and end game
     canvas.onEndGame(isWin);
     service.cancel();
+    // Reset blitz objects if we are playing blitz
+    if (currentGame == GameMode.BLITZ) {
+      resetBlitzCounter();
+      resetBlitzTime();
+    }
   }
 }

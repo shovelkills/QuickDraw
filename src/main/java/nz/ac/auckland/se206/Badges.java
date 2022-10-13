@@ -64,7 +64,7 @@ public class Badges {
     }
   }
 
-   /**
+  /**
    * Checks if the difficulties across all aspects of the game are meet
    *
    * @param Difficulty the difficulty that is being checked
@@ -103,7 +103,6 @@ public class Badges {
       winBadge("Wins", "5 consecutive wins");
     }
   }
-
 
   /** checkDrawnUserPicture will check if the user has drawn a profile picture for their badge */
   public static void checkDrawnUserPicture() {

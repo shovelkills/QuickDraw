@@ -19,6 +19,7 @@ import java.util.regex.Pattern;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
 import javax.imageio.ImageIO;
+import nz.ac.auckland.se206.GameSelectController.GameMode;
 import nz.ac.auckland.se206.words.CategorySelector;
 
 public class Users {
@@ -515,7 +516,14 @@ public class Users {
    */
   public static void addTimeHistory(int time, String word) {
     // Calculate time difference
-    int solvetime = CategorySelector.getTime() - time;
+    int solvetime;
+    // Check if game mode is blitz
+    if (GameSelectController.getCurrentGameMode() == GameMode.BLITZ) {
+      // get the last blitz time minus current time
+      solvetime = Game.getBlitzTime() - time;
+    } else {
+      solvetime = CategorySelector.getTime() - time;
+    }
     Users.timeHistory.add((double) solvetime);
     checkFastestTime(solvetime, word);
   }
