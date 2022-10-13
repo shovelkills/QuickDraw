@@ -6,6 +6,14 @@
 	-fx-font-family: "Maybe Next";
 }
 
+.profileSelectButton{
+	-fx-background-color: transparent;
+}
+
+.profileSelectButton:hover{
+	-fx-cursor: hand;
+}
+
 .newGameButton{
 	-fx-background-color: transparent;
 	-fx-background-image: url(../images/buttons/newGameButtonDefault.png);
@@ -13,6 +21,7 @@
 
 .newGameButton:hover{
 	-fx-background-image: url(../images/buttons/newGameButtonHover.png);
+	-fx-cursor: hand;
 }
 
 .newGameButton:pressed{
@@ -26,6 +35,7 @@
 
 .statsMenuButton:hover{
 	-fx-background-image: url(../images/buttons/statsMenuButtonHover.png);
+	-fx-cursor: hand;
 }
 
 .statsMenuButton:pressed{
@@ -39,23 +49,15 @@
 
 .quitMenuButton:hover{
 	-fx-background-image: url(../images/buttons/quitMenuButtonHover.png);
+	-fx-cursor: hand;
 }
 
 .quitMenuButton:pressed{
 	-fx-background-image: url(../images/buttons/quitMenuButtonDown.png);
 }
 
-.profileButton{
-	-fx-background-radius: 10;
-	-fx-background-color: #51D4D0;
-}
-
-.profileButton:hover{
-	-fx-background-color: #00E8E8;
-}
-
-.profileButton:pressed{
-	-fx-background-color: #05668D;
+.profileImageView{
+	-fx-effect: dropshadow(gaussian, #fff8f5, 10, 1, 0, 0);
 }
 
 .mainMenuBackground{

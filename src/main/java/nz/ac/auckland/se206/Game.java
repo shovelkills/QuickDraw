@@ -164,7 +164,6 @@ public class Game {
                     });
               }
               System.out.println("LOST IN TASK");
-              Users.addTimeHistory(0, getCurrentWord());
               // End the game
               if (!isGhostGame) {
                 endGame(false);

@@ -20,6 +20,7 @@ public class App extends Application {
   private static GameSelectController gameSelectController;
   private static CanvasController canvasController;
   private static LoadingController loadingController;
+  private static GraphController graphController;
 
   public static void main(final String[] args) {
     launch();
@@ -85,6 +86,14 @@ public class App extends Application {
       // return the root for switching scenes
       return root;
     }
+    if (fxml == "graph") {
+      FXMLLoader loader = new FXMLLoader(App.class.getResource("/fxml/" + fxml + ".fxml"));
+      Parent root = (Parent) loader.load();
+      graphController = loader.getController();
+      // return the root for switching scenes
+      return root;
+    }
+
     // For other FXMLs just return the root
     return new FXMLLoader(App.class.getResource("/fxml/" + fxml + ".fxml")).load();
   }
@@ -117,6 +126,10 @@ public class App extends Application {
     return loadingController;
   }
 
+  public static GraphController getGraphController() {
+    return graphController;
+  }
+
   /**
    * This method is invoked when the application starts. It loads and shows the "Canvas" scene.
    *
@@ -129,6 +142,7 @@ public class App extends Application {
     SceneManager.addUi(AppUi.MAIN_MENU, loadFxml("menu"));
     SceneManager.addUi(AppUi.GAME, loadFxml("canvas"));
     SceneManager.addUi(AppUi.GAMESELECT, loadFxml("gameselect"));
+    SceneManager.addUi(AppUi.GRAPH, loadFxml("graph"));
     SceneManager.addUi(AppUi.LOADING, loadFxml("loading"));
     SceneManager.addUi(AppUi.USERSELECT, loadFxml("users"));
     SceneManager.addUi(AppUi.USERCREATE, loadFxml("usercreation"));

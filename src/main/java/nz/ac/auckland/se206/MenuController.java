@@ -29,11 +29,23 @@ public class MenuController {
   @FXML private ImageView profileImageView;
   @FXML private Label titleLabel;
   @FXML private Label usernameLabel;
+
+  @FXML private Button graphButton;
   @FXML private Button startButton;
   @FXML private Button statsButton;
   @FXML private Button exitButton;
   @FXML private Button exitTipButton;
   @FXML private Button selectedUserButton;
+
+
+  private static final String IDLE_STYLE =
+      "-fx-effect: dropshadow(gaussian, #fff8f5, 10, 1, 0, 0);";
+  private static final String HOVER_STYLE =
+      "-fx-scale-x: 1.2; -fx-scale-y: 1.2; -fx-effect: dropshadow(gaussian, #fff8f5, 20, 0.8, 0, 0);";
+  private static final String MOUSE_DOWN_STYLE =
+      "-fx-scale-x: 1.2; -fx-scale-y: 1.2; -fx-effect: dropshadow(gaussian, #fff8f5, 30, 0.8, 0, 0);";
+  private Font titleFont;
+
 
   /**
    * This method alternates alternates colours for a label
@@ -75,6 +87,19 @@ public class MenuController {
     // Instantiate a new guest for this session.
     Users.createNewGuest();
     Users.loadUser("Guest");
+    // set up user profile selection button
+    selectedUserButton.setOnMouseEntered(
+        e -> {
+          profileImageView.setStyle(HOVER_STYLE);
+        });
+    selectedUserButton.setOnMouseExited(
+        e -> {
+          profileImageView.setStyle(IDLE_STYLE);
+        });
+    selectedUserButton.setOnMousePressed(
+        e -> {
+          profileImageView.setStyle(MOUSE_DOWN_STYLE);
+        });
   }
 
   /**
@@ -191,5 +216,27 @@ public class MenuController {
       // Do nothing if cancelled is pressed
       return;
     }
+  }
+
+  @FXML
+  private void onGraphButton(ActionEvent event) {
+    if (Users.getWordHistory().size() == 0) {
+      Alert alert = new Alert(Alert.AlertType.WARNING);
+      alert.setTitle("No game played yet");
+      alert.setHeaderText("No games have been played yet so you cannot view data");
+      alert.setResizable(false);
+      Optional<ButtonType> result = alert.showAndWait();
+      if (result.get() == ButtonType.OK) {
+        return;
+      }
+    }
+    // Tells the controller to update the graph
+    GraphController graphController = App.getGraphController();
+    graphController.loadGraphData();
+    // Get the scene currently in
+    Button button = (Button) event.getSource();
+    Scene sceneButtonIsIn = button.getScene();
+    // Move to the next scene
+    sceneButtonIsIn.setRoot(SceneManager.getUiRoot(AppUi.GRAPH));
   }
 }

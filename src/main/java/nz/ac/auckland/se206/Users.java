@@ -248,23 +248,6 @@ public class Users {
     return matchCharacters.find();
   }
 
-  /**
-   * Gets the sum of the remain time that the user has to draw each word
-   *
-   * @return the average time remaining that it user has when the game recognizes the word
-   */
-  public static double getAverageTime() {
-    double sum = 0;
-    // Checks if the list is empty and finds the average time
-    if (!timeHistory.isEmpty()) {
-      for (Double time : timeHistory) {
-        sum += time;
-      }
-      return sum / timeHistory.size();
-    }
-    return sum;
-  }
-
   /** Saves the data of the user to a JSON file after a game finishes */
   public static void saveUser() {
     if (userName == "Guest") {
