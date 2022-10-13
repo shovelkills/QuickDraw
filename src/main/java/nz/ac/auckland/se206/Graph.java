@@ -7,9 +7,6 @@ import java.util.List;
 import java.util.Map.Entry;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.chart.CategoryAxis;
-import javafx.scene.chart.LineChart;
-import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.PieChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.chart.XYChart.Data;
@@ -41,12 +38,9 @@ public class Graph {
    */
   public static XYChart.Series<String, Number> getLineChartData() {
     // Initializes the Linecart X and Y values
-    CategoryAxis xAxis = new CategoryAxis();
-    NumberAxis yAxis = new NumberAxis();
-    LineChart<String, Number> lineChart = new LineChart<>(xAxis, yAxis);
-    lineChart.setTitle("Time taken per Game");
     XYChart.Series<String, Number> series = new XYChart.Series<>();
     // Gets the data from the list
+
     for (int i = 0; i < Users.getWordHistory().size(); i++) {
       series
           .getData()
@@ -54,7 +48,6 @@ public class Graph {
               new Data<String, Number>(
                   Users.getWordHistory().get(i), Users.getTimeHistory().get(i)));
     }
-
     return series;
   }
 

@@ -4,7 +4,9 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
+import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
@@ -25,6 +27,10 @@ public class GraphController {
 
   @FXML private Button menuButton;
 
+  @FXML private CategoryAxis xAxis = new CategoryAxis();
+
+  @FXML private NumberAxis yAxis = new NumberAxis();
+
   @FXML private LineChart<String, Number> timeLineChart;
 
   @FXML private PieChart winsLossPieChart;
@@ -35,9 +41,15 @@ public class GraphController {
 
   private static String gameOutcome;
 
+  public void initilise() {
+    loadGraphData();
+  }
+
   // Load Graph Data
   public void loadGraphData() {
+    timeLineChart.getData().clear();
     timeLineChart.getData().add(Graph.getLineChartData());
+    timeLineChart.getXAxis().setTickLabelsVisible(false);
     winsLossPieChart.setData(Graph.getWinsLossPieChart());
 
     // Makes it so when pressing on the winloss piechart is changes the difficulty piegraph
@@ -104,7 +116,6 @@ public class GraphController {
   }
 
   public void onMenuButton(ActionEvent event) {
-    timeLineChart.getData().clear();
     // Get the current scene
     Button backButton = (Button) event.getSource();
     Scene currentScene = backButton.getScene();

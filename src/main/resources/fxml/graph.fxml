@@ -13,10 +13,10 @@
       <BorderPane layoutX="-128.0" layoutY="-55.0" prefHeight="200.0" prefWidth="200.0" />
       <LineChart fx:id="timeLineChart" layoutX="36.0" layoutY="31.0" title="Time Taken VS Word">
         <xAxis>
-          <CategoryAxis label="Word" side="BOTTOM" />
+          <CategoryAxis label="Word" side="BOTTOM" fx:id="xAxis" />
         </xAxis>
         <yAxis>
-          <NumberAxis label="Time Taken in Seconds" side="LEFT" />
+          <NumberAxis fx:id="yAxis" label="Time Taken in Seconds" side="LEFT" />
         </yAxis>
       </LineChart>
       <PieChart fx:id="winsLossPieChart" layoutX="622.0" layoutY="20.0" prefHeight="362.0" prefWidth="469.0" title="Game Outcome" />
