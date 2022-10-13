@@ -122,16 +122,19 @@ public class GuestPlayer {
 
   /** Saves all relevant current user stats to this instance of guestPlayer */
   public void saveGuest() {
-    // Save all of the attributes into the guest temporary stats
+    // Saves the fastest time, losses, and wins
     fastestTime = Users.getFastestTime();
     losses = Users.getLosses();
     wins = Users.getLosses();
+    // Saves the time and word histories, as well as fastest word
     timeHistory = Users.getTimeHistory();
     wordHistory = Users.getWordHistory();
     fastestWord = Users.getFastestWord();
+    // Saves the game difficulty, the badges, and consistent wins
     gamedifficulty = Users.getIndividualDifficulty();
     badges = Users.getBadges();
     consistentWins = Users.getConsistentWins();
+    // Gets all of the users difficulty histories
     accuracyDifficultyHistory = Users.getAccuracyDifficultyHistory();
     timeDifficultyHistory = Users.getTimeDifficultyHistory();
     wordDifficultyHistory = Users.getWordDifficultyHistory();

@@ -1,9 +1,12 @@
 package nz.ac.auckland.se206;
 
+import java.util.Arrays;
+import java.util.List;
 import nz.ac.auckland.se206.words.CategorySelector.Difficulty;
 
 public class Badges {
   private static boolean drawUserPicture;
+  private static List<String> difficulties = Arrays.asList("E", "M", "H", "MS");
 
   /**
    * Changes the badges hasmap so that the user has won the badge
@@ -22,13 +25,17 @@ public class Badges {
    * @param time the time it took for the user to win the badge
    */
   public static void checkWinTime(int time) {
-    // Checks the time to see if they have won any badges
+
+    // Check if the time is less than 10 seconds
+
     if (time <= 10) {
       winBadge("Timed Wins", "10 Seconds");
     }
+    // Check if the time is less than 30 seconds
     if (time <= 30) {
       winBadge("Timed Wins", "30 Seconds");
     }
+    // Check if the time is less than 60 seconds
     if (time == 59) {
       winBadge("Timed Wins", "Last Second");
     }
@@ -44,30 +51,33 @@ public class Badges {
    */
   public static void winDifficultyBadges(
       Difficulty accuracy, Difficulty word, Difficulty time, Difficulty confidence) {
-    // Wins the badges of the respective difficulties
+
+    // Get the badges hash map
+    // Store the current difficulty badges in the user's profile
     Users.getBadges().get("Accuracy").put(accuracy.toString(), true);
     Users.getBadges().get("Words").put(word.toString(), true);
     Users.getBadges().get("Time").put(time.toString(), true);
     Users.getBadges().get("Confidence").put(confidence.toString(), true);
-    // Checks if the user has won all the badges in the difficulty
-    checkAllDifficulty("E");
-    checkAllDifficulty("M");
-    checkAllDifficulty("H");
-    checkAllDifficulty("MS");
+    // Check all the badges
+    for (String difficulty : difficulties) {
+      checkAllDiffBadges(difficulty);
+    }
   }
 
-  /**
+   /**
    * Checks if the difficulties across all aspects of the game are meet
    *
    * @param Difficulty the difficulty that is being checked
    */
-  public static void checkAllDifficulty(String Difficulty) {
+  public static void checkAllDiffBadges(String Difficulty) {
+    // This function comments probably need a rewrite
     // Checks if the Accuracy, words, time and confidence levels are the are all won
     if (!Difficulty.equals("MS")
         && Users.getBadges().get("Accuracy").get(Difficulty)
         && Users.getBadges().get("Words").get(Difficulty)
         && Users.getBadges().get("Time").get(Difficulty)
         && Users.getBadges().get("Confidence").get(Difficulty)) {
+      // Win the badge for all difficulties
       // Checks the Accuracy, word, time and confidence
       winBadge("All difficulties", Difficulty);
     } else if (Users.getBadges().get("Words").get(Difficulty)
@@ -79,22 +89,26 @@ public class Badges {
   }
 
   /**
-   * Check to see if it has reached any consistent win conditions
+   * checkConsistentWins will check for player's consecutive wins
    *
-   * @param consistentwins the number of consistent wins
+   * @param consistentwins amount of wins they have consecutively
    */
   public static void checkConsistentWins(int consistentwins) {
-    // Checks the consistent wins
+    // Check if they have 2 consecutive wins
+
     if (consistentwins == 2) {
       winBadge("Wins", "2 consecutive wins");
     } else if (consistentwins == 5) {
+      // Check if they have 5 consecutive wins
       winBadge("Wins", "5 consecutive wins");
     }
   }
 
-  /** Checks if the user has drawn a profile picture yet */
+
+  /** checkDrawnUserPicture will check if the user has drawn a profile picture for their badge */
   public static void checkDrawnUserPicture() {
     if (drawUserPicture) {
+      // Give the draw profile picture badge
       winBadge("Misc", "Draw User Profile");
     }
   }

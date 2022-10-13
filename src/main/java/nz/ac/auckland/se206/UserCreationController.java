@@ -72,11 +72,17 @@ public class UserCreationController {
         });
   }
 
+  /**
+   * updateImage will update the player's drawn image into their profile picture
+   *
+   * @throws FileNotFoundException if the file was not found
+   */
   public void updateImage() throws FileNotFoundException {
     // creating the image object
     String dir = Users.folderDirectory + "/src/main/resources/images/tempImage.png";
     InputStream stream = new FileInputStream(dir);
     Image image = new Image(stream);
+    // Set the new image
     userImage.setImage(image);
   }
 
@@ -84,11 +90,11 @@ public class UserCreationController {
    * onCreateImage will allow the user to create their own image via drawing It will load the
    * profile picture creation scene
    *
-   * @param event
-   * @throws IOException
-   * @throws CsvException
-   * @throws URISyntaxException
-   * @throws ModelException
+   * @param event takes in a mouse event from FXML clicking
+   * @throws IOException reading/writing exception
+   * @throws CsvException reading spreadsheet exceptions
+   * @throws URISyntaxException converting to link exception
+   * @throws ModelException doodle prediction exception
    */
   private void onCreateImage(MouseEvent event)
       throws IOException, CsvException, URISyntaxException, ModelException {

@@ -398,19 +398,24 @@ public class Users {
   private static void loadGuest(GuestPlayer sessionGuest) {
     // Add the information to the guest
     userName = "Guest";
+    // Get the fastest word, wins, and losses
     fastestWord = guestPlayer.getFastestWord();
     wins = guestPlayer.getWins();
     losses = guestPlayer.getLosses();
+    // Get the fastest time, word history, time history, and game difficulty
     fastestTime = guestPlayer.getFastestTime();
     wordHistory = guestPlayer.getWordHistroy();
     timeHistory = guestPlayer.getTimeHistory();
     gameDifficulty = guestPlayer.getGamedifficulty();
+    // Get badges and all difficulty histories
     badges = guestPlayer.getBadges();
     accuracyDifficultyHistory = guestPlayer.getAccuracyDifficultyHistory();
     timeDifficultyHistory = guestPlayer.getTimeDifficultyHistory();
     wordDifficultyHistory = guestPlayer.getWordDifficultyHistory();
     confidenceDifficultyHistory = guestPlayer.getConfidenceDifficultyHistory();
+    // get the player's win history
     winHistory = guestPlayer.getWinHistory();
+    // Update the most recent user
     setRecentUser(userName);
   }
 
@@ -448,14 +453,20 @@ public class Users {
     confidenceDifficultyHistory.add(confidence);
   }
 
-  // updates the userList by adding new user to list
+  /**
+   * Updates the userList by adding new user to list
+   *
+   * @param user takes in a user by their user name
+   */
   public static void addUserList(String user) {
     userList.add(user);
     // Save the user List
     saveUserList();
   }
 
-  // Increases current user's wins by 1, consistentWins by 1 and check the number of consistent wins
+  /**
+   * Increases current user's wins by 1, consistentWins by 1 and check the number of consistent wins
+   */
   public static void increaseWins() {
     Users.wins++;
     Users.consistentWins++;
@@ -463,7 +474,7 @@ public class Users {
     Badges.checkConsistentWins(consistentWins);
   }
 
-  // Increases current user's losses by 1
+  /** Increases current user's losses by 1 */
   public static void increaseLosses() {
     Users.losses++;
     Users.addWinHistory(false);
@@ -496,7 +507,14 @@ public class Users {
     Users.wordHistory.add(word);
   }
 
+  /**
+   * addTimeHistory will add how long the player took to their history stats
+   *
+   * @param time is the time remaining
+   * @param word is the word they were drawing
+   */
   public static void addTimeHistory(int time, String word) {
+    // Calculate time difference
     int solvetime = CategorySelector.getTime() - time;
     Users.timeHistory.add((double) solvetime);
     checkFastestTime(solvetime, word);
@@ -557,6 +575,11 @@ public class Users {
     Users.profilePicture = profilepicture;
   }
 
+  /**
+   * Adds to win history
+   *
+   * @param win takes in if user won or not
+   */
   public static void addWinHistory(Boolean win) {
     winHistory.add(win);
   }
@@ -565,7 +588,7 @@ public class Users {
    * To get each difficulty, do Map.get(difficult) e.g. Map.get("timedifficulty") to get the time
    * difficulty
    *
-   * @return
+   * @return a string of the player's difficulty
    */
   public static String getIndividualDifficulty(String difficulty) {
     return gameDifficulty.get(difficulty);

@@ -77,7 +77,7 @@ public class ProfileBuilder {
     ProfileBuilder.hbox = hbox;
   }
 
-  // Update all the IDs
+  /** This method will update the Id of a user */
   public static void updateId() {
     int id = 0;
     // Reset all the ids
@@ -98,10 +98,9 @@ public class ProfileBuilder {
   protected UserType type;
 
   /**
-   * ProfileBuilder constructor will set up a profile inside the grid
+   * ProfileBuilder constructor will set up a profile inside the selection optinos
    *
-   * @param row the row number in the grid
-   * @param col the column number in the grid
+   * @param type takes in the type of user being built
    */
   public ProfileBuilder(UserType type) {
     // Get the type of profile
