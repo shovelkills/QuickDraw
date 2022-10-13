@@ -13,8 +13,15 @@
 
 .userSelectButton:hover{
 	-fx-background-color: #EFFBF5;
+	
 }
 
 .userSelectButton:pressed{
 	-fx-background-color: #BCC6DD;
+}
+
+.usernameTextEntry{
+	-fx-background-color: #FCEFE8;
+	-fx-background-radius: 10;
+	-fx-font-family: "Maybe Next";
 }

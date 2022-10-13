@@ -35,6 +35,12 @@ public class MenuController {
   @FXML private Button exitTipButton;
   @FXML private Button selectedUserButton;
 
+  private static final String IDLE_STYLE =
+      "-fx-effect: dropshadow(gaussian, #fff8f5, 10, 1, 0, 0);";
+  private static final String HOVER_STYLE =
+      "-fx-scale-x: 1.2; -fx-scale-y: 1.2; -fx-effect: dropshadow(gaussian, #fff8f5, 20, 0.8, 0, 0);";
+  private static final String MOUSE_DOWN_STYLE =
+      "-fx-scale-x: 1.2; -fx-scale-y: 1.2; -fx-effect: dropshadow(gaussian, #fff8f5, 30, 0.8, 0, 0);";
   private Font titleFont;
 
   /**
@@ -73,6 +79,19 @@ public class MenuController {
     // Instantiate a new guest for this session.
     Users.createNewGuest();
     Users.loadUser("Guest");
+    // set up user profile selection button
+    selectedUserButton.setOnMouseEntered(
+        e -> {
+          profileImageView.setStyle(HOVER_STYLE);
+        });
+    selectedUserButton.setOnMouseExited(
+        e -> {
+          profileImageView.setStyle(IDLE_STYLE);
+        });
+    selectedUserButton.setOnMousePressed(
+        e -> {
+          profileImageView.setStyle(MOUSE_DOWN_STYLE);
+        });
   }
 
   private void alternateColours(Label label, Color colour1, Color colour2) {

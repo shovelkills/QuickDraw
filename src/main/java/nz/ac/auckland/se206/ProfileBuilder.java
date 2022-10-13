@@ -10,6 +10,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 
 public class ProfileBuilder {
 
@@ -33,7 +34,18 @@ public class ProfileBuilder {
 
   // Define the scaling in hovering
   private static final String IDLE_STYLE = "-fx-scale-x: 1; -fx-scale-y: 1";
-  private static final String HOVERED_STYLE = "-fx-scale-x: 1.2; -fx-scale-y: 1.2; -fx-effect: dropshadow(gaussian, white, 30, 0.8, 0, 0);";
+  private static final String HOVERED_STYLE =
+      "-fx-scale-x: 1.2; -fx-scale-y: 1.2; -fx-effect: dropshadow(gaussian, #fff8f5, 20, 0.8, 0, 0);";
+  private static final String MOUSE_DOWN_STYLE =
+      "-fx-scale-x: 1.2; -fx-scale-y: 1.2; -fx-effect: dropshadow(gaussian, white, 50, 0.8, 0, 0);";
+  private static final String HIGHLIGHT_STYLE =
+      "-fx-scale-x: 1.1; -fx-scale-y: 1.1; -fx-effect: dropshadow(gaussian, #fff8f5, 10, 1, 0, 0);";
+  // #bbff78
+  // #a6ffcb
+
+  private Font maybeNext =
+      Font.loadFont(App.class.getResourceAsStream("/fonts/Maybe-Next.ttf"), 22);
+  private Boolean isSelected = false;
 
   /**
    * Get's the users current image
@@ -135,6 +147,7 @@ public class ProfileBuilder {
     // Add the vbox to the hbox and centre it
     hbox.getChildren().add(vbox);
     vbox.setAlignment(Pos.CENTER);
+    vbox.setSpacing(10);
   }
 
   /** createImageView will set up the image in our profile */
@@ -151,26 +164,40 @@ public class ProfileBuilder {
 
     // Set up interactable box for image view
     userImageVBox = new VBox();
+    userImageVBox.setAlignment(Pos.CENTER);
     userImageVBox.getChildren().add(imageView);
     // Set the profile image box id as its position in the user list
     userImageVBox.setId(String.format("image%d", counter));
 
     // Add the image view to the scene
     vbox.getChildren().add(userImageVBox);
+    VBox.setMargin(vbox.getChildren().get(0), new Insets(0, 0, 20, 0));
 
     // Event for hovering on
     userImageVBox.setOnMouseEntered(
         e -> {
-          imageView.setStyle(HOVERED_STYLE);
-          imageView.getScene().setCursor(Cursor.HAND);
+          if (!isSelected) {
+            imageView.setStyle(HOVERED_STYLE);
+            if (imageView.getScene() != null) {
+              imageView.getScene().setCursor(Cursor.HAND);
+            }
+          }
         });
-
+    // Event for mouse down
+    userImageVBox.setOnMousePressed(
+        e -> {
+          if (!isSelected) {
+            imageView.setStyle(MOUSE_DOWN_STYLE);
+          }
+        });
     // Event for hovering off
     userImageVBox.setOnMouseExited(
         e -> {
-          imageView.setStyle(IDLE_STYLE);
-          if (imageView.getScene() != null) {
-            imageView.getScene().setCursor(Cursor.DEFAULT);
+          if (!isSelected) {
+            imageView.setStyle(IDLE_STYLE);
+            if (imageView.getScene() != null) {
+              imageView.getScene().setCursor(Cursor.DEFAULT);
+            }
           }
         });
   }
@@ -182,8 +209,9 @@ public class ProfileBuilder {
     // Add the label into the grid
     vbox.getChildren().add(userNameLabel);
     // Set the alignment for the username label
+    userNameLabel.setFont(maybeNext);
     userNameLabel.setAlignment(Pos.BOTTOM_CENTER);
-    userNameLabel.setPadding(new Insets(20, 0, 0, 0));
+    userNameLabel.setPadding(new Insets(10, 0, 0, 0));
     userNameLabel.setVisible(true);
   }
 
@@ -191,9 +219,10 @@ public class ProfileBuilder {
   private void createSelectedLabel() {
     userSelectedLabel = new Label();
     vbox.getChildren().add(userSelectedLabel);
+    userSelectedLabel.setFont(maybeNext);
     userSelectedLabel.setAlignment(Pos.BOTTOM_CENTER);
     // Set the visibility off and the text to selected
-    userSelectedLabel.setText("Selected");
+    userSelectedLabel.setText("(You)");
     userSelectedLabel.setVisible(false);
   }
 
@@ -212,5 +241,23 @@ public class ProfileBuilder {
     // Remove's the vbox from the hbox
     vbox.getChildren().removeAll();
     hbox.getChildren().remove(vbox);
+  }
+
+  /**
+   * Highlights this profile by updating visible UI elements.
+   *
+   * @param highlight if true this profile will be styled as highlighted
+   */
+  public void setSelected(Boolean selected) {
+    if (selected) {
+      isSelected = true;
+      userSelectedLabel.setVisible(true);
+      imageView.setStyle(HIGHLIGHT_STYLE);
+      imageView.setEffect(null);
+    } else {
+      isSelected = false;
+      userSelectedLabel.setVisible(false);
+      imageView.setStyle(IDLE_STYLE);
+    }
   }
 }
