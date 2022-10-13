@@ -6,11 +6,9 @@ import nz.ac.auckland.se206.Graph;
 
 public class testGraphController {
 
-  @FXML
-  private LineChart<String, Number> timeLineChart;
+  @FXML private LineChart<String, Number> timeLineChart;
 
   public void initialize() {
     timeLineChart.getData().add(Graph.getLineChartData());
   }
-
 }

@@ -194,7 +194,6 @@ public class Game {
                                 hasWon = true;
                                 endGame(true);
                               }
-                              return;
                             }
                           }
                         }
@@ -255,11 +254,13 @@ public class Game {
       case BLITZ:
         // Set the blitz canvas
         setBlitzGame(canvas);
+        break;
       default:
         // Default game set
         setNormalGame(canvas);
         break;
     }
+    // Update the tool tip
     App.getCanvasController().updateToolTip();
   }
 
@@ -304,14 +305,12 @@ public class Game {
     // Check if an index was found
     if (newPos == -1) {
       App.getCanvasController().updateIndicator(Indicator.NOT_FOUND);
-      ;
 
     } else if (newPos == currentPos) {
       // Check if the position is the same
       App.getCanvasController().updateIndicator(Indicator.SAME);
-    }
-    // Check if the player is closer to winning
-    else if (newPos < currentPos) {
+    } else if (newPos < currentPos) {
+      // Check if the player is closer to winning
       App.getCanvasController().updateIndicator(Indicator.CLOSER);
     } else if (currentPos < newPos) {
       App.getCanvasController().updateIndicator(Indicator.FURTHER);
@@ -504,10 +503,5 @@ public class Game {
     // Cancel service and end game
     canvas.onEndGame(isWin);
     service.cancel();
-    // Reset blitz objects if we are playing blitz
-    if (currentGame == GameMode.BLITZ) {
-      resetBlitzCounter();
-      resetBlitzTime();
-    }
   }
 }
