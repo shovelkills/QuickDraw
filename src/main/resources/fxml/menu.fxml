@@ -48,6 +48,7 @@
                   <Button fx:id="startButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onStartGame" prefHeight="75.0" prefWidth="323.0" styleClass="newGameButton" stylesheets="@../css/menu.css" />
                   <Button fx:id="statsButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onMoveToStats" prefHeight="75.0" prefWidth="323.0" styleClass="statsMenuButton" stylesheets="@../css/menu.css" />
                   <Button fx:id="exitButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onExitGame" prefHeight="75.0" prefWidth="323.0" styleClass="quitMenuButton" stylesheets="@../css/menu.css" />
+                  <Button fx:id="graphButton" mnemonicParsing="false" onAction="#onGraphButton" prefHeight="26.0" prefWidth="380.0" text="Graph" />
                </children>
             </VBox>
          </children>

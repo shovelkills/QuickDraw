@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.chart.PieChart?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+
+<AnchorPane prefHeight="876.0" prefWidth="1143.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nz.ac.auckland.se206.GraphController">
+   <children>
+      <BorderPane layoutX="-128.0" layoutY="-55.0" prefHeight="200.0" prefWidth="200.0" />
+      <LineChart fx:id="timeLineChart" layoutX="36.0" layoutY="31.0" title="Time Taken VS Word">
+        <xAxis>
+          <CategoryAxis label="Word" side="BOTTOM" fx:id="xAxis" />
+        </xAxis>
+        <yAxis>
+          <NumberAxis fx:id="yAxis" label="Time Taken in Seconds" side="LEFT" />
+        </yAxis>
+      </LineChart>
+      <PieChart fx:id="winsLossPieChart" layoutX="622.0" layoutY="20.0" prefHeight="362.0" prefWidth="469.0" title="Game Outcome" />
+      <PieChart fx:id="individualDifficultyPieChart" layoutX="72.0" layoutY="402.0" />
+      <Button fx:id="winButton" layoutX="681.0" layoutY="455.0" mnemonicParsing="false" onAction="#onShowWins" text="Wins" />
+      <Button fx:id="lossButton" layoutX="781.0" layoutY="455.0" mnemonicParsing="false" onAction="#onShowLoss" text="Loss" />
+      <Button fx:id="accuracyButton" layoutX="596.0" layoutY="563.0" mnemonicParsing="false" onAction="#onAccuracyButton" text="Accuracy" />
+      <Button fx:id="wordButton" layoutX="676.0" layoutY="563.0" mnemonicParsing="false" onAction="#onWordButton" text="Word" />
+      <Button fx:id="timeButton" layoutX="775.0" layoutY="563.0" mnemonicParsing="false" onAction="#onTimeButton" text="Time" />
+      <Button fx:id="confidenceButton" layoutX="857.0" layoutY="563.0" mnemonicParsing="false" onAction="#onConfidenceButton" text="Confidence" />
+      <Button fx:id="menuButton" layoutX="724.0" layoutY="660.0" mnemonicParsing="false" onAction="#onMenuButton" text="Menu" />
+   </children>
+</AnchorPane>

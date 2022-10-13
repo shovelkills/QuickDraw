@@ -712,6 +712,7 @@ public class CanvasController {
             timerBarLabel.getStyleClass().add("timerBarLoss");
             Users.increaseLosses();
             Users.setConsistentWins(0);
+            Users.addTimeHistory(0, game.getCurrentPrompt());
           }
           timerBarLabel.setPrefWidth(20000.0);
           Users.addGameDifficultyHistory(
