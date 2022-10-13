@@ -78,6 +78,15 @@ public class CanvasController {
       new Image(Users.folderDirectory + "/src/main/resources/images/indicatorFurther.png");
   private static ImageView predictionImage = new ImageView();
   ;
+  private static GameMode currentGameMode;
+
+  public static GameMode getCurrentGameMode() {
+    return currentGameMode;
+  }
+
+  public static void setCurrentGameMode(GameMode currentGameMode) {
+    CanvasController.currentGameMode = currentGameMode;
+  }
 
   /** deleteIndicator will delete the indicator image */
   private void deleteIndicator() {
@@ -170,7 +179,6 @@ public class CanvasController {
   private double currentX;
   private double currentY;
   private Color predictionTextColor = Color.WHITE;
-  private GameMode currentGameMode;
   private boolean savedImage = false;
   private Label definitionLabel;
   private ArrayList<Integer> wordCharacters = new ArrayList<Integer>();
@@ -393,7 +401,7 @@ public class CanvasController {
 
   /** This method is called when the "Clear" button is pressed. Resets brush to "Brush" mode. */
   @FXML
-  private void onClear() {
+  protected void onClear() {
     // Clear the canvas
     graphic.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
     clearPredictionGrid();
@@ -701,7 +709,6 @@ public class CanvasController {
           // end of the
           // game.
           if (isWin) {
-            wordLabel.setText(getWinMessage());
             timerBarLabel.getStyleClass().clear();
             timerBarLabel.getStyleClass().add("timerBarWin");
             // Add badges for wins
@@ -713,6 +720,7 @@ public class CanvasController {
                 DifficultyBuilder.getConfDifficulty());
             // Increase the wins
             Users.increaseWins();
+            wordLabel.setText(getWinMessage());
           } else {
             System.out.println("LOST");
             wordLabel.setText(getLossMessage());
@@ -740,6 +748,14 @@ public class CanvasController {
    * @return A string informing the user they have won and how much time they took.
    */
   private String getWinMessage() {
+
+    if (currentGameMode == GameMode.BLITZ) {
+      return "You got "
+          + Game.getBlitzCounter()
+          + " words in "
+          + (CategorySelector.getTime() - game.getTimeRemaining())
+          + " seconds!";
+    }
     return "You won! You drew "
         + game.getCurrentWord()
         + " in "
@@ -756,6 +772,8 @@ public class CanvasController {
     // Create custom loss message
     if (currentGameMode == GameMode.HIDDEN_WORD) {
       return String.format("Out of time! The word was %s", game.getCurrentWord());
+    } else if (currentGameMode == GameMode.BLITZ) {
+      return "Unlucky! You got no words in " + CategorySelector.getTime() + " seconds!";
     }
     return "Out of time! Play again?";
   }
@@ -967,6 +985,8 @@ public class CanvasController {
   public void updateToolTip() {
     // Check which game mode we are in
     switch (currentGameMode) {
+      case BLITZ:
+        gameToolTip.setText("Draw as many words as you can in the given time!");
       case HIDDEN_WORD:
         // Check if the canvas is enabled
         if (!canvas.isDisabled()) {

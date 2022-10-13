@@ -32,7 +32,7 @@ public class DictionaryLookup {
       // Throw error if word was not found in dictionary
       throw new WordNotFoundException(query, title, subMessage);
     } catch (ClassCastException e) {
-      e.printStackTrace();
+      e.getMessage();
     }
 
     // make a Json array and word entry list

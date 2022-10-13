@@ -37,7 +37,6 @@ public class MenuController {
   @FXML private Button exitTipButton;
   @FXML private Button selectedUserButton;
 
-
   private static final String IDLE_STYLE =
       "-fx-effect: dropshadow(gaussian, #fff8f5, 10, 1, 0, 0);";
   private static final String HOVER_STYLE =
@@ -45,7 +44,6 @@ public class MenuController {
   private static final String MOUSE_DOWN_STYLE =
       "-fx-scale-x: 1.2; -fx-scale-y: 1.2; -fx-effect: dropshadow(gaussian, #fff8f5, 30, 0.8, 0, 0);";
   private Font titleFont;
-
 
   /**
    * This method alternates alternates colours for a label

@@ -27,6 +27,7 @@ public class GameSelectController {
     NORMAL,
     ZEN,
     PROFILE,
+    BLITZ
   }
 
   private static GameMode currentGameMode = GameMode.NORMAL;
@@ -47,6 +48,7 @@ public class GameSelectController {
   }
 
   // Define FXML fields
+  @FXML private Button blitzButton;
   @FXML private Button definitionButton;
   @FXML private Button normalButton;
   @FXML private Button zenButton;
@@ -71,7 +73,7 @@ public class GameSelectController {
    */
   public void initialize() {
     Collections.addAll(toolTips, toolTip1, toolTip2, toolTip3, toolTip4);
-    Collections.addAll(gameModes, definitionButton, normalButton, zenButton);
+    Collections.addAll(gameModes, definitionButton, normalButton, zenButton, blitzButton);
     difficultyMap.put(Difficulty.E, "EASY");
     difficultyMap.put(Difficulty.M, "MEDIUM");
     difficultyMap.put(Difficulty.H, "HARD");
@@ -178,6 +180,7 @@ public class GameSelectController {
     if (currentGameMode == GameMode.ZEN) {
       Badges.winBadge("Misc", "Play Zen Mode");
     }
+    // TODO add badge for Blitz game mode
     preGameTask.setOnSucceeded(
         e -> {
           progressBar.progressProperty().unbind();
@@ -260,9 +263,19 @@ public class GameSelectController {
         // Change the local game mode
         localGameMode = GameMode.HIDDEN_WORD;
         break;
+      case "Blitz":
+        // Switch to blitz game mode
+        wordsMenu.setDisable(false);
+        wordsMenu.setValue(Users.getIndividualDifficulty("wordsDifficulty"));
+        accuracyMenu.setDisable(false);
+        accuracyMenu.setValue(Users.getIndividualDifficulty("accuracyDifficulty"));
+        confidenceMenu.setDisable(false);
+        confidenceMenu.setValue(Users.getIndividualDifficulty("confidenceDifficulty"));
+        timeMenu.setDisable(false);
+        timeMenu.setValue(Users.getIndividualDifficulty("timeDifficulty"));
       default:
         // Set the default game mode to normal
-        localGameMode = GameMode.NORMAL;
+        localGameMode = GameMode.BLITZ;
         break;
     }
     setLocalGameMode();
