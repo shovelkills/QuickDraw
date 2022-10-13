@@ -13,29 +13,30 @@ import javafx.scene.input.MouseEvent;
 import nz.ac.auckland.se206.SceneManager.AppUi;
 
 public class GraphController {
+
   @FXML private Button accuracyButton;
-
-  @FXML private Button wordButton;
-
-  @FXML private Button timeButton;
 
   @FXML private Button confidenceButton;
 
   @FXML private Button lossButton;
 
-  @FXML private Button winButton;
-
   @FXML private Button menuButton;
 
-  @FXML private CategoryAxis xAxis = new CategoryAxis();
+  @FXML private Button timeButton;
 
-  @FXML private NumberAxis yAxis = new NumberAxis();
+  @FXML private Button wordButton;
+
+  @FXML private Button winButton;
+
+  @FXML private CategoryAxis xAxis;
 
   @FXML private LineChart<String, Number> timeLineChart;
 
-  @FXML private PieChart winsLossPieChart;
+  @FXML private NumberAxis yAxis;
 
   @FXML private PieChart individualDifficultyPieChart;
+
+  @FXML private PieChart winsLossPieChart;
 
   private static String difficulty = null;
 
@@ -45,8 +46,9 @@ public class GraphController {
     loadGraphData();
   }
 
-  // Load Graph Data
+  /** Loads the data from the user to the graph */
   public void loadGraphData() {
+    // Loads the data onto the list and disables the x axis
     timeLineChart.getData().clear();
     timeLineChart.getData().add(Graph.getLineChartData());
     timeLineChart.getXAxis().setTickLabelsVisible(false);
@@ -77,16 +79,19 @@ public class GraphController {
             });
   }
 
+  @FXML
   public void onShowWins() {
     gameOutcome = "Win";
     loadIndividualDifficulyPieChart();
   }
 
+  @FXML
   public void onShowLoss() {
     gameOutcome = "Loss";
     loadIndividualDifficulyPieChart();
   }
 
+  /** Checks if there is any loaded difficulty. If there isn't just loads accuracy by default */
   public void loadIndividualDifficulyPieChart() {
     if (difficulty == null) {
       difficulty = "accuracy";
@@ -95,27 +100,37 @@ public class GraphController {
         Graph.getIndividualDifficultyPieChart(gameOutcome, difficulty));
   }
 
-  public void onAccuracyButton() {
+  @FXML
+  public void onShowAccuracyDifficulty() {
     difficulty = "accuracy";
     loadIndividualDifficulyPieChart();
   }
 
-  public void onWordButton() {
+  @FXML
+  public void onShowWordDifficulty() {
     difficulty = "word";
     loadIndividualDifficulyPieChart();
   }
 
-  public void onTimeButton() {
+  @FXML
+  public void onShowTimeDifficulty() {
     difficulty = "time";
     loadIndividualDifficulyPieChart();
   }
 
-  public void onConfidenceButton() {
+  @FXML
+  public void onShowConfidenceDifficulty() {
     difficulty = "confidence";
     loadIndividualDifficulyPieChart();
   }
 
-  public void onMenuButton(ActionEvent event) {
+  /**
+   * Takes the user back to the menu button
+   *
+   * @param event the event when the button is pressed
+   */
+  @FXML
+  public void onMenu(ActionEvent event) {
     // Get the current scene
     Button backButton = (Button) event.getSource();
     Scene currentScene = backButton.getScene();
