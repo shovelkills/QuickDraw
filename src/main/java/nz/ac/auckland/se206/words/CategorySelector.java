@@ -51,10 +51,10 @@ public class CategorySelector {
   /**
    * getLines will read the lines from the CSV file
    *
-   * @return
-   * @throws IOException
-   * @throws CsvException
-   * @throws URISyntaxException
+   * @throws IOException reading/writing exception
+   * @throws URISyntaxException converting to link exception
+   * @throws CsvException reading spreadsheet exceptions
+   * @return a list full of strings that is from the CSV file
    */
   protected static List<String[]> getLines() throws IOException, CsvException, URISyntaxException {
     // Get the CSV File

@@ -58,12 +58,12 @@ public class Badges {
     Users.getBadges().get("Confidence").put(confidence.toString(), true);
     // Check all the badges
     for (String difficulty : difficulties) {
-      checkAllDifficultiesBadge(difficulty);
+      checkAllDiffBadges(difficulty);
     }
   }
 
   /** Checks if the difficulties accross all aspects of the game are meet */
-  public static void checkAllDifficultiesBadge(String Difficulty) {
+  public static void checkAllDiffBadges(String Difficulty) {
     // This function comments probably need a rewrite
     // Checks if the Accuracy, words, time and confidence levels are the are all won
     if (!Difficulty.equals("MS")
@@ -81,16 +81,25 @@ public class Badges {
     }
   }
 
+  /**
+   * checkConsistentWins will check for player's consecutive wins
+   *
+   * @param consistentwins amount of wins they have consecutively
+   */
   public static void checkConsistentWins(int consistentwins) {
+    // Check if they have 2 consecutive wins
     if (consistentwins == 2) {
       winBadge("Wins", "2 consecutive wins");
     } else if (consistentwins == 5) {
+      // Check if they have 5 consecutive wins
       winBadge("Wins", "5 consecutive wins");
     }
   }
 
+  /** checkDrawnUserPicture will check if the user has drawn a profile picture for their badge */
   public static void checkDrawnUserPicture() {
     if (drawUserPicture) {
+      // Give the draw profile picture badge
       winBadge("Misc", "Draw User Profile");
     }
   }

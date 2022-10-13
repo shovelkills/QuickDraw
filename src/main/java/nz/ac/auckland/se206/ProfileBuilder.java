@@ -33,7 +33,8 @@ public class ProfileBuilder {
 
   // Define the scaling in hovering
   private static final String IDLE_STYLE = "-fx-scale-x: 1; -fx-scale-y: 1";
-  private static final String HOVERED_STYLE = "-fx-scale-x: 1.2; -fx-scale-y: 1.2; -fx-effect: dropshadow(gaussian, white, 30, 0.8, 0, 0);";
+  private static final String HOVERED_STYLE =
+      "-fx-scale-x: 1.2; -fx-scale-y: 1.2; -fx-effect: dropshadow(gaussian, white, 30, 0.8, 0, 0);";
 
   /**
    * Get's the users current image
@@ -65,7 +66,7 @@ public class ProfileBuilder {
     ProfileBuilder.hbox = hbox;
   }
 
-  // Update all the IDs
+  /** This method will update the Id of a user */
   public static void updateId() {
     int id = 0;
     // Reset all the ids
@@ -86,10 +87,9 @@ public class ProfileBuilder {
   protected UserType type;
 
   /**
-   * ProfileBuilder constructor will set up a profile inside the grid
+   * ProfileBuilder constructor will set up a profile inside the selection optinos
    *
-   * @param row the row number in the grid
-   * @param col the column number in the grid
+   * @param type takes in the type of user being built
    */
   public ProfileBuilder(UserType type) {
     // Get the type of profile

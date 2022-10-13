@@ -32,15 +32,16 @@ public class DictionaryLookup {
       // Throw error if word was not found in dictionary
       throw new WordNotFoundException(query, title, subMessage);
     } catch (ClassCastException e) {
+      e.printStackTrace();
     }
 
     // make a Json array and word entry list
-    JSONArray jArray = (JSONArray) new JSONTokener(jsonString).nextValue();
+    JSONArray jsonArray = (JSONArray) new JSONTokener(jsonString).nextValue();
     List<WordEntry> entries = new ArrayList<WordEntry>();
 
     // Loop through the json array inserting meanings into array
-    for (int e = 0; e < jArray.length(); e++) {
-      JSONObject jsonEntryObj = jArray.getJSONObject(e);
+    for (int e = 0; e < jsonArray.length(); e++) {
+      JSONObject jsonEntryObj = jsonArray.getJSONObject(e);
       JSONArray jsonMeanings = jsonEntryObj.getJSONArray("meanings");
 
       String partOfSpeech = "[not specified]";

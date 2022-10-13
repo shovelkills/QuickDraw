@@ -169,14 +169,11 @@ public class CanvasController {
   private boolean isDrawing;
   private double currentX;
   private double currentY;
-  private Color predictionListColor = Color.DARKSLATEBLUE;
-  private Color predictionHighlightColor = Color.web("#008079");
   private Color predictionTextColor = Color.WHITE;
   private GameMode currentGameMode;
-  private Font maybeNext;
   private boolean savedImage = false;
   private Label definitionLabel;
-  private ArrayList<Integer> wordCharacters = new ArrayList();
+  private ArrayList<Integer> wordCharacters = new ArrayList<Integer>();
 
   // Task for alternating colour of the title and word label concurrently
   private Task<Void> alternateColoursTask =
@@ -204,7 +201,7 @@ public class CanvasController {
     // Get the graphic from the canvas
     graphic = canvas.getGraphicsContext2D();
     // Load font
-    maybeNext = Font.loadFont(App.class.getResourceAsStream("/fonts/Maybe-Next.ttf"), 0);
+    Font.loadFont(App.class.getResourceAsStream("/fonts/Maybe-Next.ttf"), 0);
     // Create a new thread for the alternating colours task
     Thread colourThread = new Thread(alternateColoursTask);
     // Allow the task to be cancelled on closing of application
@@ -238,11 +235,11 @@ public class CanvasController {
   /**
    * Sets UI elements which are common to the initialisation of the scene and restarting the game.
    *
-   * @throws URISyntaxException
-   * @throws CsvException
-   * @throws IOException
-   * @throws ModelException
-   * @throws WordNotFoundException
+   * @throws IOException reading/writing exception
+   * @throws CsvException reading spreadsheet exceptions
+   * @throws URISyntaxException converting to link exception
+   * @throws ModelException doodle prediction exception
+   * @throws WordNotFoundException word was not found exception
    */
   public void setPreGameInterface()
       throws IOException, CsvException, URISyntaxException, ModelException, WordNotFoundException {
@@ -254,7 +251,9 @@ public class CanvasController {
     timerBarLabel.getStyleClass().add("timerBarDefault");
     colourPicker.setValue(Color.BLACK);
     colourPicker.setVisible(true);
+    // Create the game instance
     game = new Game(this, currentGameMode);
+    // Update the tool tip
     updateToolTip();
 
     // Disable/Enable the definition label
@@ -321,6 +320,7 @@ public class CanvasController {
     definitionLabel.setAlignment(Pos.CENTER);
     definitionLabel.setTextAlignment(TextAlignment.CENTER);
     definitionLabel.setFont(Font.font(wordLabel.getFont().getFamily(), FontWeight.NORMAL, 20));
+    // Set up the size for the label
     definitionLabel.setPrefSize(1025, 100);
     definitionLabel.setMinSize(1025, 100);
     definitionLabel.setWrapText(true);
@@ -357,7 +357,7 @@ public class CanvasController {
     cornerLabel.setVisible(false);
     // Enable them to draw
 
-    onStartGame();
+    onStartGame(null);
   }
 
   /**
@@ -494,7 +494,7 @@ public class CanvasController {
                       | URISyntaxException
                       | ModelException
                       | WordNotFoundException e) {
-                    // TODO Auto-generated catch block
+                    // Print the error's message
                     e.printStackTrace();
                   }
                 });
@@ -531,15 +531,15 @@ public class CanvasController {
   /**
    * This method will restart the game once the player presses the button
    *
-   * @throws ModelException
-   * @throws CsvException
-   * @throws URISyntaxException
-   * @throws IOException
-   * @throws WordNotFoundException
+   * @throws IOException reading/writing exception
+   * @throws CsvException reading spreadsheet exceptions
+   * @throws URISyntaxException converting to link exception
+   * @throws ModelException doodle prediction exception
+   * @throws WordNotFoundException word was not found exception
    */
   @FXML
-  public void onRestartGame()
-      throws IOException, URISyntaxException, CsvException, ModelException, WordNotFoundException {
+  protected void onRestartGame(ActionEvent event)
+      throws IOException, CsvException, URISyntaxException, ModelException, WordNotFoundException {
     // Clear the canvas
     onClear();
     if (currentGameMode == GameMode.HIDDEN_WORD) {
@@ -585,7 +585,8 @@ public class CanvasController {
    * @throws IOException If the image cannot be saved.
    */
   private File saveCurrentSnapshotOnFile() throws IOException {
-    File file = null;
+    // Initialise a file
+    File file;
     if (currentGameMode != GameMode.PROFILE) {
       // Create a file chooser
       FileChooser fileChooser = new FileChooser();
@@ -652,13 +653,18 @@ public class CanvasController {
     timeline.play();
   }
 
+  /** decrementTimerBar will decrease the timer bar width */
   public void decrementTimerBar() {
+    // Reduce the width of the timer bar
     timerBarLabel.setPrefWidth(timerBarLabel.getWidth() - (600 - wordLabel.getWidth()) / 60);
   }
 
+  /** resetTimerBar will reset the width and reset the css */
   public void resetTimerBar() {
+    // Remove all the styling and set the default one back
     timerBarLabel.getStyleClass().clear();
     timerBarLabel.getStyleClass().add("timerBarDefault");
+    // Reset the width to 600 (back to default)
     timerBarLabel.setPrefWidth(600.0);
   }
 
@@ -668,7 +674,7 @@ public class CanvasController {
    * won <br>
    * - Prompts user with a pop-up giving them the option to save their drawing
    *
-   * @return isWin The win flag from the game controller, is true if the game was won and false if
+   * @param isWin The win flag from the game controller, is true if the game was won and false if
    *     lost
    * @throws InterruptedException
    */
@@ -698,18 +704,22 @@ public class CanvasController {
             wordLabel.setText(getWinMessage());
             timerBarLabel.getStyleClass().clear();
             timerBarLabel.getStyleClass().add("timerBarWin");
+            // Add badges for wins
             Badges.winBadge("Wins", "First Win");
             Badges.winDifficultyBadges(
                 DifficultyBuilder.getAccDifficulty(),
                 DifficultyBuilder.getWordsDifficulty(),
                 DifficultyBuilder.getTimeDifficulty(),
                 DifficultyBuilder.getConfDifficulty());
+            // Increase the wins
             Users.increaseWins();
           } else {
             System.out.println("LOST");
             wordLabel.setText(getLossMessage());
+            // Set the loss css to the timer bar
             timerBarLabel.getStyleClass().clear();
             timerBarLabel.getStyleClass().add("timerBarLoss");
+            // Increment losses and reset consecutive wins to 0
             Users.increaseLosses();
             Users.setConsistentWins(0);
           }
@@ -751,7 +761,7 @@ public class CanvasController {
 
   /** This method sets up a new game to be started */
   @FXML
-  public void onStartGame() {
+  protected void onStartGame(ActionEvent event) {
     // Ghost game pretends it is drawing to load and call first update of game services to pre-load
     // them
     if (game.getIsGhostGame()) {
@@ -813,18 +823,16 @@ public class CanvasController {
    * Takes the user back to the main menu. Also resets the game in the canvas scene so loading a new
    * game from the menu will present the user with a fresh game.
    *
-   * @param event
-   * @throws IOException
-   * @throws URISyntaxException
-   * @throws CsvException
-   * @throws ModelException
-   * @throws InterruptedException
-   * @throws WordNotFoundException
+   * @param event takes in an event to return back to the menu
+   * @throws IOException reading/writing exception
+   * @throws URISyntaxException converting to link exception
+   * @throws CsvException reading spreadsheet exceptions
+   * @throws ModelException doodle prediction exception
+   * @throws WordNotFoundException word was not found exception
    */
   @FXML
   private void onBackToMenuStart(ActionEvent event)
-      throws IOException, URISyntaxException, CsvException, ModelException, InterruptedException,
-          WordNotFoundException {
+      throws IOException, URISyntaxException, CsvException, ModelException {
 
     // If not in zen mode, cancelling the game counts as a loss
     if (currentGameMode != GameMode.ZEN) {
@@ -852,6 +860,15 @@ public class CanvasController {
     }
   }
 
+  /**
+   * onBack will return back to main menu or creation page
+   *
+   * @param event
+   * @throws IOException reading/writing exception
+   * @throws URISyntaxException converting to link exception
+   * @throws CsvException reading spreadsheet exceptions
+   * @throws ModelException doodle prediction exception
+   */
   @FXML
   private void onBack(ActionEvent event)
       throws IOException, URISyntaxException, CsvException, ModelException {
@@ -883,6 +900,11 @@ public class CanvasController {
     resetTimerBar();
   }
 
+  /**
+   * onBackToMenu will go back to main menu
+   *
+   * @param event takes in the action event click
+   */
   @FXML
   private void onBackToMenu(ActionEvent event) {
     // Get the current scene
@@ -892,9 +914,13 @@ public class CanvasController {
     currentScene.setRoot(SceneManager.getUiRoot(AppUi.MAIN_MENU));
   }
 
+  /**
+   * onBackToCreation will take us back to profile creation scene
+   *
+   * @param event takes in action event click
+   */
   @FXML
-  private void onBackToCreation(ActionEvent event)
-      throws IOException, URISyntaxException, CsvException, ModelException {
+  private void onBackToCreation(ActionEvent event) {
     // Get the current scene
     Button backButton = (Button) event.getSource();
     Scene currentScene = backButton.getScene();
@@ -973,7 +999,7 @@ public class CanvasController {
   /**
    * onWordHint will give a hint to the player upon request
    *
-   * @param event
+   * @param event takes in a mouse click to ask for hint
    */
   @FXML
   private void onWordHint(MouseEvent event) {

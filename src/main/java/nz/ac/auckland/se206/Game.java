@@ -16,7 +16,6 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
-import javafx.scene.image.Image;
 import nz.ac.auckland.se206.GameSelectController.GameMode;
 import nz.ac.auckland.se206.dict.DictionaryLookup;
 import nz.ac.auckland.se206.dict.WordEntry;
@@ -44,11 +43,6 @@ public class Game {
   // Declare difficulty field
   private static DoodlePrediction model;
   private static Difficulty difficulty;
-  // Define higher or lower images
-  private static final Image indicatorCloser =
-      new Image(Users.folderDirectory + "/src/main/resources/images/indicatorCloser.png");
-  private static final Image indicatorFurther =
-      new Image(Users.folderDirectory + "/src/main/resources/images/indicatorFurther.png");
 
   public static void createModel() throws ModelException, IOException {
     model = new DoodlePrediction();
@@ -189,7 +183,7 @@ public class Game {
    * @throws URISyntaxException converting to link exception
    * @throws CsvException reading spreadsheet exceptions
    * @throws ModelException doodle prediction exception
-   * @throws WordNotFoundException
+   * @throws WordNotFoundException word was not found exception
    */
   public Game(CanvasController canvas, GameMode gameMode)
       throws ModelException, IOException, WordNotFoundException {
@@ -238,8 +232,13 @@ public class Game {
     isGhostGame = isGhost;
   }
 
-  private void updateIndicator(List<Classifications.Classification> predictions)
-      throws TranslateException {
+  /**
+   * updateIndicator will update the the image and text to see how close or far the player is
+   * getting
+   *
+   * @param predictions takes in the current predictions
+   */
+  private void updateIndicator(List<Classifications.Classification> predictions) {
 
     // Reset the new position
     newPos = -1;
@@ -271,6 +270,13 @@ public class Game {
     currentPos = newPos;
   }
 
+  /**
+   * setNormalGame will set up the backend of the normal game
+   *
+   * @param canvas takes in the normal canvas
+   * @throws ModelException doodle prediction exception
+   * @throws IOException reading/writing exception
+   */
   private void setNormalGame(CanvasController canvas) throws ModelException, IOException {
     // Set the canvas
     this.canvas = canvas;
@@ -285,6 +291,13 @@ public class Game {
     currentPrompt.setValue(word);
   }
 
+  /**
+   * setZenGame will set up the backend of the zen game
+   *
+   * @param canvas takes in the normal canvas
+   * @throws ModelException doodle prediction exception
+   * @throws IOException reading/writing exception
+   */
   private void setZenGame(CanvasController canvas) throws ModelException, IOException {
     // Set the canvas
     this.canvas = canvas;
@@ -299,6 +312,13 @@ public class Game {
     currentPrompt.setValue(word);
   }
 
+  /**
+   * setHiddenWordGame will set up the backend of the hidden word game
+   *
+   * @param canvas takes in the normal canvas
+   * @throws ModelException doodle prediction exception
+   * @throws IOException reading/writing exception
+   */
   private void setHiddenWordGame(CanvasController canvas) throws ModelException, IOException {
     // Initialize variables
     WordInfo wordResult = null;
@@ -393,7 +413,7 @@ public class Game {
   /**
    * Resets the game's timer
    *
-   * @param difficulty
+   * @param difficulty takes in a difficulty enum
    */
   public void resetTimer(Difficulty difficulty) {
     // Check the current game mode

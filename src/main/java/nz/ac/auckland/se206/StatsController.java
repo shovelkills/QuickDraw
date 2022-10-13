@@ -25,6 +25,7 @@ public class StatsController {
   @FXML private VBox wordsListPaneBox;
   @FXML private VBox wordsListBox;
 
+  /** JavaFX calls this method once the GUI elements are loaded. */
   public void initialize() {
     // Updates all the stats
     updateAllStats();

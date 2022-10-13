@@ -35,8 +35,6 @@ public class MenuController {
   @FXML private Button exitTipButton;
   @FXML private Button selectedUserButton;
 
-  private Font titleFont;
-
   /**
    * This method alternates alternates colours for a label
    *
@@ -55,9 +53,13 @@ public class MenuController {
         }
       };
 
+  /**
+   * JavaFX calls this method once the GUI elements are loaded. Here we load in the fonts and user's
+   * images and start up the threads
+   */
   public void initialize() {
     // Load in a new font and set it to the tile
-    titleFont = Font.loadFont("file:src/main/resources/fonts/Maybe-Next.ttf", 60);
+    Font.loadFont("file:src/main/resources/fonts/Maybe-Next.ttf", 60);
     // Set default guest login label
     usernameLabel.setText("Guest");
     // Load in the guest image
@@ -75,6 +77,13 @@ public class MenuController {
     Users.loadUser("Guest");
   }
 
+  /**
+   * alternateColours will create an alternating colour timeline on our title
+   *
+   * @param label takes in a label, usually the title
+   * @param colour1 a colour to oscillate between
+   * @param colour2 another colour to oscillate between
+   */
   private void alternateColours(Label label, Color colour1, Color colour2) {
     // Create a new timeline object
     Timeline timeline = new Timeline();
@@ -93,14 +102,29 @@ public class MenuController {
     timeline.play();
   }
 
+  /**
+   * updateUserImage will change the user image based on switching
+   *
+   * @param image the player's image that is saved
+   */
   public void updateUserImage(Image image) {
     profileImageView.setImage(image);
   }
 
+  /**
+   * updateUsernameLabel will change the user name label based on switching
+   *
+   * @param username the player's name
+   */
   public void updateUsernameLabel(String username) {
     usernameLabel.setText(username);
   }
 
+  /**
+   * onStartGame will start up the game select screen
+   *
+   * @param event takes in an event to return back to the menu
+   */
   @FXML
   private void onStartGame(ActionEvent event) {
 
@@ -115,6 +139,12 @@ public class MenuController {
     sceneButtonIsIn.setRoot(SceneManager.getUiRoot(AppUi.GAMESELECT));
   }
 
+  /**
+   * onMoveToStats will move us to the stats scene
+   *
+   * @param event takes in an event to return back to the menu
+   * @throws IOException reading/writing exception
+   */
   @FXML
   private void onMoveToStats(ActionEvent event) throws IOException {
     // Tell the stats controller to update values for the current user
@@ -130,6 +160,11 @@ public class MenuController {
     sceneButtonIsIn.setRoot(SceneManager.getUiRoot(AppUi.STATS));
   }
 
+  /**
+   * onUserSelect will take us to the user selection screen
+   *
+   * @param event takes in an event to return back to the menu
+   */
   @FXML
   private void onUserSelect(ActionEvent event) {
     // Get the scene currently in
@@ -139,6 +174,7 @@ public class MenuController {
     sceneButtonIsIn.setRoot(SceneManager.getUiRoot(AppUi.USERSELECT));
   }
 
+  /** onExitGame will let us leave the game after asking for confirmation */
   @FXML
   private void onExitGame() {
     // Create a pop up for confirming exit
