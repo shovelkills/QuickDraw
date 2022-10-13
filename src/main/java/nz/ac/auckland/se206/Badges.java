@@ -60,7 +60,7 @@ public class Badges {
     Users.getBadges().get("Confidence").put(confidence.toString(), true);
     // Check all the badges
     for (String difficulty : difficulties) {
-      checkAllDiffBadges(difficulty);
+      checkDifficulty(difficulty);
     }
   }
 
@@ -69,7 +69,7 @@ public class Badges {
    *
    * @param Difficulty the difficulty that is being checked
    */
-  public static void checkAllDiffBadges(String Difficulty) {
+  public static void checkDifficulty(String Difficulty) {
     // This function comments probably need a rewrite
     // Checks if the Accuracy, words, time and confidence levels are the are all won
     if (!Difficulty.equals("MS")

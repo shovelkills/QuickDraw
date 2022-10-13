@@ -445,6 +445,14 @@ public class Users {
     }
   }
 
+  /**
+   * Adds the difficulty to the history
+   *
+   * @param accuracy the accuracy difficulty
+   * @param word the word difficulty
+   * @param time the time difficulty
+   * @param confidence the confidence difficulty
+   */
   public static void addGameDifficultyHistory(
       String accuracy, String word, String time, String confidence) {
 
@@ -584,7 +592,7 @@ public class Users {
   }
 
   /**
-   * Adds to win history
+   * Adds the win to the winhistory array
    *
    * @param win takes in if user won or not
    */

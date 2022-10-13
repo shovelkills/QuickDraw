@@ -23,10 +23,10 @@
       <PieChart fx:id="individualDifficultyPieChart" layoutX="72.0" layoutY="402.0" />
       <Button fx:id="winButton" layoutX="681.0" layoutY="455.0" mnemonicParsing="false" onAction="#onShowWins" text="Wins" />
       <Button fx:id="lossButton" layoutX="781.0" layoutY="455.0" mnemonicParsing="false" onAction="#onShowLoss" text="Loss" />
-      <Button fx:id="accuracyButton" layoutX="596.0" layoutY="563.0" mnemonicParsing="false" onAction="#onAccuracyButton" text="Accuracy" />
-      <Button fx:id="wordButton" layoutX="676.0" layoutY="563.0" mnemonicParsing="false" onAction="#onWordButton" text="Word" />
-      <Button fx:id="timeButton" layoutX="775.0" layoutY="563.0" mnemonicParsing="false" onAction="#onTimeButton" text="Time" />
-      <Button fx:id="confidenceButton" layoutX="857.0" layoutY="563.0" mnemonicParsing="false" onAction="#onConfidenceButton" text="Confidence" />
-      <Button fx:id="menuButton" layoutX="724.0" layoutY="660.0" mnemonicParsing="false" onAction="#onMenuButton" text="Menu" />
+      <Button fx:id="accuracyButton" layoutX="596.0" layoutY="563.0" mnemonicParsing="false" onAction="#onShowAccuracyDifficulty" text="Accuracy" />
+      <Button fx:id="wordButton" layoutX="676.0" layoutY="563.0" mnemonicParsing="false" onAction="#onShowWordDifficulty" text="Word" />
+      <Button fx:id="timeButton" layoutX="775.0" layoutY="563.0" mnemonicParsing="false" onAction="#onShowTimeDifficulty" text="Time" />
+      <Button fx:id="confidenceButton" layoutX="857.0" layoutY="563.0" mnemonicParsing="false" onAction="#onShowConfidenceDifficulty" text="Confidence" />
+      <Button fx:id="menuButton" layoutX="724.0" layoutY="660.0" mnemonicParsing="false" onAction="#onMenu" text="Menu" />
    </children>
 </AnchorPane>

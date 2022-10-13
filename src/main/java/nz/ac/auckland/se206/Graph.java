@@ -51,6 +51,11 @@ public class Graph {
     return series;
   }
 
+  /**
+   * Loads the data to the piechart of the wins and losses
+   *
+   * @return the data of the wins and losses
+   */
   public static ObservableList<PieChart.Data> getWinsLossPieChart() {
     // Gets the number of wins and losses and coverts it into a percentage
     int totalGames = Users.getWins() + Users.getLosses();
@@ -63,18 +68,25 @@ public class Graph {
     return winLossPieChart;
   }
 
+  /**
+   * Gets the data of the respective difficulty and game outcome (wins or losses)
+   *
+   * @param gameOutcome if the user wants to see the wins or losses
+   * @param difficulty the individual difficulty that the user wants to see
+   * @return the data of the difficulty that the user wants
+   */
   public static ObservableList<PieChart.Data> getIndividualDifficultyPieChart(
-      String gameOutcome, String Difficulty) {
+      String gameOutcome, String difficulty) {
 
     boolean wantedGameOutcome = true;
     int totalGames = Users.getWins();
     List<String> checkOutcomeDifficulty;
     // Finds which difficulty they want to look at
-    if (Difficulty.equals("accuracy")) {
+    if (difficulty.equals("accuracy")) {
       checkOutcomeDifficulty = Users.getAccuracyDifficultyHistory();
-    } else if (Difficulty.equals("word")) {
+    } else if (difficulty.equals("word")) {
       checkOutcomeDifficulty = Users.getWordDifficultyHistory();
-    } else if (Difficulty.equals("time")) {
+    } else if (difficulty.equals("time")) {
       checkOutcomeDifficulty = Users.getTimeDifficultyHistory();
     } else {
       checkOutcomeDifficulty = Users.getConfidenceDifficultyHistory();
@@ -101,7 +113,7 @@ public class Graph {
         "Medium", (double) (Collections.frequency(gameOutcomeDifficulty, "M") * 100 / totalGames));
     countDifficulty.put(
         "Hard", (double) (Collections.frequency(gameOutcomeDifficulty, "H") * 100 / totalGames));
-    if (!Difficulty.equals("accuracy")) {
+    if (!difficulty.equals("accuracy")) {
       countDifficulty.put(
           "Master",
           (double) (Collections.frequency(gameOutcomeDifficulty, "MS") * 100 / totalGames));
