@@ -25,7 +25,7 @@ import nz.ac.auckland.se206.GameSelectController.GameMode;
 import nz.ac.auckland.se206.ProfileBuilder.UserType;
 import nz.ac.auckland.se206.SceneManager.AppUi;
 
-public class UserCreationController {
+public class UserCreationController extends SoundsController {
 
   // Initialise FXML items
   @FXML private Button createButton;
