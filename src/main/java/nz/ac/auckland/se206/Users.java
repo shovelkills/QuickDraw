@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -140,7 +141,7 @@ public class Users {
 
     } catch (FileNotFoundException e) {
       // Creates a hashMap to add information to the JSON file
-      Map<String, Object> userMap = new HashMap<>();
+      Map<String, Object> userMap = new LinkedHashMap<>();
       userMap.put("username", username);
       userMap.put("gamesWon", 0);
       userMap.put("gamesLost", 0);
@@ -156,7 +157,7 @@ public class Users {
       userMap.put("winHistory", new ArrayList<Boolean>());
 
       // Creates the default difficulty
-      Map<String, String> difficulty = new HashMap<>();
+      Map<String, String> difficulty = new LinkedHashMap<>();
       difficulty.put("accuracyDifficulty", "EASY");
       difficulty.put("wordsDifficulty", "EASY");
       difficulty.put("timeDifficulty", "EASY");
@@ -200,33 +201,38 @@ public class Users {
    */
   public static Map<String, Map<String, Boolean>> createBadges() {
     // Creates a new HashMap the contains all the badges
-    Map<String, Map<String, Boolean>> badgeList = new HashMap<>();
-    Map<String, Boolean> difficulty = new HashMap<>();
+    Map<String, Map<String, Boolean>> badgeList = new LinkedHashMap<>();
+    Map<String, Boolean> difficulty = new LinkedHashMap<>();
     // Generates the badges
     difficulty.put("E", false);
     difficulty.put("M", false);
     difficulty.put("H", false);
     badgeList.put("Accuracy", difficulty);
+    difficulty = new LinkedHashMap<>();
+    difficulty.put("E", false);
+    difficulty.put("M", false);
+    difficulty.put("H", false);
     difficulty.put("MS", false);
+
     // Adds to badge list based of difficulty
     badgeList.put("Words", difficulty);
     badgeList.put("Time", difficulty);
     badgeList.put("Confidence", difficulty);
     badgeList.put("All difficulties", difficulty);
     // Generate hashMap for badges based on time wins
-    Map<String, Boolean> timedWins = new HashMap<>();
+    Map<String, Boolean> timedWins = new LinkedHashMap<>();
     timedWins.put("10 Seconds", false);
     timedWins.put("30 Seconds", false);
     timedWins.put("Last Second", false);
     badgeList.put("Timed Wins", timedWins);
     // Generate hashMap for badges based on Wins
-    Map<String, Boolean> wins = new HashMap<>();
+    Map<String, Boolean> wins = new LinkedHashMap<>();
     wins.put("First Win", false);
     wins.put("2 consecutive wins", false);
     wins.put("5 consecutive wins", false);
     badgeList.put("Wins", wins);
     // Generates hashMap for badges on Misc actions
-    Map<String, Boolean> misc = new HashMap<>();
+    Map<String, Boolean> misc = new LinkedHashMap<>();
     misc.put("Draw User Profile", false);
     misc.put("Play Zen Mode", false);
     misc.put("View Stats Page", false);
@@ -259,7 +265,7 @@ public class Users {
     try (Writer writer = new FileWriter(new File(dir, userName + ".json"))) {
 
       // Creates map to store user info
-      Map<String, Object> userMap = new HashMap<>();
+      Map<String, Object> userMap = new LinkedHashMap<>();
       userMap.put("username", userName);
       userMap.put("gamesWon", wins);
       userMap.put("gamesLost", losses);
