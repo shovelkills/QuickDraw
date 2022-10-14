@@ -10,6 +10,7 @@ public class SceneManager {
     GAME,
     GAMESELECT,
     GRAPH,
+    BADGES,
     LOADING,
     STATS,
     USERSELECT,

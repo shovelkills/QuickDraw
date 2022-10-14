@@ -13,6 +13,7 @@ import nz.ac.auckland.se206.SceneManager.AppUi;
  * remain as the class that runs the JavaFX application.
  */
 public class App extends Application {
+  private static BadgeController badgeController;
   private static StatsController statsController;
   private static MenuController menuController;
   private static UsersController usersController;
@@ -94,6 +95,14 @@ public class App extends Application {
       return root;
     }
 
+    if (fxml == "badges") {
+      FXMLLoader loader = new FXMLLoader(App.class.getResource("/fxml/" + fxml + ".fxml"));
+      Parent root = (Parent) loader.load();
+      badgeController = loader.getController();
+      // return the root for switching scenes
+      return root;
+    }
+
     // For other FXMLs just return the root
     return new FXMLLoader(App.class.getResource("/fxml/" + fxml + ".fxml")).load();
   }
@@ -130,6 +139,10 @@ public class App extends Application {
     return graphController;
   }
 
+  public static BadgeController getBadgeController() {
+    return badgeController;
+  }
+
   /**
    * This method is invoked when the application starts. It loads and shows the "Canvas" scene.
    *
@@ -143,6 +156,7 @@ public class App extends Application {
     SceneManager.addUi(AppUi.GAME, loadFxml("canvas"));
     SceneManager.addUi(AppUi.GAMESELECT, loadFxml("gameselect"));
     SceneManager.addUi(AppUi.GRAPH, loadFxml("graph"));
+    SceneManager.addUi(AppUi.BADGES, loadFxml("badges"));
     SceneManager.addUi(AppUi.LOADING, loadFxml("loading"));
     SceneManager.addUi(AppUi.USERSELECT, loadFxml("users"));
     SceneManager.addUi(AppUi.USERCREATE, loadFxml("usercreation"));

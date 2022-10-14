@@ -1,6 +1,7 @@
 package nz.ac.auckland.se206;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Optional;
 import javafx.animation.Animation;
@@ -37,6 +38,7 @@ public class MenuController {
   @FXML private Label titleLabel;
   @FXML private Label usernameLabel;
 
+  @FXML private Button badgesButton;
   @FXML private Button graphButton;
   @FXML private Button startButton;
   @FXML private Button statsButton;
@@ -235,5 +237,18 @@ public class MenuController {
     Scene sceneButtonIsIn = button.getScene();
     // Move to the next scene
     sceneButtonIsIn.setRoot(SceneManager.getUiRoot(AppUi.GRAPH));
+  }
+
+  @FXML
+  private void onShowBadges(ActionEvent event) throws FileNotFoundException {
+    // Wins the badge at looking at badges
+    Badges.winBadge("Misc", "View Badges Page");
+    BadgeController badgeController = App.getBadgeController();
+    badgeController.loadBadges();
+    // Moves to the badges scene
+    Button button = (Button) event.getSource();
+    Scene sceneButtonIsIn = button.getScene();
+    // Move to the next scene
+    sceneButtonIsIn.setRoot(SceneManager.getUiRoot(AppUi.BADGES));
   }
 }
