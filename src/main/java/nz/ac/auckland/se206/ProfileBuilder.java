@@ -12,7 +12,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 
-public class ProfileBuilder {
+public class ProfileBuilder extends SoundsController {
 
   // Define the types of users a profile can be
   public enum UserType {
@@ -175,6 +175,7 @@ public class ProfileBuilder {
     userImageBox.setOnMouseEntered(
         e -> {
           if (!isSelected) {
+            onButtonHover(null);
             imageView.setStyle(HOVERED_STYLE);
             if (imageView.getScene() != null) {
               imageView.getScene().setCursor(Cursor.HAND);
@@ -185,6 +186,7 @@ public class ProfileBuilder {
     userImageBox.setOnMousePressed(
         e -> {
           if (!isSelected) {
+            onButtonClick(null);
             imageView.setStyle(MOUSE_DOWN_STYLE);
           }
         });

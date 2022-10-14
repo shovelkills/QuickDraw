@@ -20,22 +20,22 @@
                <children>
                   <VBox alignment="CENTER" prefHeight="578.0" prefWidth="165.0" spacing="20.0">
                      <children>
-                        <Button fx:id="zenButton" mnemonicParsing="false" onAction="#onSelectGameMode" prefHeight="25.0" prefWidth="110.0" text="Zen" />
+                        <Button fx:id="zenButton" mnemonicParsing="false" onAction="#onSelectGameMode" onMouseClicked="#onButtonClick" onMouseEntered="#onButtonHover" prefHeight="25.0" prefWidth="110.0" text="Zen" />
                      </children>
                   </VBox>
                   <VBox alignment="CENTER" prefHeight="578.0" prefWidth="165.0" spacing="20.0">
                      <children>
-                        <Button fx:id="normalButton" disable="true" mnemonicParsing="false" onAction="#onSelectGameMode" prefHeight="25.0" prefWidth="110.0" text="Normal" />
+                        <Button fx:id="normalButton" disable="true" mnemonicParsing="false" onAction="#onSelectGameMode" onMouseClicked="#onButtonClick" onMouseEntered="#onButtonHover" prefHeight="25.0" prefWidth="110.0" text="Normal" />
                      </children>
                   </VBox>
                   <VBox alignment="CENTER" prefHeight="578.0" prefWidth="165.0" spacing="20.0">
                      <children>
-                        <Button fx:id="definitionButton" mnemonicParsing="false" onAction="#onSelectGameMode" prefHeight="25.0" prefWidth="110.0" text="Hidden Word" />
+                        <Button fx:id="definitionButton" mnemonicParsing="false" onAction="#onSelectGameMode" onMouseClicked="#onButtonClick" onMouseEntered="#onButtonHover" prefHeight="25.0" prefWidth="110.0" text="Hidden Word" />
                      </children>
                   </VBox>
                   <VBox alignment="CENTER" prefHeight="578.0" prefWidth="165.0" spacing="20.0">
                      <children>
-                        <Button fx:id="blitzButton" mnemonicParsing="false" onAction="#onSelectGameMode" prefHeight="25.0" prefWidth="110.0" text="Blitz" />
+                        <Button fx:id="blitzButton" mnemonicParsing="false" onAction="#onSelectGameMode" onMouseClicked="#onButtonClick" onMouseEntered="#onButtonHover" prefHeight="25.0" prefWidth="110.0" text="Blitz" />
                      </children>
                   </VBox>
                </children>
@@ -130,8 +130,8 @@
             </HBox>
             <HBox alignment="CENTER" prefHeight="196.0" prefWidth="860.0" spacing="30.0">
                <children>
-                  <Button mnemonicParsing="false" onAction="#onStartGame" text="Start Game" />
-                  <Button fx:id="goBackButton" mnemonicParsing="false" onAction="#onExitToMenu" text="Go Back" />
+                  <Button mnemonicParsing="false" onAction="#onStartGame" onMouseClicked="#onButtonClick" onMouseEntered="#onButtonHover" text="Start Game" />
+                  <Button fx:id="goBackButton" mnemonicParsing="false" onAction="#onExitToMenu" onMouseClicked="#onButtonClick" onMouseEntered="#onButtonHover" text="Go Back" />
                </children>
             </HBox>
          </children>

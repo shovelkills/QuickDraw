@@ -31,7 +31,7 @@ import nz.ac.auckland.se206.words.CategorySelector.Difficulty;
  * Keeps track of the timer, prompt, and difficulty variables of the game.<br>
  * Runs the prediction model to determine win condition.
  */
-public class Game {
+public class Game extends SoundsController {
 
   public enum Indicator {
     CLOSER,
@@ -43,6 +43,8 @@ public class Game {
   // Declare difficulty field
   private static DoodlePrediction model;
   private static Difficulty difficulty;
+  private static boolean textToSpeech = true;
+  private static boolean spoken = false;
   private static int blitzCounter;
   private static int blitzTime = CategorySelector.getTime();
 
@@ -57,6 +59,21 @@ public class Game {
     model = new DoodlePrediction();
   }
 
+  /**
+   * getTextToSpeech is getting the text to speech boolean
+   *
+   * @return a boolean either true or false
+   */
+  public static boolean getTextToSpeech() {
+    return textToSpeech;
+  }
+
+  /** Swaps textToSpeech's boolean from true to false or from false to true */
+  public static void toggleTextToSpeech() {
+    textToSpeech = !textToSpeech;
+    spoken = !spoken;
+  }
+
   /** resetBlitzCounter will reset the the counter after the game ends */
   public static void resetBlitzCounter() {
     blitzCounter = 0;
@@ -68,7 +85,7 @@ public class Game {
 
   /** resetBlitzTime will reset the the counter after the game ends */
   public static void resetBlitzTime() {
-    blitzTime = 0;
+    blitzTime = CategorySelector.getTime();
   }
 
   public static int getBlitzTime() {
@@ -90,7 +107,6 @@ public class Game {
   private int gameTime;
   private int topMatch;
   private float confidence;
-  private boolean spoken = false;
   private boolean hasWon = false;
   private GameMode currentGame;
   private boolean isGhostGame;
@@ -106,28 +122,30 @@ public class Game {
               TextToSpeech textToSpeech = new TextToSpeech();
               // Run indefinitely
               while (true) {
-                // When starting speak that its starting (Unless ghost game)
-                if (timer.get() == gameTime - 1 && !hasWon && !isGhostGame) {
-                  textToSpeech.speak("Starting");
-                } else if (timer.get() == (gameTime / 2) + 1) {
-                  // When half way speak thats it is halfway
-                  textToSpeech.speak(
-                      String.format("%s Seconds Remaining"), Integer.toString(gameTime / 2));
-                }
-                // Speak if the person has won
-                if (hasWon && !spoken) {
-                  textToSpeech.speak("You Won!");
-                  // Set that it has spoken
-                  spoken = true;
+                if (Game.getTextToSpeech()) {
+                  // When starting speak that its starting (Unless ghost game)
+                  if (timer.get() == gameTime - 1 && !hasWon && !isGhostGame) {
+                    textToSpeech.speak("Starting");
+                  } else if (timer.get() == (gameTime / 2) + 1) {
+                    // When half way speak thats it is halfway
+                    textToSpeech.speak(
+                        String.format("%s Seconds Remaining"), Integer.toString(gameTime / 2));
+                  }
+                  // Speak if the person has won
+                  if (hasWon && !spoken) {
+                    textToSpeech.speak("You Won!");
+                    // Set that it has spoken
+                    spoken = true;
 
-                } else if (timer.get() == 0 && !spoken) {
-                  // Speak if the person has lost
-                  textToSpeech.speak("YOU LOST!");
-                  // Set that it has spoken
-                  spoken = true;
+                  } else if (timer.get() == 0 && !spoken) {
+                    // Speak if the person has lost
+                    textToSpeech.speak("YOU LOST!");
+                    // Set that it has spoken
+                    spoken = true;
+                  }
+                  // Sleep for 10 ms
+                  Thread.sleep(10);
                 }
-                // Sleep for 10 ms
-                Thread.sleep(10);
               }
             }
           };
@@ -178,6 +196,7 @@ public class Game {
                               Users.addTimeHistory(timer.getValue().intValue(), getCurrentWord());
                               // Check if playing BLITZ
                               if (currentGame == GameMode.BLITZ) {
+                                onDingEffect(null);
                                 blitzTime = timer.getValue().intValue();
                                 currentSelection = CategorySelector.getWordSelection();
                                 String word =
