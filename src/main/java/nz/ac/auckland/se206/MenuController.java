@@ -274,6 +274,7 @@ public class MenuController extends SoundsController {
     Scene sceneButtonIsIn = button.getScene();
     // Move to the next scene
     sceneButtonIsIn.setRoot(SceneManager.getUiRoot(AppUi.BADGES));
+  }
 
   /**
    * onSoundToggle will toggle all sound effects in the application
@@ -303,6 +304,5 @@ public class MenuController extends SoundsController {
     }
     // Toggle the background music
     SoundsController.toggleMusic();
-
   }
 }
