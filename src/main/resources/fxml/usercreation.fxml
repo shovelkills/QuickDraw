@@ -55,7 +55,7 @@
                         <Insets top="10.0" />
                      </VBox.margin>
                      <children>
-                        <ImageView fx:id="userImage" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" styleClass="image-style">
+                        <ImageView fx:id="userImage" fitHeight="150.0" fitWidth="200.0" onMouseClicked="#onButtonClick" onMouseEntered="#onButtonHover" pickOnBounds="true" preserveRatio="true" styleClass="image-style">
                            <image>
                               <Image url="@../users/happy.png" />
                            </image>
@@ -72,32 +72,32 @@
                   </Label>
                   <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0" spacing="30.0">
                      <children>
-                        <ImageView fx:id="imageOption0" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" styleClass="image-style">
+                        <ImageView fx:id="imageOption0" fitHeight="150.0" fitWidth="200.0" onMouseEntered="#onButtonHover" pickOnBounds="true" preserveRatio="true" styleClass="image-style">
                            <image>
                               <Image url="@../images/profile1.png" />
                            </image>
                         </ImageView>
-                        <ImageView fx:id="imageOption1" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" styleClass="image-style">
+                        <ImageView fx:id="imageOption1" fitHeight="150.0" fitWidth="200.0" onMouseClicked="#onButtonClick" onMouseEntered="#onButtonHover" pickOnBounds="true" preserveRatio="true" styleClass="image-style">
                            <image>
                               <Image url="@../images/profile2.png" />
                            </image>
                         </ImageView>
-                        <ImageView fx:id="imageOption2" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" styleClass="image-style">
+                        <ImageView fx:id="imageOption2" fitHeight="150.0" fitWidth="200.0" onMouseClicked="#onButtonClick" onMouseEntered="#onButtonHover" pickOnBounds="true" preserveRatio="true" styleClass="image-style">
                            <image>
                               <Image url="@../images/profile3.png" />
                            </image>
                         </ImageView>
-                        <ImageView fx:id="imageOption3" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" styleClass="image-style">
+                        <ImageView fx:id="imageOption3" fitHeight="150.0" fitWidth="200.0" onMouseClicked="#onButtonClick" onMouseEntered="#onButtonHover" pickOnBounds="true" preserveRatio="true" styleClass="image-style">
                            <image>
                               <Image url="@../images/profile4.png" />
                            </image>
                         </ImageView>
-                        <ImageView fx:id="imageOption4" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" styleClass="image-style">
+                        <ImageView fx:id="imageOption4" fitHeight="150.0" fitWidth="200.0" onMouseClicked="#onButtonClick" onMouseEntered="#onButtonHover" pickOnBounds="true" preserveRatio="true" styleClass="image-style">
                            <image>
                               <Image url="@../images/profile5.png" />
                            </image>
                         </ImageView>
-                        <ImageView fx:id="imageOption5" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" styleClass="image-style">
+                        <ImageView fx:id="imageOption5" fitHeight="150.0" fitWidth="200.0" onMouseClicked="#onButtonClick" onMouseEntered="#onButtonHover" pickOnBounds="true" preserveRatio="true" styleClass="image-style">
                            <image>
                               <Image url="@../images/profile6.png" />
                            </image>
@@ -109,12 +109,12 @@
                   </HBox>
                   <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
                      <children>
-                        <Button fx:id="createButton" alignment="CENTER" mnemonicParsing="false" onAction="#onCreateProfile" prefHeight="40.0" prefWidth="160.0" style="-fx-cursor: hand;" styleClass="userSelectButton" stylesheets="@../css/userselection.css" text="Save Profile">
+                        <Button fx:id="createButton" alignment="CENTER" mnemonicParsing="false" onAction="#onCreateProfile" onMouseClicked="#onButtonClick" onMouseEntered="#onButtonHover" prefHeight="40.0" prefWidth="160.0" style="-fx-cursor: hand;" styleClass="userSelectButton" stylesheets="@../css/userselection.css" text="Save Profile">
                            <font>
                               <Font name="System Bold" size="20.0" />
                            </font>
                         </Button>
-                        <Button fx:id="returnButton" mnemonicParsing="false" onAction="#onExitSelection" prefHeight="40.0" prefWidth="150.0" style="-fx-cursor: hand;" styleClass="userSelectButton" stylesheets="@../css/userselection.css" text="Cancel">
+                        <Button fx:id="returnButton" mnemonicParsing="false" onAction="#onExitSelection" onMouseClicked="#onButtonClick" onMouseEntered="#onButtonHover" prefHeight="40.0" prefWidth="150.0" style="-fx-cursor: hand;" styleClass="userSelectButton" stylesheets="@../css/userselection.css" text="Cancel">
                            <font>
                               <Font name="System Bold" size="20.0" />
                            </font>

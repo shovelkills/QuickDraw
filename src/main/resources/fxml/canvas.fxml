@@ -66,6 +66,11 @@
                         <Insets left="5.0" />
                      </HBox.margin>
                   </Label>
+                  <Button mnemonicParsing="false" onAction="#onToggleTextToSpeech" text="Text To Speech">
+                     <HBox.margin>
+                        <Insets left="10.0" />
+                     </HBox.margin>
+                  </Button>
                </children>
             </HBox>
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="1384.0">
@@ -79,7 +84,7 @@
                         </ColorPicker>
                         <Label alignment="BOTTOM_RIGHT" minHeight="-Infinity" minWidth="-Infinity" prefHeight="108.0" prefWidth="108.0">
                            <graphic>
-                              <Button fx:id="brushButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onBrush" prefHeight="108.0" prefWidth="108.0" styleClass="brushButton" stylesheets="@../css/canvas.css">
+                              <Button fx:id="brushButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onBrush" onMouseClicked="#onButtonClick" onMouseEntered="#onButtonHover" prefHeight="108.0" prefWidth="108.0" styleClass="brushButton" stylesheets="@../css/canvas.css">
                                  <font>
                                     <Font name="System Bold" size="20.0" />
                                  </font>
@@ -88,7 +93,7 @@
                         </Label>
                         <Label alignment="BOTTOM_RIGHT" layoutX="260.0" layoutY="352.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="108.0" prefWidth="108.0">
                            <graphic>
-                              <Button fx:id="eraseButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onErase" prefHeight="108.0" prefWidth="108.0" styleClass="eraserButton" stylesheets="@../css/canvas.css">
+                              <Button fx:id="eraseButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onErase" onMouseClicked="#onButtonClick" onMouseEntered="#onButtonHover" prefHeight="108.0" prefWidth="108.0" styleClass="eraserButton" stylesheets="@../css/canvas.css">
                                  <font>
                                     <Font name="System Bold" size="20.0" />
                                  </font>
@@ -97,7 +102,7 @@
                         </Label>
                         <Label alignment="BOTTOM_RIGHT" layoutX="260.0" layoutY="360.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="108.0" prefWidth="108.0">
                            <graphic>
-                              <Button fx:id="clearButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onClear" prefHeight="108.0" prefWidth="108.0" styleClass="clearButton" stylesheets="@../css/canvas.css">
+                              <Button fx:id="clearButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onClear" onMouseClicked="#onButtonClick" onMouseEntered="#onButtonHover" prefHeight="108.0" prefWidth="108.0" styleClass="clearButton" stylesheets="@../css/canvas.css">
                                  <font>
                                     <Font name="System Bold" size="20.0" />
                                  </font>
@@ -158,7 +163,7 @@
                            <children>
                               <Label alignment="BOTTOM_RIGHT" minHeight="-Infinity" minWidth="-Infinity" prefHeight="46.0" prefWidth="146.0">
                                  <graphic>
-                                    <Button fx:id="backToMenuButtonStart" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onBackToMenuStart" prefHeight="46.0" prefWidth="146.0" styleClass="backToMenuButton" stylesheets="@../css/canvas.css" textFill="WHITE">
+                                    <Button fx:id="backToMenuButtonStart" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onBackToMenuStart" onMouseClicked="#onButtonClick" onMouseEntered="#onButtonHover" prefHeight="46.0" prefWidth="146.0" styleClass="backToMenuButton" stylesheets="@../css/canvas.css" textFill="WHITE">
                                        <font>
                                           <Font name="System Bold" size="16.0" />
                                        </font>
@@ -167,7 +172,7 @@
                               </Label>
                               <Label alignment="BOTTOM_RIGHT" minHeight="-Infinity" minWidth="-Infinity" prefHeight="47.0" prefWidth="149.0">
                                  <graphic>
-                                    <Button fx:id="startButton" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onStartGame" prefHeight="47.0" prefWidth="149.0" styleClass="startButton" stylesheets="@../css/canvas.css">
+                                    <Button fx:id="startButton" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onStartGame" onMouseClicked="#onButtonClick" onMouseEntered="#onButtonHover" prefHeight="47.0" prefWidth="149.0" styleClass="startButton" stylesheets="@../css/canvas.css">
                                        <font>
                                           <Font name="System Bold" size="16.0" />
                                        </font>
@@ -186,7 +191,7 @@
                            <children>
                               <Label alignment="BOTTOM_RIGHT" layoutX="596.0" layoutY="20.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="46.0" prefWidth="146.0">
                                  <graphic>
-                                    <Button fx:id="backToMenuButtonEnd" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onBack" prefHeight="46.0" prefWidth="146.0" styleClass="backToMenuButton" stylesheets="@../css/canvas.css" textFill="WHITE">
+                                    <Button fx:id="backToMenuButtonEnd" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onBack" onMouseClicked="#onButtonClick" onMouseEntered="#onButtonHover" prefHeight="46.0" prefWidth="146.0" styleClass="backToMenuButton" stylesheets="@../css/canvas.css" textFill="WHITE">
                                        <font>
                                           <Font name="System Bold" size="16.0" />
                                        </font>
@@ -195,7 +200,7 @@
                               </Label>
                               <Label alignment="BOTTOM_RIGHT" layoutX="610.0" layoutY="20.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="46.0" prefWidth="126.0">
                                  <graphic>
-                                    <Button fx:id="restartButton" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onRestartGame" prefHeight="46.0" prefWidth="126.0" styleClass="restartButton" stylesheets="@../css/canvas.css" textFill="WHITE">
+                                    <Button fx:id="restartButton" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onRestartGame" onMouseClicked="#onButtonClick" onMouseEntered="#onButtonHover" prefHeight="46.0" prefWidth="126.0" styleClass="restartButton" stylesheets="@../css/canvas.css" textFill="WHITE">
                                        <font>
                                           <Font name="System Bold" size="16.0" />
                                        </font>
@@ -204,7 +209,7 @@
                               </Label>
                               <Label alignment="BOTTOM_RIGHT" minHeight="-Infinity" minWidth="-Infinity" prefHeight="46.0" prefWidth="145.0">
                                  <graphic>
-                                    <Button fx:id="saveButton" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onSaveImage" prefHeight="46.0" prefWidth="145.0" styleClass="saveButton" stylesheets="@../css/canvas.css">
+                                    <Button fx:id="saveButton" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onSaveImage" onMouseClicked="#onButtonClick" onMouseEntered="#onButtonHover" prefHeight="46.0" prefWidth="145.0" styleClass="saveButton" stylesheets="@../css/canvas.css">
                                        <font>
                                           <Font name="System Bold" size="16.0" />
                                        </font>

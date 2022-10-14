@@ -17,7 +17,7 @@ import javafx.scene.layout.VBox;
 import nz.ac.auckland.se206.ProfileBuilder.UserType;
 import nz.ac.auckland.se206.SceneManager.AppUi;
 
-public class UsersController {
+public class UsersController extends SoundsController {
   // Create an array to store the newly built profiles
   protected static ArrayList<ProfileBuilder> profiles = new ArrayList<ProfileBuilder>();
   // Get all the users

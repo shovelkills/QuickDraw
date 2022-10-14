@@ -524,16 +524,16 @@ public class Users {
    */
   public static void addTimeHistory(int time, String word) {
     // Calculate time difference
-    int solvetime;
+    int solveTime;
     // Check if game mode is blitz
     if (GameSelectController.getCurrentGameMode() == GameMode.BLITZ) {
       // get the last blitz time minus current time
-      solvetime = Game.getBlitzTime() - time;
+      solveTime = Game.getBlitzTime() - time;
     } else {
-      solvetime = CategorySelector.getTime() - time;
+      solveTime = CategorySelector.getTime() - time;
     }
-    Users.timeHistory.add((double) solvetime);
-    checkFastestTime(solvetime, word);
+    Users.timeHistory.add((double) solveTime);
+    checkFastestTime(solveTime, word);
   }
 
   // Getters and setter methods below.

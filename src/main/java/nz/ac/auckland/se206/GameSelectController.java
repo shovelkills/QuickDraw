@@ -20,7 +20,7 @@ import nz.ac.auckland.se206.SceneManager.AppUi;
 import nz.ac.auckland.se206.dict.WordNotFoundException;
 import nz.ac.auckland.se206.words.CategorySelector.Difficulty;
 
-public class GameSelectController {
+public class GameSelectController extends SoundsController {
 
   public enum GameMode {
     HIDDEN_WORD,

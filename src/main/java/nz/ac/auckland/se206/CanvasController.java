@@ -66,7 +66,7 @@ import nz.ac.auckland.se206.words.CategorySelector;
  * the canvas size, the ML model will not work correctly. So be careful. If you make some changes in
  * the canvas and brush sizes, make sure that the prediction works fine.
  */
-public class CanvasController {
+public class CanvasController extends SoundsController {
 
   // Define the scaling in hovering
   private static final String IDLE_STYLE = "-fx-scale-x: 1; -fx-scale-y: 1";
@@ -1063,5 +1063,15 @@ public class CanvasController {
         game.setCurrentPrompt(currentPrompt);
       }
     }
+  }
+
+  /**
+   * onToggleTextToSpeech will toggle the text to speech voice, by default tts is on
+   *
+   * @param event takes in a JavaFX action event
+   */
+  @FXML
+  private void onToggleTextToSpeech(ActionEvent event) {
+    Game.toggleTextToSpeech();
   }
 }
