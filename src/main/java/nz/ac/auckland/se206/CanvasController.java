@@ -77,7 +77,6 @@ public class CanvasController {
   private static final Image INDICATOR_FURTHER =
       new Image(Users.folderDirectory + "/src/main/resources/images/indicatorFurther.png");
   private static ImageView predictionImage = new ImageView();
-  ;
   private static GameMode currentGameMode;
 
   public static GameMode getCurrentGameMode() {
@@ -86,61 +85,6 @@ public class CanvasController {
 
   public static void setCurrentGameMode(GameMode currentGameMode) {
     CanvasController.currentGameMode = currentGameMode;
-  }
-
-  /** deleteIndicator will delete the indicator image */
-  private void deleteIndicator() {
-    // Check if the image is active
-    if (predictionLabel.getGraphic() != null) {
-      // Remove the image
-      predictionLabel.setGraphic(null);
-    }
-  }
-
-  /** addIndicator will add a closer or further image to prediction label */
-  private void addIndicator() {
-    // Check that there is no image set
-    if (predictionLabel.getGraphic() == null) {
-      // Place the image inside the label
-      predictionLabel.setGraphic(predictionImage);
-    }
-  }
-
-  /**
-   * updateIndicator will update the indicator on the canvas
-   *
-   * @param closer will be true if the word is moving up the predictions list
-   */
-  public void updateIndicator(Indicator indicator) {
-    // Switch between the indicators
-    switch (indicator) {
-      case CLOSER:
-        addIndicator();
-
-        // Set the image and text for closer
-        predictionImage.setImage(INDICATOR_CLOSER);
-        predictionLabel.setText("Closer!");
-        break;
-      case FURTHER:
-        addIndicator();
-
-        // Set the image and text for further
-        predictionImage.setImage(INDICATOR_FURTHER);
-        predictionLabel.setText("Further away!");
-        break;
-      case NOT_FOUND:
-        deleteIndicator();
-        // Set the text for not in top 100
-        predictionLabel.setText("Not in top 100!");
-        break;
-      case SAME:
-        deleteIndicator();
-        // Set the text for not changed position
-        predictionLabel.setText("Haven't changed!");
-        break;
-      default:
-        break;
-    }
   }
 
   // Define FXML fields
@@ -317,6 +261,61 @@ public class CanvasController {
           () -> {
             setProfile();
           });
+    }
+  }
+
+  /** deleteIndicator will delete the indicator image */
+  private void deleteIndicator() {
+    // Check if the image is active
+    if (predictionLabel.getGraphic() != null) {
+      // Remove the image
+      predictionLabel.setGraphic(null);
+    }
+  }
+
+  /** addIndicator will add a closer or further image to prediction label */
+  private void addIndicator() {
+    // Check that there is no image set
+    if (predictionLabel.getGraphic() == null) {
+      // Place the image inside the label
+      predictionLabel.setGraphic(predictionImage);
+    }
+  }
+
+  /**
+   * updateIndicator will update the indicator on the canvas
+   *
+   * @param closer will be true if the word is moving up the predictions list
+   */
+  public void updateIndicator(Indicator indicator) {
+    // Switch between the indicators
+    switch (indicator) {
+      case CLOSER:
+        addIndicator();
+
+        // Set the image and text for closer
+        predictionImage.setImage(INDICATOR_CLOSER);
+        predictionLabel.setText("Closer!");
+        break;
+      case FURTHER:
+        addIndicator();
+
+        // Set the image and text for further
+        predictionImage.setImage(INDICATOR_FURTHER);
+        predictionLabel.setText("Further away!");
+        break;
+      case NOT_FOUND:
+        deleteIndicator();
+        // Set the text for not in top 100
+        predictionLabel.setText("Not in top 100!");
+        break;
+      case SAME:
+        deleteIndicator();
+        // Set the text for not changed position
+        predictionLabel.setText("Haven't changed!");
+        break;
+      default:
+        break;
     }
   }
 
@@ -739,6 +738,9 @@ public class CanvasController {
               DifficultyBuilder.getTimeDifficulty().toString(),
               DifficultyBuilder.getConfDifficulty().toString());
           Users.saveUser();
+          // Reset blitz objects if we are playing blitz
+          Game.resetBlitzCounter();
+          Game.resetBlitzTime();
         });
   }
 
@@ -748,7 +750,7 @@ public class CanvasController {
    * @return A string informing the user they have won and how much time they took.
    */
   private String getWinMessage() {
-
+    // Check to see if we are playing blitz
     if (currentGameMode == GameMode.BLITZ) {
       return "You got "
           + Game.getBlitzCounter()
@@ -756,6 +758,7 @@ public class CanvasController {
           + (CategorySelector.getTime() - game.getTimeRemaining())
           + " seconds!";
     }
+    // Otherwise for all other game modes
     return "You won! You drew "
         + game.getCurrentWord()
         + " in "
@@ -775,6 +778,7 @@ public class CanvasController {
     } else if (currentGameMode == GameMode.BLITZ) {
       return "Unlucky! You got no words in " + CategorySelector.getTime() + " seconds!";
     }
+    // For all other game modes
     return "Out of time! Play again?";
   }
 
@@ -987,6 +991,7 @@ public class CanvasController {
     switch (currentGameMode) {
       case BLITZ:
         gameToolTip.setText("Draw as many words as you can in the given time!");
+        break;
       case HIDDEN_WORD:
         // Check if the canvas is enabled
         if (!canvas.isDisabled()) {

@@ -34,20 +34,20 @@ public class UsersController {
    */
   private static void onSelectProfile(Event event) {
     VBox image = null;
-    int profileSelectedID;
+    int profileSelectedId;
     // Get the button pressed
     if (event.getSource().getClass().equals(profiles.get(0).deleteProfileButton.getClass())) {
       // guest was selected via creation or deletion
-      profileSelectedID = profiles.size() - 2;
+      profileSelectedId = profiles.size() - 2;
     } else {
       image = (VBox) event.getSource();
-      String imageID = image.getId().toString();
+      String imageId = image.getId().toString();
       // Find out which profile was clicked
-      profileSelectedID = (Integer.parseInt(String.valueOf(imageID.charAt(imageID.length() - 1))));
+      profileSelectedId = (Integer.parseInt(String.valueOf(imageId.charAt(imageId.length() - 1))));
     }
 
     // Check if the image pressed was the add new player
-    if (profileSelectedID == profiles.size() - 1) {
+    if (profileSelectedId == profiles.size() - 1) {
       // Check if the profile cap was reached
       if (profiles.size() == profileCap) {
         System.out.println("You cannot add anymore users!");
@@ -60,7 +60,7 @@ public class UsersController {
       return;
     }
     // Update the current user in the usersList and main menu
-    selectUser(profileSelectedID);
+    selectUser(profileSelectedId);
   }
 
   /**
@@ -68,9 +68,9 @@ public class UsersController {
    *
    * @param number the index number for the profile
    */
-  private static void selectUser(int userID) {
+  private static void selectUser(int userId) {
     // Once valid profile ID is obtained, set it to the currently selected profile
-    currentlySelected = profiles.get(userID);
+    currentlySelected = profiles.get(userId);
 
     // Reset all profile visual styles
     for (ProfileBuilder profile : profiles) {
@@ -78,20 +78,20 @@ public class UsersController {
       profile.setSelected(false);
     }
     // Update selected user's visual style
-    profiles.get(userID).setSelected(true);
+    profiles.get(userId).setSelected(true);
 
     String username;
     // Get the user's name based on the number position of the profile
-    if (userID == profiles.size() - 2) {
+    if (userId == profiles.size() - 2) {
       username = "Guest";
     } else {
-      username = usersList.get(userID);
+      username = usersList.get(userId);
     }
 
     // Load in the user
     Users.loadUser(username);
     // Update the menu page
-    App.getMenuController().updateUserImage(profiles.get(userID).imageView.getImage());
+    App.getMenuController().updateUserImage(profiles.get(userId).imageView.getImage());
     App.getMenuController().updateUsernameLabel(username);
   }
 
@@ -117,17 +117,17 @@ public class UsersController {
       Button button = (Button) event.getSource();
       String string = button.getId().toString();
       // Get the index number from the button
-      int userID = (Integer.parseInt(String.valueOf(string.charAt(string.length() - 1))));
+      int userId = (Integer.parseInt(String.valueOf(string.charAt(string.length() - 1))));
       // Delete that profile
-      profiles.get(userID).deleteProfile();
-      profiles.remove(userID);
+      profiles.get(userId).deleteProfile();
+      profiles.remove(userId);
       ProfileBuilder.updateId();
       // Update counter position
       ProfileBuilder.decrementCounter();
       // Select the Guest Profile
       onSelectProfile(event);
       // Find that user in the list
-      String username = usersList.get(userID);
+      String username = usersList.get(userId);
       // Delete the user in the JSON file
       Users.deleteUser(username);
       Users.deleteProfilePicture(username);
@@ -145,7 +145,7 @@ public class UsersController {
    * @param deleteButton new profile's delete button
    * @param number new profile's slot
    */
-  protected static void addEvents(VBox imageBox, Button deleteButton, int profileID) {
+  protected static void addEvents(VBox imageBox, Button deleteButton, int profileId) {
     // Add the event handler to the image
     imageBox.addEventHandler(
         MouseEvent.MOUSE_CLICKED,
@@ -160,7 +160,7 @@ public class UsersController {
           // Add delete event
           onDeleteProfile(e);
         });
-    selectUser(profileID);
+    selectUser(profileId);
   }
 
   // Declare the user grid from the FXML
@@ -189,7 +189,7 @@ public class UsersController {
     // Add event handlers to the profiles
     for (ProfileBuilder profile : profiles) {
       // Add select profile event
-      profile.userImageVBox.addEventHandler(
+      profile.userImageBox.addEventHandler(
           MouseEvent.MOUSE_CLICKED,
           e -> {
             onSelectProfile(e);

@@ -273,9 +273,11 @@ public class GameSelectController {
         confidenceMenu.setValue(Users.getIndividualDifficulty("confidenceDifficulty"));
         timeMenu.setDisable(false);
         timeMenu.setValue(Users.getIndividualDifficulty("timeDifficulty"));
+        localGameMode = GameMode.BLITZ;
+        break;
       default:
         // Set the default game mode to normal
-        localGameMode = GameMode.BLITZ;
+        localGameMode = GameMode.NORMAL;
         break;
     }
     setLocalGameMode();

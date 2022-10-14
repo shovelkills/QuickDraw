@@ -14,35 +14,23 @@ import nz.ac.auckland.se206.SceneManager.AppUi;
 
 public class GraphController {
 
+  private static String difficulty = null;
+  private static String gameOutcome;
   @FXML private Button accuracyButton;
-
   @FXML private Button confidenceButton;
-
   @FXML private Button lossButton;
-
   @FXML private Button menuButton;
-
   @FXML private Button timeButton;
-
   @FXML private Button wordButton;
-
   @FXML private Button winButton;
-
   @FXML private CategoryAxis xAxis;
-
   @FXML private LineChart<String, Number> timeLineChart;
-
   @FXML private NumberAxis yAxis;
-
   @FXML private PieChart individualDifficultyPieChart;
-
   @FXML private PieChart winsLossPieChart;
 
-  private static String difficulty = null;
-
-  private static String gameOutcome;
-
-  public void initilise() {
+  /** JavaFX will call this method to initialize the UI */
+  public void initialize() {
     loadGraphData();
   }
 
@@ -79,20 +67,22 @@ public class GraphController {
             });
   }
 
+  /** onShowWins will show the wins pie chart */
   @FXML
-  public void onShowWins() {
+  private void onShowWins() {
     gameOutcome = "Win";
     loadIndividualDifficulyPieChart();
   }
 
+  /** onShowLoss will show the loss pie chart */
   @FXML
-  public void onShowLoss() {
+  private void onShowLoss() {
     gameOutcome = "Loss";
     loadIndividualDifficulyPieChart();
   }
 
   /** Checks if there is any loaded difficulty. If there isn't just loads accuracy by default */
-  public void loadIndividualDifficulyPieChart() {
+  private void loadIndividualDifficulyPieChart() {
     if (difficulty == null) {
       difficulty = "accuracy";
     }
@@ -100,26 +90,30 @@ public class GraphController {
         Graph.getIndividualDifficultyPieChart(gameOutcome, difficulty));
   }
 
+  /** onShowAccuracyDifficulty will show the accuracy pie chart */
   @FXML
-  public void onShowAccuracyDifficulty() {
+  private void onShowAccuracyDifficulty() {
     difficulty = "accuracy";
     loadIndividualDifficulyPieChart();
   }
 
+  /** onShowWordDifficulty will show the word pie chart */
   @FXML
-  public void onShowWordDifficulty() {
+  private void onShowWordDifficulty() {
     difficulty = "word";
     loadIndividualDifficulyPieChart();
   }
 
+  /** onShowTimeDifficulty will show the time pie chart */
   @FXML
-  public void onShowTimeDifficulty() {
+  private void onShowTimeDifficulty() {
     difficulty = "time";
     loadIndividualDifficulyPieChart();
   }
 
+  /** onShowConfidenceDifficulty will show the confidence pie chart */
   @FXML
-  public void onShowConfidenceDifficulty() {
+  private void onShowConfidenceDifficulty() {
     difficulty = "confidence";
     loadIndividualDifficulyPieChart();
   }

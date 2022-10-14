@@ -50,7 +50,7 @@
                         <Font name="System Bold" size="18.0" />
                      </font>
                   </Label>
-                  <VBox fx:id="userImageVBox" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="150.0" prefWidth="150.0">
+                  <VBox fx:id="userImageBox" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="150.0" prefWidth="150.0">
                      <VBox.margin>
                         <Insets top="10.0" />
                      </VBox.margin>

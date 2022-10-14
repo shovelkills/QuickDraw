@@ -30,7 +30,7 @@ public class UserCreationController {
   // Initialise FXML items
   @FXML private Button createButton;
   @FXML private TextField usernameField;
-  @FXML private VBox userImageVBox;
+  @FXML private VBox userImageBox;
   @FXML private ImageView userImage;
   @FXML private ImageView imageOption0;
   @FXML private ImageView imageOption1;
@@ -60,7 +60,7 @@ public class UserCreationController {
             onSetImage(e);
           });
     }
-    userImageVBox.addEventHandler(
+    userImageBox.addEventHandler(
         MouseEvent.MOUSE_CLICKED,
         e -> {
           try {
@@ -181,7 +181,7 @@ public class UserCreationController {
     // Grab the new user
     ProfileBuilder newUser = profiles.get(index);
     // Set up new events to the new user
-    UsersController.addEvents(newUser.userImageVBox, newUser.deleteProfileButton, index);
+    UsersController.addEvents(newUser.userImageBox, newUser.deleteProfileButton, index);
     // Select the new user
     UsersController.currentlySelected = newUser;
     onExitSelection(event);
