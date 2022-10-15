@@ -19,30 +19,18 @@ public class GraphController {
 
   private static String difficulty = null;
   private static String gameOutcome;
-  @FXML
-  private Button accuracyButton;
-  @FXML
-  private Button confidenceButton;
-  @FXML
-  private Button menuButton;
-  @FXML
-  private Button timeButton;
-  @FXML
-  private Button wordButton;
-  @FXML
-  private CategoryAxis xAxis;
-  @FXML
-  private Label indvidualDifficultyLabel;
-  @FXML
-  private LineChart<String, Number> timeLineChart;
-  @FXML
-  private NumberAxis yAxis;
-  @FXML
-  private PieChart individualDifficultyPieChart;
-  @FXML
-  private PieChart winsLossPieChart;
-  @FXML
-  private Tooltip toolTip;
+  @FXML private Button accuracyButton;
+  @FXML private Button confidenceButton;
+  @FXML private Button menuButton;
+  @FXML private Button timeButton;
+  @FXML private Button wordButton;
+  @FXML private CategoryAxis xAxis;
+  @FXML private Label indvidualDifficultyLabel;
+  @FXML private LineChart<String, Number> timeLineChart;
+  @FXML private NumberAxis yAxis;
+  @FXML private PieChart individualDifficultyPieChart;
+  @FXML private PieChart winsLossPieChart;
+  @FXML private Tooltip toolTip;
 
   /** JavaFX will call this method to initialize the UI */
   public void initialize() {
@@ -65,18 +53,28 @@ public class GraphController {
     accuracyButton.setDisable(true);
     confidenceButton.setDisable(true);
     // Makes it so when pressing on the winloss piechart is changes the difficulty piegraph
-    winsLossPieChart.getData().get(0).getNode().addEventHandler(MouseEvent.MOUSE_PRESSED,
-        new EventHandler<MouseEvent>() {
-          public void handle(MouseEvent e) {
-            onShowWins();
-          }
-        });
-    winsLossPieChart.getData().get(1).getNode().addEventHandler(MouseEvent.MOUSE_PRESSED,
-        new EventHandler<MouseEvent>() {
-          public void handle(MouseEvent e) {
-            onShowLoss();
-          }
-        });
+    winsLossPieChart
+        .getData()
+        .get(0)
+        .getNode()
+        .addEventHandler(
+            MouseEvent.MOUSE_PRESSED,
+            new EventHandler<MouseEvent>() {
+              public void handle(MouseEvent e) {
+                onShowWins();
+              }
+            });
+    winsLossPieChart
+        .getData()
+        .get(1)
+        .getNode()
+        .addEventHandler(
+            MouseEvent.MOUSE_PRESSED,
+            new EventHandler<MouseEvent>() {
+              public void handle(MouseEvent e) {
+                onShowLoss();
+              }
+            });
   }
 
   /** onShowWins will show the wins pie chart */
@@ -102,8 +100,8 @@ public class GraphController {
     accuracyButton.setDisable(false);
     confidenceButton.setDisable(false);
     indvidualDifficultyLabel.setText(difficulty);
-    individualDifficultyPieChart
-        .setData(Graph.getIndividualDifficultyPieChart(gameOutcome, difficulty));
+    individualDifficultyPieChart.setData(
+        Graph.getIndividualDifficultyPieChart(gameOutcome, difficulty));
   }
 
   /** onShowAccuracyDifficulty will show the accuracy pie chart */
