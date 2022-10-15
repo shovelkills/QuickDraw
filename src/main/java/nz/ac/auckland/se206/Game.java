@@ -221,19 +221,23 @@ public class Game extends SoundsController {
                       }
                     });
               }
-
-              // End the game
-              if (currentGame == GameMode.BLITZ && blitzCounter > 0) {
-                endGame(true);
-                return null;
-              } else if (currentGame == GameMode.BLITZ && blitzCounter == 0) {
-                endGame(false);
-                return null;
+              if (!isGhostGame) {
+                // End the game
+                if (currentGame == GameMode.BLITZ && blitzCounter > 0) {
+                  // If they got a word in blitz
+                  endGame(true);
+                  return null;
+                } else if (currentGame == GameMode.BLITZ && blitzCounter == 0) {
+                  // If they got no words in blitz
+                  endGame(false);
+                  return null;
+                } else {
+                  // All other instances
+                  endGame(false);
+                }
               }
               System.out.println("LOST IN TASK");
-              if (!isGhostGame) {
-                endGame(false);
-              }
+
               return null;
             }
           };
