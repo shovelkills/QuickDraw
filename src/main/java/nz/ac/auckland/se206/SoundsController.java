@@ -18,31 +18,21 @@ public class SoundsController {
   private static boolean music = true;
 
   // Create background song
-  private static Media background_song =
-      new Media(
-          new File(Users.folderDirectory + "/src/main/resources/sounds/music.mp3")
-              .toURI()
-              .toString());
+  private static Media background_song = new Media(
+      new File(Users.folderDirectory + "/src/main/resources/sounds/music.mp3").toURI().toString());
   private static MediaPlayer backgroundMedia = new MediaPlayer(background_song);
 
   // Create audio clip for hover effect
   private static AudioClip buttonHoverAudio =
-      new AudioClip(
-          new File(Users.folderDirectory + "/src/main/resources/sounds/buttonHover.mp3")
-              .toURI()
-              .toString());
+      new AudioClip(new File(Users.folderDirectory + "/src/main/resources/sounds/buttonHover.mp3")
+          .toURI().toString());
   // Create audio clip for click effect
   private static AudioClip buttonClickAudio =
-      new AudioClip(
-          new File(Users.folderDirectory + "/src/main/resources/sounds/buttonClick.wav")
-              .toURI()
-              .toString());
+      new AudioClip(new File(Users.folderDirectory + "/src/main/resources/sounds/buttonClick.wav")
+          .toURI().toString());
   // Create ding audio effect
-  private static AudioClip dingAudio =
-      new AudioClip(
-          new File(Users.folderDirectory + "/src/main/resources/sounds/ding.mp3")
-              .toURI()
-              .toString());
+  private static AudioClip dingAudio = new AudioClip(
+      new File(Users.folderDirectory + "/src/main/resources/sounds/ding.mp3").toURI().toString());
 
   // Create volume slider object
   private static Slider volumeSlider;
@@ -103,23 +93,22 @@ public class SoundsController {
    * loop the background song to repeat
    */
   public static void soundsInitialize() {
+    // get the volume slider
     volumeSlider = MenuController.getVolumeSlider();
-    volumeSlider
-        .valueProperty()
-        .addListener(
-            new InvalidationListener() {
+    volumeSlider.valueProperty().addListener(new InvalidationListener() {
 
-              @Override
-              public void invalidated(Observable observable) {
-                backgroundMedia.setVolume(volumeSlider.getValue() / 100);
-              }
-            });
-    backgroundMedia.setOnEndOfMedia(
-        new Runnable() {
-          public void run() {
-            backgroundMedia.seek(Duration.ZERO);
-          }
-        });
+      @Override
+      public void invalidated(Observable observable) {
+        // Link the slider properties
+        backgroundMedia.setVolume(volumeSlider.getValue() / 100);
+      }
+    });
+    backgroundMedia.setOnEndOfMedia(new Runnable() {
+      public void run() {
+        // Loop back to beginning
+        backgroundMedia.seek(Duration.ZERO);
+      }
+    });
   }
 
   // Sound effects

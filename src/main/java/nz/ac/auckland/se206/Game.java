@@ -1,13 +1,13 @@
 package nz.ac.auckland.se206;
 
-import ai.djl.ModelException;
-import ai.djl.modality.Classifications;
-import ai.djl.translate.TranslateException;
-import com.opencsv.exceptions.CsvException;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.List;
+import com.opencsv.exceptions.CsvException;
+import ai.djl.ModelException;
+import ai.djl.modality.Classifications;
+import ai.djl.translate.TranslateException;
 import javafx.application.Platform;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.IntegerProperty;
@@ -34,10 +34,7 @@ import nz.ac.auckland.se206.words.CategorySelector.Difficulty;
 public class Game extends SoundsController {
 
   public enum Indicator {
-    CLOSER,
-    FURTHER,
-    SAME,
-    NOT_FOUND
+    CLOSER, FURTHER, SAME, NOT_FOUND
   }
 
   // Declare difficulty field
@@ -113,132 +110,123 @@ public class Game extends SoundsController {
   private int currentPos = 100;
   private int newPos;
 
-  private Service<Void> ttsService =
-      new Service<Void>() {
-        protected Task<Void> createTask() {
-          return new Task<Void>() {
-            protected Void call() throws InterruptedException {
-              // Initialise a text to speech instance
-              TextToSpeech textToSpeech = new TextToSpeech();
-              // Run indefinitely
-              while (true) {
-                if (Game.getTextToSpeech()) {
-                  // When starting speak that its starting (Unless ghost game)
-                  if (timer.get() == gameTime - 1 && !hasWon && !isGhostGame) {
-                    textToSpeech.speak("Starting");
-                  } else if (timer.get() == (gameTime / 2) + 1) {
-                    // When half way speak thats it is halfway
-                    textToSpeech.speak(
-                        String.format("%s Seconds Remaining"), Integer.toString(gameTime / 2));
-                  }
-                  // Speak if the person has won
-                  if (hasWon && !spoken) {
-                    textToSpeech.speak("You Won!");
-                    // Set that it has spoken
-                    spoken = true;
-
-                  } else if (timer.get() == 0 && !spoken) {
-                    // Speak if the person has lost
-                    textToSpeech.speak("YOU LOST!");
-                    // Set that it has spoken
-                    spoken = true;
-                  }
-                  // Sleep for 10 ms
-                  Thread.sleep(10);
-                }
+  private Service<Void> ttsService = new Service<Void>() {
+    protected Task<Void> createTask() {
+      return new Task<Void>() {
+        protected Void call() throws InterruptedException {
+          // Initialise a text to speech instance
+          TextToSpeech textToSpeech = new TextToSpeech();
+          // Run indefinitely
+          while (true) {
+            if (Game.getTextToSpeech()) {
+              // When starting speak that its starting (Unless ghost game)
+              if (timer.get() == gameTime - 1 && !hasWon && !isGhostGame) {
+                textToSpeech.speak("Starting");
+              } else if (timer.get() == (gameTime / 2) + 1) {
+                // When half way speak thats it is halfway
+                textToSpeech.speak(String.format("%s Seconds Remaining"),
+                    Integer.toString(gameTime / 2));
               }
+              // Speak if the person has won
+              if (hasWon && !spoken) {
+                textToSpeech.speak("You Won!");
+                // Set that it has spoken
+                spoken = true;
+
+              } else if (timer.get() == 0 && !spoken) {
+                // Speak if the person has lost
+                textToSpeech.speak("YOU LOST!");
+                // Set that it has spoken
+                spoken = true;
+              }
+              // Sleep for 10 ms
+              Thread.sleep(10);
             }
-          };
+          }
         }
       };
+    }
+  };
 
   // Initialise a service routine
-  private Service<Void> service =
-      new Service<Void>() {
-        // Create the task to handle the game
-        protected Task<Void> createTask() {
-          // Main game loop thread
-          return new Task<Void>() {
-            protected Void call() throws InterruptedException, TranslateException {
+  private Service<Void> service = new Service<Void>() {
+    // Create the task to handle the game
+    protected Task<Void> createTask() {
+      // Main game loop thread
+      return new Task<Void>() {
+        protected Void call() throws InterruptedException, TranslateException {
 
-              // Check that the timer is running
-              while (timer == null || timer.intValue() > 1) {
-                // Wait 1 second
-                Thread.sleep(1000);
-                Platform.runLater(
-                    () -> {
-                      // For all game modes other than zen
-                      if (currentGame != GameMode.ZEN) {
-                        // Decrement timer
-                        timer.set(timer.get() - 1);
-                        // Decrement timer bar
-                        canvas.decrementTimerBar();
+          // Check that the timer is running
+          while (timer == null || timer.intValue() > 1) {
+            // Wait 1 second
+            Thread.sleep(1000);
+            Platform.runLater(() -> {
+              // For all game modes other than zen
+              if (currentGame != GameMode.ZEN) {
+                // Decrement timer
+                timer.set(timer.get() - 1);
+                // Decrement timer bar
+                canvas.decrementTimerBar();
+              }
+
+              try {
+                // Check if the player is currently drawing
+                if (canvas.getIsDrawing()) {
+                  // Get the top 10 predictions
+                  List<Classifications.Classification> currentPredictions =
+                      model.getPredictions(canvas.getCurrentSnapshot(), 100);
+                  // Update the predictions
+                  canvas.updatePredictionGridDisplay(currentPredictions);
+                  updateIndicator(currentPredictions);
+                  for (int i = 0; i < topMatch; i++) {
+                    // Check if the top words are what we are drawing based on difficulty
+                    if (currentPredictions.get(i).getProbability() > confidence && getCurrentWord()
+                        .equals(currentPredictions.get(i).getClassName().replace("_", " "))) {
+                      Users.addTimeHistory(timer.getValue().intValue(), getCurrentWord());
+                      // Check if playing BLITZ
+                      if (currentGame == GameMode.BLITZ) {
+                        onDingEffect(null);
+                        blitzTime = timer.getValue().intValue();
+                        currentSelection = CategorySelector.getWordSelection();
+                        String word = currentSelection.get(DifficultyBuilder.getWordsDifficulty());
+                        // Reset the current prompt
+                        setCurrentWord(word);
+                        currentPrompt.setValue(word);
+                        canvas.onClear();
+                        // increment counter
+                        blitzCounter++;
                       }
-
-                      try {
-                        // Check if the player is currently drawing
-                        if (canvas.getIsDrawing()) {
-                          // Get the top 10 predictions
-                          List<Classifications.Classification> currentPredictions =
-                              model.getPredictions(canvas.getCurrentSnapshot(), 100);
-                          // Update the predictions
-                          canvas.updatePredictionGridDisplay(currentPredictions);
-                          updateIndicator(currentPredictions);
-                          for (int i = 0; i < topMatch; i++) {
-                            // Check if the top words are what we are drawing based on difficulty
-                            if (currentPredictions.get(i).getProbability() > confidence
-                                && getCurrentWord()
-                                    .equals(
-                                        currentPredictions
-                                            .get(i)
-                                            .getClassName()
-                                            .replace("_", " "))) {
-                              Users.addTimeHistory(timer.getValue().intValue(), getCurrentWord());
-                              // Check if playing BLITZ
-                              if (currentGame == GameMode.BLITZ) {
-                                onDingEffect(null);
-                                blitzTime = timer.getValue().intValue();
-                                currentSelection = CategorySelector.getWordSelection();
-                                String word =
-                                    currentSelection.get(DifficultyBuilder.getWordsDifficulty());
-                                // Reset the current prompt
-                                setCurrentWord(word);
-                                currentPrompt.setValue(word);
-                                canvas.onClear();
-                                // increment counter
-                                blitzCounter++;
-                              }
-                              // End the game
-                              if (!isGhostGame && currentGame != GameMode.BLITZ) {
-                                hasWon = true;
-                                endGame(true);
-                              }
-                            }
-                          }
-                        }
-                      } catch (TranslateException | InterruptedException e) {
-                        e.printStackTrace();
+                      // End the game
+                      if (!isGhostGame && currentGame != GameMode.BLITZ) {
+                        hasWon = true;
+                        endGame(true);
                       }
-                    });
+                    }
+                  }
+                }
+              } catch (TranslateException | InterruptedException e) {
+                e.printStackTrace();
               }
+            });
+          }
 
-              // End the game
-              if (currentGame == GameMode.BLITZ && blitzCounter > 0) {
-                endGame(true);
-                return null;
-              } else if (currentGame == GameMode.BLITZ && blitzCounter == 0) {
-                endGame(false);
-                return null;
-              }
-              System.out.println("LOST IN TASK");
-              if (!isGhostGame) {
-                endGame(false);
-              }
-              return null;
-            }
-          };
+          // End the game
+          if (currentGame == GameMode.BLITZ && blitzCounter > 0) {
+            endGame(true);
+            return null;
+          } else if (currentGame == GameMode.BLITZ && blitzCounter == 0) {
+            endGame(false);
+            return null;
+          }
+          System.out.println("LOST IN TASK");
+          if (!isGhostGame) {
+            endGame(false);
+          }
+          return null;
         }
       };
+    }
+  };
 
   /**
    * Game will set up a game based on the presets selected
@@ -431,6 +419,7 @@ public class Game extends SoundsController {
         continue;
       }
     }
+    // Sets the current word
     setCurrentWord(word);
     List<WordEntry> entries = wordResult.getWordEntries();
     definition = entries.get(0).getDefinitions().get(0);
@@ -480,7 +469,7 @@ public class Game extends SoundsController {
     this.currentWord = currentWord;
   }
 
-  /** startGame will initialize the game */
+  /** startGame will initialize the game fully */
   public void startGame() {
     // Set these fields to false so that tts only speaks once
     spoken = false;

@@ -5,7 +5,9 @@ import javafx.scene.control.ProgressBar;
 
 public class LoadingController extends SoundsController {
 
-  @FXML private ProgressBar progressBar;
+  // Define elements
+  @FXML
+  private ProgressBar progressBar;
 
   public ProgressBar getProgressBar() {
     return progressBar;

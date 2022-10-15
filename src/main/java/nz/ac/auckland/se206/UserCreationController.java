@@ -1,7 +1,5 @@
 package nz.ac.auckland.se206;
 
-import ai.djl.ModelException;
-import com.opencsv.exceptions.CsvException;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -9,6 +7,8 @@ import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collections;
+import com.opencsv.exceptions.CsvException;
+import ai.djl.ModelException;
 import javafx.concurrent.Task;
 import javafx.event.Event;
 import javafx.fxml.FXML;
@@ -28,34 +28,46 @@ import nz.ac.auckland.se206.SceneManager.AppUi;
 
 public class UserCreationController extends SoundsController {
 
-  // Initialise FXML items
-  @FXML private Button createButton;
-  @FXML private TextField usernameField;
-  @FXML private ImageView editImageView;
-  @FXML private VBox userImageBox;
-  @FXML private ImageView userImage;
-  @FXML private ImageView imageOption0;
-  @FXML private ImageView imageOption1;
-  @FXML private ImageView imageOption2;
-  @FXML private ImageView imageOption3;
-  @FXML private ImageView imageOption4;
-  @FXML private ImageView imageOption5;
-
   // Maximum length for a new username
   private static final int MAX_USERNAME_LENGTH = 12;
+
+  // Initialise FXML items
+  @FXML
+  private Button createButton;
+  @FXML
+  private TextField usernameField;
+  @FXML
+  private ImageView editImageView;
+  @FXML
+  private VBox userImageBox;
+  @FXML
+  private ImageView userImage;
+  @FXML
+  private ImageView imageOption0;
+  @FXML
+  private ImageView imageOption1;
+  @FXML
+  private ImageView imageOption2;
+  @FXML
+  private ImageView imageOption3;
+  @FXML
+  private ImageView imageOption4;
+  @FXML
+  private ImageView imageOption5;
+
 
   // Initliase array for image options
   private ArrayList<ImageView> imageOptions = new ArrayList<ImageView>();
 
-  private String editImageViewDefault =
-      "-fx-scale-y: 1.1; -fx-scale-x: 1.1; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, #00e8e8, 20, 0.8, 0, 0);";
-  private String editImageViewPressed =
-      "-fx-scale-y: 1.0; -fx-scale-x: 1.0; -fx-effect: dropshadow(gaussian, #00e8e8, 30, 0.8, 0, 0);";
+  private String editImageViewDefault = "-fx-scale-y: 1.1; -fx-scale-x: 1.1; -fx-cursor: hand;"
+      + " -fx-effect: dropshadow(gaussian, #00e8e8, 20, 0.8, 0, 0);";
+  private String editImageViewPressed = "-fx-scale-y: 1.0; -fx-scale-x: 1.0;"
+      + " -fx-effect: dropshadow(gaussian, #00e8e8, 30, 0.8, 0, 0);";
 
   /**
-   * initialize will be called on start up
+   * initialize will be called on start up of application
    *
-   * @throws FileNotFoundException
+   * @throws FileNotFoundException no file found
    */
   public void initialize() throws FileNotFoundException {
     // Set user image edit overlay from file
@@ -65,54 +77,36 @@ public class UserCreationController extends SoundsController {
     editImageView.setImage(editImage);
     editImageView.setVisible(false);
     // Add all the image options into the array
-    Collections.addAll(
-        imageOptions,
-        imageOption0,
-        imageOption1,
-        imageOption2,
-        imageOption3,
-        imageOption4,
-        imageOption5);
+    Collections.addAll(imageOptions, imageOption0, imageOption1, imageOption2, imageOption3,
+        imageOption4, imageOption5);
     // Loop through them and set event handlers onto them
     for (ImageView option : imageOptions) {
-      option.addEventHandler(
-          MouseEvent.MOUSE_CLICKED,
-          e -> {
-            onSetImage(e);
-          });
+      option.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
+        onSetImage(e);
+      });
     }
-    userImageBox.addEventHandler(
-        MouseEvent.MOUSE_CLICKED,
-        e -> {
-          try {
-            onCreateImage(e);
-          } catch (IOException | CsvException | URISyntaxException | ModelException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-          }
-        });
+    userImageBox.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
+      try {
+        onCreateImage(e);
+      } catch (IOException | CsvException | URISyntaxException | ModelException e1) {
+        // TODO Auto-generated catch block
+        e1.printStackTrace();
+      }
+    });
     // Hover shows "edit" overlay
-    userImageBox.addEventHandler(
-        MouseEvent.MOUSE_ENTERED,
-        e -> {
-          editImageView.setVisible(true);
-        });
+    userImageBox.addEventHandler(MouseEvent.MOUSE_ENTERED, e -> {
+      editImageView.setVisible(true);
+    });
     // Exit hides "edit" overlay
-    userImageBox.addEventHandler(
-        MouseEvent.MOUSE_EXITED,
-        e -> {
-          editImageView.setVisible(false);
-        });
-    userImageBox.addEventHandler(
-        MouseEvent.MOUSE_PRESSED,
-        e -> {
-          editImageView.setStyle(editImageViewPressed);
-        });
-    userImageBox.addEventHandler(
-        MouseEvent.MOUSE_RELEASED,
-        e -> {
-          editImageView.setStyle(editImageViewDefault);
-        });
+    userImageBox.addEventHandler(MouseEvent.MOUSE_EXITED, e -> {
+      editImageView.setVisible(false);
+    });
+    userImageBox.addEventHandler(MouseEvent.MOUSE_PRESSED, e -> {
+      editImageView.setStyle(editImageViewPressed);
+    });
+    userImageBox.addEventHandler(MouseEvent.MOUSE_RELEASED, e -> {
+      editImageView.setStyle(editImageViewDefault);
+    });
   }
 
   /**
@@ -144,39 +138,41 @@ public class UserCreationController extends SoundsController {
     GameSelectController.setCurrentGameMode(GameMode.PROFILE);
     VBox image = (VBox) event.getSource();
     Scene sceneButtonIsIn = image.getScene();
-    Task<Void> preDrawTask =
-        new Task<Void>() {
-          @Override
-          protected Void call() throws Exception {
-            // Set up the pre-game UI elements that are in common with restarting the game
-            updateProgress(0, 1);
-            sceneButtonIsIn.setRoot(SceneManager.getUiRoot(AppUi.LOADING));
-            System.out.println("Loading");
-            App.getCanvasController().setPreGameInterface();
-            updateProgress(1, 1);
-            Thread.sleep(50);
-            return null;
-          }
-        };
+    Task<Void> preDrawTask = new Task<Void>() {
+      @Override
+      protected Void call() throws Exception {
+        // Set up the pre-game UI elements that are in common with restarting the game
+        updateProgress(0, 1);
+        sceneButtonIsIn.setRoot(SceneManager.getUiRoot(AppUi.LOADING));
+        System.out.println("Loading");
+        App.getCanvasController().setPreGameInterface();
+        updateProgress(1, 1);
+        Thread.sleep(50);
+        return null;
+      }
+    };
     // Find progress bar on loading screen
     ProgressBar progressBar = App.getLoadingController().getProgressBar();
     progressBar.progressProperty().unbind();
     // Bind progress bar
     progressBar.progressProperty().bind(preDrawTask.progressProperty());
     // On finish loading move from loading screen to game screen
-    preDrawTask.setOnSucceeded(
-        e -> {
-          progressBar.progressProperty().unbind();
-          sceneButtonIsIn.setCursor(Cursor.DEFAULT);
-          sceneButtonIsIn.setRoot(SceneManager.getUiRoot(AppUi.GAME));
-        });
+    preDrawTask.setOnSucceeded(e -> {
+      progressBar.progressProperty().unbind();
+      sceneButtonIsIn.setCursor(Cursor.DEFAULT);
+      sceneButtonIsIn.setRoot(SceneManager.getUiRoot(AppUi.GAME));
+    });
     Thread preGameThread = new Thread(preDrawTask);
     // Allow the task to be cancelled on closing of application
     preGameThread.setDaemon(true);
     preGameThread.start();
   }
 
-  /** onSetImage will set the users image to the one clicked */
+  /**
+   * onSetImage will set the users image to the one clicked
+   * 
+   * @param e takes in an event from FXML
+   */
   @FXML
   private void onSetImage(Event e) {
     // Get the image selected
@@ -189,7 +185,7 @@ public class UserCreationController extends SoundsController {
   /**
    * onCreateProfile method will create a new user profile based on the profile position
    *
-   * @param event Takes in the FXML action event
+   * @param event takes in the FXML action event
    */
   @FXML
   private void onCreateProfile(Event event) {
@@ -254,7 +250,7 @@ public class UserCreationController extends SoundsController {
   /**
    * onExitSelection will leave the profile creation scene
    *
-   * @param event Takes in Mouse Pressed event
+   * @param event takes in Mouse Pressed event
    */
   @FXML
   private void onExitSelection(Event event) {
