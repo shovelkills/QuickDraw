@@ -55,7 +55,7 @@ public class UsersController extends SoundsController {
       }
       // Go to user Creation scene
 
-      SceneManager.getUiRoot(AppUi.USERCREATE).setCursor(Cursor.DEFAULT);
+      image.getScene().setCursor(Cursor.DEFAULT);
       image.getScene().setRoot(SceneManager.getUiRoot(AppUi.USERCREATE));
       return;
     }
