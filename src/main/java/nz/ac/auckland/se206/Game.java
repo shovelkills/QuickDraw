@@ -16,7 +16,6 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
-import javafx.scene.image.Image;
 import nz.ac.auckland.se206.GameSelectController.GameMode;
 import nz.ac.auckland.se206.dict.DictionaryLookup;
 import nz.ac.auckland.se206.dict.WordEntry;
@@ -32,7 +31,7 @@ import nz.ac.auckland.se206.words.CategorySelector.Difficulty;
  * Keeps track of the timer, prompt, and difficulty variables of the game.<br>
  * Runs the prediction model to determine win condition.
  */
-public class Game {
+public class Game extends SoundsController {
 
   public enum Indicator {
     CLOSER,
@@ -44,14 +43,53 @@ public class Game {
   // Declare difficulty field
   private static DoodlePrediction model;
   private static Difficulty difficulty;
-  // Define higher or lower images
-  private static final Image indicatorCloser =
-      new Image(Users.folderDirectory + "/src/main/resources/images/indicatorCloser.png");
-  private static final Image indicatorFurther =
-      new Image(Users.folderDirectory + "/src/main/resources/images/indicatorFurther.png");
+  private static boolean textToSpeech = true;
+  private static boolean spoken = false;
+  private static int blitzCounter;
+  private static int blitzTime = CategorySelector.getTime();
 
+  /**
+   * createModel will create the doodle prediction model
+   *
+   * @throws ModelException model not found
+   * @throws IOException read write error
+   */
   public static void createModel() throws ModelException, IOException {
+    // Creates the model
     model = new DoodlePrediction();
+  }
+
+  /**
+   * getTextToSpeech is getting the text to speech boolean
+   *
+   * @return a boolean either true or false
+   */
+  public static boolean getTextToSpeech() {
+    return textToSpeech;
+  }
+
+  /** Swaps textToSpeech's boolean from true to false or from false to true */
+  public static void toggleTextToSpeech() {
+    textToSpeech = !textToSpeech;
+    spoken = !spoken;
+  }
+
+  /** resetBlitzCounter will reset the the counter after the game ends */
+  public static void resetBlitzCounter() {
+    blitzCounter = 0;
+  }
+
+  public static int getBlitzCounter() {
+    return blitzCounter;
+  }
+
+  /** resetBlitzTime will reset the the counter after the game ends */
+  public static void resetBlitzTime() {
+    blitzTime = CategorySelector.getTime();
+  }
+
+  public static int getBlitzTime() {
+    return blitzTime;
   }
 
   public static Difficulty getDifficulty() {
@@ -69,7 +107,6 @@ public class Game {
   private int gameTime;
   private int topMatch;
   private float confidence;
-  private boolean spoken = false;
   private boolean hasWon = false;
   private GameMode currentGame;
   private boolean isGhostGame;
@@ -85,28 +122,30 @@ public class Game {
               TextToSpeech textToSpeech = new TextToSpeech();
               // Run indefinitely
               while (true) {
-                // When starting speak that its starting (Unless ghost game)
-                if (timer.get() == gameTime - 1 && !hasWon && !isGhostGame) {
-                  textToSpeech.speak("Starting");
-                } else if (timer.get() == (gameTime / 2) + 1) {
-                  // When half way speak thats it is halfway
-                  textToSpeech.speak(
-                      String.format("%s Seconds Remaining"), Integer.toString(gameTime / 2));
-                }
-                // Speak if the person has won
-                if (hasWon && !spoken) {
-                  textToSpeech.speak("You Won!");
-                  // Set that it has spoken
-                  spoken = true;
+                if (Game.getTextToSpeech()) {
+                  // When starting speak that its starting (Unless ghost game)
+                  if (timer.get() == gameTime - 1 && !hasWon && !isGhostGame) {
+                    textToSpeech.speak("Starting");
+                  } else if (timer.get() == (gameTime / 2) + 1) {
+                    // When half way speak thats it is halfway
+                    textToSpeech.speak(
+                        String.format("%s Seconds Remaining"), Integer.toString(gameTime / 2));
+                  }
+                  // Speak if the person has won
+                  if (hasWon && !spoken) {
+                    textToSpeech.speak("You Won!");
+                    // Set that it has spoken
+                    spoken = true;
 
-                } else if (timer.get() == 0 && !spoken) {
-                  // Speak if the person has lost
-                  textToSpeech.speak("YOU LOST!");
-                  // Set that it has spoken
-                  spoken = true;
+                  } else if (timer.get() == 0 && !spoken) {
+                    // Speak if the person has lost
+                    textToSpeech.speak("YOU LOST!");
+                    // Set that it has spoken
+                    spoken = true;
+                  }
+                  // Sleep for 10 ms
+                  Thread.sleep(10);
                 }
-                // Sleep for 10 ms
-                Thread.sleep(10);
               }
             }
           };
@@ -155,12 +194,25 @@ public class Game {
                                             .getClassName()
                                             .replace("_", " "))) {
                               Users.addTimeHistory(timer.getValue().intValue(), getCurrentWord());
+                              // Check if playing BLITZ
+                              if (currentGame == GameMode.BLITZ) {
+                                onDingEffect(null);
+                                blitzTime = timer.getValue().intValue();
+                                currentSelection = CategorySelector.getWordSelection();
+                                String word =
+                                    currentSelection.get(DifficultyBuilder.getWordsDifficulty());
+                                // Reset the current prompt
+                                setCurrentWord(word);
+                                currentPrompt.setValue(word);
+                                canvas.onClear();
+                                // increment counter
+                                blitzCounter++;
+                              }
                               // End the game
-                              if (!isGhostGame) {
+                              if (!isGhostGame && currentGame != GameMode.BLITZ) {
                                 hasWon = true;
                                 endGame(true);
                               }
-                              return;
                             }
                           }
                         }
@@ -169,9 +221,16 @@ public class Game {
                       }
                     });
               }
-              System.out.println("LOST IN TASK");
-              Users.addTimeHistory(0, getCurrentWord());
+
               // End the game
+              if (currentGame == GameMode.BLITZ && blitzCounter > 0) {
+                endGame(true);
+                return null;
+              } else if (currentGame == GameMode.BLITZ && blitzCounter == 0) {
+                endGame(false);
+                return null;
+              }
+              System.out.println("LOST IN TASK");
               if (!isGhostGame) {
                 endGame(false);
               }
@@ -179,7 +238,6 @@ public class Game {
             }
           };
         }
-        ;
       };
 
   /**
@@ -190,13 +248,13 @@ public class Game {
    * @throws URISyntaxException converting to link exception
    * @throws CsvException reading spreadsheet exceptions
    * @throws ModelException doodle prediction exception
-   * @throws WordNotFoundException
+   * @throws WordNotFoundException word was not found exception
    */
   public Game(CanvasController canvas, GameMode gameMode)
       throws ModelException, IOException, WordNotFoundException {
     // Set the current game mode
     currentGame = gameMode;
-    switch (gameMode) {
+    switch (currentGame) {
       case HIDDEN_WORD:
         setHiddenWordGame(canvas);
         break;
@@ -212,11 +270,16 @@ public class Game {
         // Set the profile picture canvas
         setProfileCanvas(canvas);
         break;
+      case BLITZ:
+        // Set the blitz canvas
+        setBlitzGame(canvas);
+        break;
       default:
         // Default game set
         setNormalGame(canvas);
         break;
     }
+    // Update the tool tip
     App.getCanvasController().updateToolTip();
   }
 
@@ -239,8 +302,13 @@ public class Game {
     isGhostGame = isGhost;
   }
 
-  private void updateIndicator(List<Classifications.Classification> predictions)
-      throws TranslateException {
+  /**
+   * updateIndicator will update the the image and text to see how close or far the player is
+   * getting
+   *
+   * @param predictions takes in the current predictions
+   */
+  private void updateIndicator(List<Classifications.Classification> predictions) {
 
     // Reset the new position
     newPos = -1;
@@ -256,14 +324,12 @@ public class Game {
     // Check if an index was found
     if (newPos == -1) {
       App.getCanvasController().updateIndicator(Indicator.NOT_FOUND);
-      ;
 
     } else if (newPos == currentPos) {
       // Check if the position is the same
       App.getCanvasController().updateIndicator(Indicator.SAME);
-    }
-    // Check if the player is closer to winning
-    else if (newPos < currentPos) {
+    } else if (newPos < currentPos) {
+      // Check if the player is closer to winning
       App.getCanvasController().updateIndicator(Indicator.CLOSER);
     } else if (currentPos < newPos) {
       App.getCanvasController().updateIndicator(Indicator.FURTHER);
@@ -272,6 +338,13 @@ public class Game {
     currentPos = newPos;
   }
 
+  /**
+   * setNormalGame will set up the backend of the normal game
+   *
+   * @param canvas takes in the normal canvas
+   * @throws ModelException doodle prediction exception
+   * @throws IOException reading/writing exception
+   */
   private void setNormalGame(CanvasController canvas) throws ModelException, IOException {
     // Set the canvas
     this.canvas = canvas;
@@ -286,6 +359,34 @@ public class Game {
     currentPrompt.setValue(word);
   }
 
+  /**
+   * setBlitzGame will set up the backend of the blitz game
+   *
+   * @param canvas takes in the normal canvas
+   * @throws ModelException doodle prediction exception
+   * @throws IOException reading/writing exception
+   */
+  private void setBlitzGame(CanvasController canvas) throws ModelException, IOException {
+    // Set the canvas
+    this.canvas = canvas;
+    // Get the current difficulty's word
+    currentSelection = CategorySelector.getWordSelection();
+    String word = currentSelection.get(DifficultyBuilder.getWordsDifficulty());
+    gameTime = CategorySelector.getTime();
+    topMatch = CategorySelector.getAccuracy();
+    confidence = ((float) CategorySelector.getConfidence() / 100);
+    timer = new SimpleIntegerProperty(gameTime);
+    setCurrentWord(word);
+    currentPrompt.setValue(word);
+  }
+
+  /**
+   * setZenGame will set up the backend of the zen game
+   *
+   * @param canvas takes in the normal canvas
+   * @throws ModelException doodle prediction exception
+   * @throws IOException reading/writing exception
+   */
   private void setZenGame(CanvasController canvas) throws ModelException, IOException {
     // Set the canvas
     this.canvas = canvas;
@@ -300,6 +401,13 @@ public class Game {
     currentPrompt.setValue(word);
   }
 
+  /**
+   * setHiddenWordGame will set up the backend of the hidden word game
+   *
+   * @param canvas takes in the normal canvas
+   * @throws ModelException doodle prediction exception
+   * @throws IOException reading/writing exception
+   */
   private void setHiddenWordGame(CanvasController canvas) throws ModelException, IOException {
     // Initialize variables
     WordInfo wordResult = null;
@@ -388,13 +496,14 @@ public class Game {
   public void resetGame() {
     ttsService.cancel();
     service.cancel();
+
     resetTimer(difficulty);
   }
 
   /**
    * Resets the game's timer
    *
-   * @param difficulty
+   * @param difficulty takes in a difficulty enum
    */
   public void resetTimer(Difficulty difficulty) {
     // Check the current game mode

@@ -12,7 +12,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 
-public class ProfileBuilder {
+public class ProfileBuilder extends SoundsController {
 
   // Define the types of users a profile can be
   public enum UserType {
@@ -35,17 +35,17 @@ public class ProfileBuilder {
   // Define the scaling in hovering
   private static final String IDLE_STYLE = "-fx-scale-x: 1; -fx-scale-y: 1";
   private static final String HOVERED_STYLE =
-      "-fx-scale-x: 1.2; -fx-scale-y: 1.2; -fx-effect: dropshadow(gaussian, #fff8f5, 20, 0.8, 0, 0);";
+      "-fx-scale-x: 1.2; -fx-scale-y: 1.2;"
+          + " -fx-effect: dropshadow(gaussian, #fff8f5, 20, 0.8, 0, 0);";
   private static final String MOUSE_DOWN_STYLE =
-      "-fx-scale-x: 1.0; -fx-scale-y: 1.0; -fx-effect: dropshadow(gaussian, white, 50, 0.8, 0, 0);";
+      "-fx-scale-x: 1.0; -fx-scale-y: 1.0;"
+          + " -fx-effect: dropshadow(gaussian, white, 50, 0.8, 0, 0);";
+
   private static final String HIGHLIGHT_STYLE =
-      "-fx-scale-x: 1.1; -fx-scale-y: 1.1; -fx-effect: dropshadow(gaussian, #fff8f5, 10, 1, 0, 0);";
+      "-fx-scale-x: 1.1; -fx-scale-y: 1.1;"
+          + " -fx-effect: dropshadow(gaussian, #fff8f5, 10, 1, 0, 0);";
   // #bbff78
   // #a6ffcb
-
-  private Font maybeNext =
-      Font.loadFont(App.class.getResourceAsStream("/fonts/Maybe-Next.ttf"), 22);
-  private Boolean isSelected = false;
 
   /**
    * Get's the users current image
@@ -56,11 +56,7 @@ public class ProfileBuilder {
     return userImage;
   }
 
-  /**
-   * Decrement counter will decrease the counter by 1
-   *
-   * @param counter
-   */
+  /** Decrement counter will decrease the counter by 1 */
   public static void decrementCounter() {
     counter--;
   }
@@ -77,31 +73,33 @@ public class ProfileBuilder {
     ProfileBuilder.hbox = hbox;
   }
 
-  // Update all the IDs
+  /** This method will update the Id of a user */
   public static void updateId() {
     int id = 0;
     // Reset all the ids
     for (ProfileBuilder profile : UsersController.profiles) {
       profile.deleteProfileButton.setId(String.format("deleteProfileButton%d", id));
-      profile.userImageVBox.setId(String.format("image%d", id));
+      profile.userImageBox.setId(String.format("image%d", id));
       id++;
     }
   }
 
   // Declare all fields that a user profile will have
   protected ImageView imageView;
-  protected VBox userImageVBox;
+  protected VBox userImageBox;
   protected Label userNameLabel;
   protected Label userSelectedLabel;
   protected Button deleteProfileButton;
   protected VBox vbox;
   protected UserType type;
+  private Font maybeNext =
+      Font.loadFont(App.class.getResourceAsStream("/fonts/Maybe-Next.ttf"), 22);
+  private boolean isSelected = false;
 
   /**
-   * ProfileBuilder constructor will set up a profile inside the grid
+   * ProfileBuilder constructor will set up a profile inside the selection optinos
    *
-   * @param row the row number in the grid
-   * @param col the column number in the grid
+   * @param type takes in the type of user being built
    */
   public ProfileBuilder(UserType type) {
     // Get the type of profile
@@ -163,20 +161,21 @@ public class ProfileBuilder {
     imageView.fitWidthProperty().bind(hbox.widthProperty().divide(7));
 
     // Set up interactable box for image view
-    userImageVBox = new VBox();
-    userImageVBox.setAlignment(Pos.CENTER);
-    userImageVBox.getChildren().add(imageView);
+    userImageBox = new VBox();
+    userImageBox.setAlignment(Pos.CENTER);
+    userImageBox.getChildren().add(imageView);
     // Set the profile image box id as its position in the user list
-    userImageVBox.setId(String.format("image%d", counter));
+    userImageBox.setId(String.format("image%d", counter));
 
     // Add the image view to the scene
-    vbox.getChildren().add(userImageVBox);
+    vbox.getChildren().add(userImageBox);
     VBox.setMargin(vbox.getChildren().get(0), new Insets(0, 0, 20, 0));
 
     // Event for hovering on
-    userImageVBox.setOnMouseEntered(
+    userImageBox.setOnMouseEntered(
         e -> {
           if (!isSelected) {
+            onButtonHover(null);
             imageView.setStyle(HOVERED_STYLE);
             if (imageView.getScene() != null) {
               imageView.getScene().setCursor(Cursor.HAND);
@@ -184,14 +183,15 @@ public class ProfileBuilder {
           }
         });
     // Event for mouse down
-    userImageVBox.setOnMousePressed(
+    userImageBox.setOnMousePressed(
         e -> {
           if (!isSelected) {
+            onButtonClick(null);
             imageView.setStyle(MOUSE_DOWN_STYLE);
           }
         });
     // Event for hovering off
-    userImageVBox.setOnMouseExited(
+    userImageBox.setOnMouseExited(
         e -> {
           if (!isSelected) {
             imageView.setStyle(IDLE_STYLE);
@@ -246,15 +246,17 @@ public class ProfileBuilder {
   /**
    * Highlights this profile by updating visible UI elements.
    *
-   * @param highlight if true this profile will be styled as highlighted
+   * @param selected if true this profile will be styled as highlighted
    */
-  public void setSelected(Boolean selected) {
+  public void setSelected(boolean selected) {
     if (selected) {
+      // Update selected style
       isSelected = true;
       userSelectedLabel.setVisible(true);
       imageView.setStyle(HIGHLIGHT_STYLE);
       imageView.setEffect(null);
     } else {
+      // Update non selected style
       isSelected = false;
       userSelectedLabel.setVisible(false);
       imageView.setStyle(IDLE_STYLE);

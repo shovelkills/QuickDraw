@@ -9,6 +9,8 @@ public class SceneManager {
     MAIN_MENU,
     GAME,
     GAMESELECT,
+    GRAPH,
+    BADGES,
     LOADING,
     STATS,
     USERSELECT,

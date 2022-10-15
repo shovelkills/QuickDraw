@@ -1,6 +1,7 @@
 package nz.ac.auckland.se206;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Optional;
 import javafx.animation.Animation;
@@ -16,6 +17,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
@@ -23,33 +25,33 @@ import javafx.scene.text.Font;
 import javafx.util.Duration;
 import nz.ac.auckland.se206.SceneManager.AppUi;
 
-public class MenuController {
-  // Declare the menu objects
-  @FXML private Canvas canvas;
-  @FXML private ImageView profileImageView;
-  @FXML private Label titleLabel;
-  @FXML private Label usernameLabel;
-  @FXML private Button startButton;
-  @FXML private Button statsButton;
-  @FXML private Button exitButton;
-  @FXML private Button exitTipButton;
-  @FXML private Button selectedUserButton;
-
+public class MenuController extends SoundsController {
+  // volume Slider is used by sounds class
+  private static Slider volumeSlider;
   private static final String IDLE_STYLE =
       "-fx-effect: dropshadow(gaussian, #fff8f5, 10, 1, 0, 0);";
   private static final String HOVER_STYLE =
       "-fx-scale-x: 1.2; -fx-scale-y: 1.2; -fx-effect: dropshadow(gaussian, #fff8f5, 20, 0.8, 0, 0);";
   private static final String MOUSE_DOWN_STYLE =
       "-fx-scale-x: 1.2; -fx-scale-y: 1.2; -fx-effect: dropshadow(gaussian, #fff8f5, 30, 0.8, 0, 0);";
-  private Font titleFont;
+  // Declare the menu objects
+  @FXML private Canvas canvas;
+  @FXML private ImageView profileImageView;
+  @FXML private Label titleLabel;
+  @FXML private Label usernameLabel;
 
-  /**
-   * This method alternates alternates colours for a label
-   *
-   * @param label the FXML label given
-   * @param colour1 the first colour to alternate between
-   * @param colour2 the second colour to alternate between
-   */
+  @FXML private Button badgesButton;
+  @FXML private Button graphButton;
+  @FXML private Button startButton;
+  @FXML private Button statsButton;
+  @FXML private Button exitButton;
+  @FXML private Button exitTipButton;
+  @FXML private Button selectedUserButton;
+  @FXML private Button soundButton;
+  @FXML private Button musicButton;
+  @FXML private Slider musicSlider;
+
+  // This is a task that alternates colours for a label
   private Task<Void> backgroundTask =
       new Task<Void>() {
 
@@ -61,9 +63,17 @@ public class MenuController {
         }
       };
 
+  /**
+   * JavaFX calls this method once the GUI elements are loaded. Here we load in the fonts and user's
+   * images and start up the threads
+   */
   public void initialize() {
     // Load in a new font and set it to the tile
-    titleFont = Font.loadFont("file:src/main/resources/fonts/Maybe-Next.ttf", 60);
+    Font.loadFont("file:src/main/resources/fonts/Maybe-Next.ttf", 60);
+    // Start music task
+    volumeSlider = musicSlider;
+    SoundsController.soundsInitialize();
+    SoundsController.playBackgroundMusic();
     // Set default guest login label
     usernameLabel.setText("Guest");
     // Load in the guest image
@@ -83,6 +93,7 @@ public class MenuController {
     selectedUserButton.setOnMouseEntered(
         e -> {
           profileImageView.setStyle(HOVER_STYLE);
+          onButtonHover(null);
         });
     selectedUserButton.setOnMouseExited(
         e -> {
@@ -91,9 +102,17 @@ public class MenuController {
     selectedUserButton.setOnMousePressed(
         e -> {
           profileImageView.setStyle(MOUSE_DOWN_STYLE);
+          onButtonClick(null);
         });
   }
 
+  /**
+   * alternateColours will create an alternating colour timeline on our title
+   *
+   * @param label takes in a label, usually the title
+   * @param colour1 a colour to oscillate between
+   * @param colour2 another colour to oscillate between
+   */
   private void alternateColours(Label label, Color colour1, Color colour2) {
     // Create a new timeline object
     Timeline timeline = new Timeline();
@@ -112,17 +131,40 @@ public class MenuController {
     timeline.play();
   }
 
+  /**
+   * get's the volume slider on main menu page
+   *
+   * @return a slider object
+   */
+  public static Slider getVolumeSlider() {
+    return volumeSlider;
+  }
+
+  /**
+   * updateUserImage will change the user image based on switching
+   *
+   * @param image the player's image that is saved
+   */
   public void updateUserImage(Image image) {
     profileImageView.setImage(image);
   }
 
+  /**
+   * updateUsernameLabel will change the user name label based on switching
+   *
+   * @param username the player's name
+   */
   public void updateUsernameLabel(String username) {
     usernameLabel.setText(username);
   }
 
+  /**
+   * onStartGame will start up the game select screen
+   *
+   * @param event takes in an event to return back to the menu
+   */
   @FXML
   private void onStartGame(ActionEvent event) {
-
     // Get the scene currently in
     Button button = (Button) event.getSource();
     Scene sceneButtonIsIn = button.getScene();
@@ -134,6 +176,12 @@ public class MenuController {
     sceneButtonIsIn.setRoot(SceneManager.getUiRoot(AppUi.GAMESELECT));
   }
 
+  /**
+   * onMoveToStats will move us to the stats scene
+   *
+   * @param event takes in an event to return back to the menu
+   * @throws IOException reading/writing exception
+   */
   @FXML
   private void onMoveToStats(ActionEvent event) throws IOException {
     // Tell the stats controller to update values for the current user
@@ -149,6 +197,11 @@ public class MenuController {
     sceneButtonIsIn.setRoot(SceneManager.getUiRoot(AppUi.STATS));
   }
 
+  /**
+   * onUserSelect will take us to the user selection screen
+   *
+   * @param event takes in an event to return back to the menu
+   */
   @FXML
   private void onUserSelect(ActionEvent event) {
     // Get the scene currently in
@@ -158,6 +211,7 @@ public class MenuController {
     sceneButtonIsIn.setRoot(SceneManager.getUiRoot(AppUi.USERSELECT));
   }
 
+  /** onExitGame will let us leave the game after asking for confirmation */
   @FXML
   private void onExitGame() {
     // Create a pop up for confirming exit
@@ -174,5 +228,82 @@ public class MenuController {
       // Do nothing if cancelled is pressed
       return;
     }
+  }
+
+  /**
+   * onGraphButton will take the user to the graph scene or pop up an alert saying no stats
+   *
+   * @param event takes in an event to return back to the menu
+   */
+  @FXML
+  private void onGraphButton(ActionEvent event) {
+    if (Users.getWordHistory().size() == 0) {
+      // Create a new alert
+      Alert alert = new Alert(Alert.AlertType.WARNING);
+      alert.setTitle("No game played yet");
+      alert.setHeaderText("No games have been played yet so you cannot view data");
+      alert.setResizable(false);
+      Optional<ButtonType> result = alert.showAndWait();
+      if (result.get() == ButtonType.OK) {
+        return;
+      }
+    }
+    // Tells the controller to update the graph
+    GraphController graphController = App.getGraphController();
+    graphController.loadGraphData();
+    // Get the scene currently in
+    Button button = (Button) event.getSource();
+    Scene sceneButtonIsIn = button.getScene();
+    // Move to the next scene
+    sceneButtonIsIn.setRoot(SceneManager.getUiRoot(AppUi.GRAPH));
+  }
+
+  /**
+   * onShowBadges will take the user to the badges scene
+   *
+   * @param event takes in an event to return back to the menu
+   */
+  @FXML
+  private void onShowBadges(ActionEvent event) throws FileNotFoundException {
+    BadgeController badgeController = App.getBadgeController();
+    badgeController.loadBadges();
+    // Moves to the badges scene
+    Button button = (Button) event.getSource();
+    Scene sceneButtonIsIn = button.getScene();
+
+    // Wins the badge at looking at badges
+    Badges.winBadge("Misc", "View Badges Page");
+    // Move to the next scene
+    sceneButtonIsIn.setRoot(SceneManager.getUiRoot(AppUi.BADGES));
+  }
+
+  /**
+   * onSoundToggle will toggle all sound effects in the application
+   *
+   * @param event takes in an event to return back to the menu
+   */
+  @FXML
+  protected void onSoundToggle(ActionEvent event) {
+    // Toggle ALL sound effects
+    SoundsController.toggleSoundEffect();
+  }
+
+  /**
+   * onMusicToggle will toggle the background music in the application
+   *
+   * @param event takes in an event to return back to the menu
+   */
+  @FXML
+  protected void onMusicToggle(ActionEvent event) {
+    // Check if the music is playing
+    if (SoundsController.getMusic()) {
+      // Disable the slider
+      musicSlider.setDisable(true);
+    } else {
+      // Enable the slider
+      musicSlider.setDisable(false);
+    }
+    // Toggle the background music
+    SoundsController.toggleMusic();
   }
 }

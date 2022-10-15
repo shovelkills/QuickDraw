@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -19,6 +20,7 @@ import java.util.regex.Pattern;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
 import javax.imageio.ImageIO;
+import nz.ac.auckland.se206.GameSelectController.GameMode;
 import nz.ac.auckland.se206.words.CategorySelector;
 
 public class Users {
@@ -139,7 +141,7 @@ public class Users {
 
     } catch (FileNotFoundException e) {
       // Creates a hashMap to add information to the JSON file
-      Map<String, Object> userMap = new HashMap<>();
+      Map<String, Object> userMap = new LinkedHashMap<>();
       userMap.put("username", username);
       userMap.put("gamesWon", 0);
       userMap.put("gamesLost", 0);
@@ -155,7 +157,7 @@ public class Users {
       userMap.put("winHistory", new ArrayList<Boolean>());
 
       // Creates the default difficulty
-      Map<String, String> difficulty = new HashMap<>();
+      Map<String, String> difficulty = new LinkedHashMap<>();
       difficulty.put("accuracyDifficulty", "EASY");
       difficulty.put("wordsDifficulty", "EASY");
       difficulty.put("timeDifficulty", "EASY");
@@ -199,33 +201,38 @@ public class Users {
    */
   public static Map<String, Map<String, Boolean>> createBadges() {
     // Creates a new HashMap the contains all the badges
-    Map<String, Map<String, Boolean>> badgeList = new HashMap<>();
-    Map<String, Boolean> difficulty = new HashMap<>();
+    Map<String, Map<String, Boolean>> badgeList = new LinkedHashMap<>();
+    Map<String, Boolean> difficulty = new LinkedHashMap<>();
     // Generates the badges
     difficulty.put("E", false);
     difficulty.put("M", false);
     difficulty.put("H", false);
     badgeList.put("Accuracy", difficulty);
+    difficulty = new LinkedHashMap<>();
+    difficulty.put("E", false);
+    difficulty.put("M", false);
+    difficulty.put("H", false);
     difficulty.put("MS", false);
+
     // Adds to badge list based of difficulty
     badgeList.put("Words", difficulty);
     badgeList.put("Time", difficulty);
     badgeList.put("Confidence", difficulty);
     badgeList.put("All difficulties", difficulty);
     // Generate hashMap for badges based on time wins
-    Map<String, Boolean> timedWins = new HashMap<>();
+    Map<String, Boolean> timedWins = new LinkedHashMap<>();
     timedWins.put("10 Seconds", false);
     timedWins.put("30 Seconds", false);
     timedWins.put("Last Second", false);
     badgeList.put("Timed Wins", timedWins);
     // Generate hashMap for badges based on Wins
-    Map<String, Boolean> wins = new HashMap<>();
+    Map<String, Boolean> wins = new LinkedHashMap<>();
     wins.put("First Win", false);
     wins.put("2 consecutive wins", false);
     wins.put("5 consecutive wins", false);
     badgeList.put("Wins", wins);
     // Generates hashMap for badges on Misc actions
-    Map<String, Boolean> misc = new HashMap<>();
+    Map<String, Boolean> misc = new LinkedHashMap<>();
     misc.put("Draw User Profile", false);
     misc.put("Play Zen Mode", false);
     misc.put("View Stats Page", false);
@@ -248,23 +255,6 @@ public class Users {
     return matchCharacters.find();
   }
 
-  /**
-   * Gets the sum of the remain time that the user has to draw each word
-   *
-   * @return the average time remaining that it user has when the game recognizes the word
-   */
-  public static double getAverageTime() {
-    double sum = 0;
-    // Checks if the list is empty and finds the average time
-    if (!timeHistory.isEmpty()) {
-      for (Double time : timeHistory) {
-        sum += time;
-      }
-      return sum / timeHistory.size();
-    }
-    return sum;
-  }
-
   /** Saves the data of the user to a JSON file after a game finishes */
   public static void saveUser() {
     if (userName == "Guest") {
@@ -275,7 +265,7 @@ public class Users {
     try (Writer writer = new FileWriter(new File(dir, userName + ".json"))) {
 
       // Creates map to store user info
-      Map<String, Object> userMap = new HashMap<>();
+      Map<String, Object> userMap = new LinkedHashMap<>();
       userMap.put("username", userName);
       userMap.put("gamesWon", wins);
       userMap.put("gamesLost", losses);
@@ -415,19 +405,24 @@ public class Users {
   private static void loadGuest(GuestPlayer sessionGuest) {
     // Add the information to the guest
     userName = "Guest";
+    // Get the fastest word, wins, and losses
     fastestWord = guestPlayer.getFastestWord();
     wins = guestPlayer.getWins();
     losses = guestPlayer.getLosses();
+    // Get the fastest time, word history, time history, and game difficulty
     fastestTime = guestPlayer.getFastestTime();
     wordHistory = guestPlayer.getWordHistroy();
     timeHistory = guestPlayer.getTimeHistory();
     gameDifficulty = guestPlayer.getGamedifficulty();
+    // Get badges and all difficulty histories
     badges = guestPlayer.getBadges();
     accuracyDifficultyHistory = guestPlayer.getAccuracyDifficultyHistory();
     timeDifficultyHistory = guestPlayer.getTimeDifficultyHistory();
     wordDifficultyHistory = guestPlayer.getWordDifficultyHistory();
     confidenceDifficultyHistory = guestPlayer.getConfidenceDifficultyHistory();
+    // get the player's win history
     winHistory = guestPlayer.getWinHistory();
+    // Update the most recent user
     setRecentUser(userName);
   }
 
@@ -443,7 +438,6 @@ public class Users {
    * @param word the word the user had to draw
    */
   public static void checkFastestTime(int time, String word) {
-    Badges.checkWinTime(time);
     // Checks if it is the fastest time
     if (time <= Users.fastestTime || (Users.fastestTime == -1 && time != 60)) {
       Users.fastestTime = time;
@@ -456,6 +450,14 @@ public class Users {
     }
   }
 
+  /**
+   * Adds the difficulty to the history
+   *
+   * @param accuracy the accuracy difficulty
+   * @param word the word difficulty
+   * @param time the time difficulty
+   * @param confidence the confidence difficulty
+   */
   public static void addGameDifficultyHistory(
       String accuracy, String word, String time, String confidence) {
 
@@ -465,14 +467,20 @@ public class Users {
     confidenceDifficultyHistory.add(confidence);
   }
 
-  // updates the userList by adding new user to list
+  /**
+   * Updates the userList by adding new user to list
+   *
+   * @param user takes in a user by their user name
+   */
   public static void addUserList(String user) {
     userList.add(user);
     // Save the user List
     saveUserList();
   }
 
-  // Increases current user's wins by 1, consistentWins by 1 and check the number of consistent wins
+  /**
+   * Increases current user's wins by 1, consistentWins by 1 and check the number of consistent wins
+   */
   public static void increaseWins() {
     Users.wins++;
     Users.consistentWins++;
@@ -480,7 +488,7 @@ public class Users {
     Badges.checkConsistentWins(consistentWins);
   }
 
-  // Increases current user's losses by 1
+  /** Increases current user's losses by 1 */
   public static void increaseLosses() {
     Users.losses++;
     Users.addWinHistory(false);
@@ -513,10 +521,24 @@ public class Users {
     Users.wordHistory.add(word);
   }
 
+  /**
+   * addTimeHistory will add how long the player took to their history stats
+   *
+   * @param time is the time remaining
+   * @param word is the word they were drawing
+   */
   public static void addTimeHistory(int time, String word) {
-    int solvetime = CategorySelector.getTime() - time;
-    Users.timeHistory.add((double) solvetime);
-    checkFastestTime(solvetime, word);
+    // Calculate time difference
+    int solveTime;
+    // Check if game mode is blitz
+    if (GameSelectController.getCurrentGameMode() == GameMode.BLITZ) {
+      // get the last blitz time minus current time
+      solveTime = Game.getBlitzTime() - time;
+    } else {
+      solveTime = CategorySelector.getTime() - time;
+    }
+    Users.timeHistory.add((double) solveTime);
+    checkFastestTime(solveTime, word);
   }
 
   // Getters and setter methods below.
@@ -574,6 +596,11 @@ public class Users {
     Users.profilePicture = profilepicture;
   }
 
+  /**
+   * Adds the win to the winhistory array
+   *
+   * @param win takes in if user won or not
+   */
   public static void addWinHistory(Boolean win) {
     winHistory.add(win);
   }
@@ -582,7 +609,7 @@ public class Users {
    * To get each difficulty, do Map.get(difficult) e.g. Map.get("timedifficulty") to get the time
    * difficulty
    *
-   * @return
+   * @return a string of the player's difficulty
    */
   public static String getIndividualDifficulty(String difficulty) {
     return gameDifficulty.get(difficulty);

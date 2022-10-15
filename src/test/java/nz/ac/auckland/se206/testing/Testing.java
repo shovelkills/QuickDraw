@@ -1,8 +1,12 @@
 package nz.ac.auckland.se206.testing;
 
+import java.util.HashMap;
+import java.util.Map;
 import nz.ac.auckland.se206.Users;
 
 public class Testing {
+
+  private static Map<String, Map<String, Boolean>> badges;
 
   public static void main(String[] args) {
 
@@ -13,6 +17,11 @@ public class Testing {
     // testUserList();
     // testDeletingUser();
     // testDeleteProfilePicture();
+
+    createBadges();
+    System.out.println(getBadges().get("Accuracy").get("EASY"));
+    getBadges().get("Accuracy").put("EASY", true);
+    System.out.println(getBadges().get("Accuracy").get("EASY"));
   }
 
   private static void testDeleteProfilePicture() {
@@ -35,7 +44,6 @@ public class Testing {
     System.out.println("Word History " + Users.getWordHistory());
     System.out.println("Fastest word " + Users.getFastestWord());
     System.out.println("Time History" + Users.getTimeHistory());
-    System.out.println("Average Time " + Users.getAverageTime());
   }
 
   public static void testCreatingJSONFile() {
@@ -98,5 +106,45 @@ public class Testing {
     System.out.println(Users.getUserName());
     Users.deleteUser("BroBait");
     System.out.println(Users.getUserList());
+  }
+
+  public static void createBadges() {
+    Map<String, Map<String, Boolean>> badgeList = new HashMap<>();
+    Map<String, Boolean> difficulty = new HashMap<>();
+    // Generates the badges
+    difficulty.put("EASY", false);
+    difficulty.put("MEDIUM", false);
+    difficulty.put("HARD", false);
+    badgeList.put("Accuracy", difficulty);
+    difficulty.put("MASTER", false);
+    // Adds to badge list based of difficulty
+    badgeList.put("Words", difficulty);
+    badgeList.put("Time", difficulty);
+    badgeList.put("Confidence", difficulty);
+    badgeList.put("All difficulties", difficulty);
+    // Generate hashMap for badges based on time wins
+    Map<String, Boolean> timedWins = new HashMap<>();
+    timedWins.put("10 Seconds", false);
+    timedWins.put("30 Seconds", false);
+    timedWins.put("Last Second", false);
+    badgeList.put("Timed Wins", timedWins);
+    // Generate hashMap for badges based on Wins
+    Map<String, Boolean> wins = new HashMap<>();
+    wins.put("First Win", false);
+    wins.put("2 consecutive wins", false);
+    wins.put("5 consecutive wins", false);
+    badgeList.put("Wins", wins);
+    // Generates hashMap for badges on Misc actions
+    Map<String, Boolean> misc = new HashMap<>();
+    misc.put("Draw User Profile", false);
+    misc.put("Play Zen Mode", false);
+    misc.put("View Stats Page", false);
+    misc.put("View Badges Page", false);
+    badgeList.put("Misc", misc);
+    badges = badgeList;
+  }
+
+  public static Map<String, Map<String, Boolean>> getBadges() {
+    return badges;
   }
 }

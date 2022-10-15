@@ -51,10 +51,10 @@ public class CategorySelector {
   /**
    * getLines will read the lines from the CSV file
    *
-   * @return
-   * @throws IOException
-   * @throws CsvException
-   * @throws URISyntaxException
+   * @return a list full of strings that is from the CSV file
+   * @throws IOException reading/writing exception
+   * @throws URISyntaxException converting to link exception
+   * @throws CsvException reading spreadsheet exceptions
    */
   protected static List<String[]> getLines() throws IOException, CsvException, URISyntaxException {
     // Get the CSV File
@@ -107,7 +107,7 @@ public class CategorySelector {
   /**
    * getEasyMediumHardCategory will get a word from any of the three categories
    *
-   * @return
+   * @return A string of one of the three difficulties
    */
   public static String getEasyMediumHardCategory() {
     // Choose a random category

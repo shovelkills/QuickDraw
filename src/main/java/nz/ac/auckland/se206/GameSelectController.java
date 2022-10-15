@@ -20,13 +20,14 @@ import nz.ac.auckland.se206.SceneManager.AppUi;
 import nz.ac.auckland.se206.dict.WordNotFoundException;
 import nz.ac.auckland.se206.words.CategorySelector.Difficulty;
 
-public class GameSelectController {
+public class GameSelectController extends SoundsController {
 
   public enum GameMode {
     HIDDEN_WORD,
     NORMAL,
     ZEN,
     PROFILE,
+    BLITZ
   }
 
   private static GameMode currentGameMode = GameMode.NORMAL;
@@ -41,29 +42,38 @@ public class GameSelectController {
     GameSelectController.currentGameMode = currentGameMode;
   }
 
+  /** Sets the local game mode */
+  public static void setLocalGameMode() {
+    setCurrentGameMode(localGameMode);
+  }
+
   // Define FXML fields
+  @FXML private Button blitzButton;
+  @FXML private Button definitionButton;
+  @FXML private Button normalButton;
+  @FXML private Button zenButton;
   @FXML private ChoiceBox<String> accuracyMenu;
   @FXML private ChoiceBox<String> wordsMenu;
   @FXML private ChoiceBox<String> timeMenu;
   @FXML private ChoiceBox<String> confidenceMenu;
-  @FXML private Button definitionButton;
-  @FXML private Button normalButton;
-  @FXML private Button zenButton;
   @FXML private Tooltip toolTip1;
   @FXML private Tooltip toolTip2;
   @FXML private Tooltip toolTip3;
   @FXML private Tooltip toolTip4;
 
+  private final HashMap<Difficulty, String> difficultyMap = new HashMap<Difficulty, String>();
   private ArrayList<Button> gameModes = new ArrayList<Button>();
   private ArrayList<Tooltip> toolTips = new ArrayList<Tooltip>();
-
-  private final HashMap<Difficulty, String> difficultyMap = new HashMap<Difficulty, String>();
   private ArrayList<ChoiceBox<String>> difficultyMenu = new ArrayList<ChoiceBox<String>>();
   // Task for alternating colour of the title and word label concurrently
 
+  /**
+   * initialize method will be called upon starting the game to add all the difficulties into the
+   * game select canvas so that the user can choose which difficulties they will play in their games
+   */
   public void initialize() {
     Collections.addAll(toolTips, toolTip1, toolTip2, toolTip3, toolTip4);
-    Collections.addAll(gameModes, definitionButton, normalButton, zenButton);
+    Collections.addAll(gameModes, definitionButton, normalButton, zenButton, blitzButton);
     difficultyMap.put(Difficulty.E, "EASY");
     difficultyMap.put(Difficulty.M, "MEDIUM");
     difficultyMap.put(Difficulty.H, "HARD");
@@ -100,11 +110,11 @@ public class GameSelectController {
       e.printStackTrace();
     }
     canvas.getGame().setIsGhostGame(true);
-
-    canvas.onStartGame();
+    // Start the game
+    canvas.onStartGame(null);
 
     try {
-      canvas.onRestartGame();
+      canvas.onRestartGame(null);
     } catch (IOException
         | URISyntaxException
         | CsvException
@@ -120,16 +130,10 @@ public class GameSelectController {
   /**
    * onStartGame will start the game based on the given settings
    *
-   * @param event
-   * @throws IOException
-   * @throws CsvException
-   * @throws URISyntaxException
-   * @throws ModelException
-   * @throws InterruptedException
+   * @param event takes in the click to start the game
    */
   @FXML
-  private void onStartGame(ActionEvent event)
-      throws IOException, CsvException, URISyntaxException, ModelException, InterruptedException {
+  private void onStartGame(ActionEvent event) {
 
     Task<Void> preGameTask =
         new Task<Void>() {
@@ -139,8 +143,10 @@ public class GameSelectController {
             updateProgress(0, 1);
             CanvasController canvas = App.getCanvasController();
             Thread.sleep(100);
+            // Update progress to half way and then set up the pre-game interface
             updateProgress(0.5, 1);
             canvas.setPreGameInterface();
+            // Update progress completely
             updateProgress(1, 1);
             Thread.sleep(100);
 
@@ -165,15 +171,25 @@ public class GameSelectController {
           timeMenu.getValue(),
           confidenceMenu.getValue());
 
-      DifficultyBuilder.difficultySetter(
+      // Build the difficulty for all game modes except profile and zen
+      DifficultyBuilder.setDifficulty(
           Users.getIndividualDifficulty("accuracyDifficulty"),
           Users.getIndividualDifficulty("wordsDifficulty"),
           Users.getIndividualDifficulty("timeDifficulty"),
           Users.getIndividualDifficulty("confidenceDifficulty"));
     }
     if (currentGameMode == GameMode.ZEN) {
+      // Set up zen mode
       Badges.winBadge("Misc", "Play Zen Mode");
+      Users.setGameDifficulty(
+          Users.getIndividualDifficulty("accuracyDifficulty"),
+          wordsMenu.getValue(),
+          Users.getIndividualDifficulty("timeDifficulty"),
+          Users.getIndividualDifficulty("confidenceDifficulty"));
+      // Build the difficulty for zen mode
+      DifficultyBuilder.setDifficulty("EASY", wordsMenu.getValue(), "-1", "-1");
     }
+    // TODO add badge for Blitz game mode
     preGameTask.setOnSucceeded(
         e -> {
           progressBar.progressProperty().unbind();
@@ -186,6 +202,11 @@ public class GameSelectController {
     preGameThread.start();
   }
 
+  /**
+   * onExitToMenu will take us back to the main menu from game select screen
+   *
+   * @param event takes in the click to start the game
+   */
   @FXML
   private void onExitToMenu(ActionEvent event) {
     // Get the current scene
@@ -198,11 +219,12 @@ public class GameSelectController {
   /**
    * onSelectGameMode will change the current GameMode
    *
-   * @param event
+   * @param event takes in an JavaFX event
    */
   @FXML
   private void onSelectGameMode(ActionEvent event) {
     Button gameModeButton = (Button) event.getSource();
+    // Loop through all the buttons
     for (Button button : gameModes) {
       if (button == gameModeButton) {
         button.setDisable(true);
@@ -210,6 +232,7 @@ public class GameSelectController {
         button.setDisable(false);
       }
     }
+    // See which button was pressed
     switch (gameModeButton.getText()) {
       case "Normal":
         // Switch to normal game mode
@@ -226,15 +249,14 @@ public class GameSelectController {
         break;
       case "Zen":
         // Switch to zen game mode
-        wordsMenu.setDisable(true);
-        wordsMenu.setValue("HARD");
+        wordsMenu.setDisable(false);
+        wordsMenu.setValue(Users.getIndividualDifficulty("wordsDifficulty"));
         accuracyMenu.setDisable(true);
         accuracyMenu.setValue("N/A");
         confidenceMenu.setDisable(true);
         confidenceMenu.setValue("N/A");
         timeMenu.setDisable(true);
         timeMenu.setValue("N/A");
-        DifficultyBuilder.difficultySetter("-1", wordsMenu.getValue(), "-1", "-1");
         // Change the local game mode
         localGameMode = GameMode.ZEN;
         break;
@@ -251,6 +273,18 @@ public class GameSelectController {
         // Change the local game mode
         localGameMode = GameMode.HIDDEN_WORD;
         break;
+      case "Blitz":
+        // Switch to blitz game mode
+        wordsMenu.setDisable(false);
+        wordsMenu.setValue(Users.getIndividualDifficulty("wordsDifficulty"));
+        accuracyMenu.setDisable(false);
+        accuracyMenu.setValue(Users.getIndividualDifficulty("accuracyDifficulty"));
+        confidenceMenu.setDisable(false);
+        confidenceMenu.setValue(Users.getIndividualDifficulty("confidenceDifficulty"));
+        timeMenu.setDisable(false);
+        timeMenu.setValue(Users.getIndividualDifficulty("timeDifficulty"));
+        localGameMode = GameMode.BLITZ;
+        break;
       default:
         // Set the default game mode to normal
         localGameMode = GameMode.NORMAL;
@@ -261,20 +295,19 @@ public class GameSelectController {
 
   /** Sets the difficulties of the choice menus of the users previous difficulties selected */
   public void setUserDifficulties() {
+    // Check if the current game mode is zen
     if (getCurrentGameMode() == GameMode.ZEN) {
+      // set all the menus to N/A
       accuracyMenu.setValue("N/A");
       confidenceMenu.setValue("N/A");
       timeMenu.setValue("N/A");
     } else {
+      // Otherwise load in the user's difficulties
       accuracyMenu.setValue(Users.getIndividualDifficulty("accuracyDifficulty"));
       confidenceMenu.setValue(Users.getIndividualDifficulty("confidenceDifficulty"));
       timeMenu.setValue(Users.getIndividualDifficulty("timeDifficulty"));
     }
+    // For the word menu set the words difficulty
     wordsMenu.setValue(Users.getIndividualDifficulty("wordsDifficulty"));
-  }
-
-  /** Sets the local game mode */
-  public static void setLocalGameMode() {
-    setCurrentGameMode(localGameMode);
   }
 }

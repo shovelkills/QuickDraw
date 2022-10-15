@@ -24,6 +24,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.geometry.VPos;
 import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
@@ -42,6 +43,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
+import javafx.scene.shape.StrokeType;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
@@ -66,7 +69,7 @@ import nz.ac.auckland.se206.words.CategorySelector;
  * the canvas size, the ML model will not work correctly. So be careful. If you make some changes in
  * the canvas and brush sizes, make sure that the prediction works fine.
  */
-public class CanvasController {
+public class CanvasController extends SoundsController {
 
   // Define the scaling in hovering
   private static final String IDLE_STYLE = "-fx-scale-x: 1; -fx-scale-y: 1";
@@ -77,61 +80,14 @@ public class CanvasController {
   private static final Image INDICATOR_FURTHER =
       new Image(Users.folderDirectory + "/src/main/resources/images/indicatorFurther.png");
   private static ImageView predictionImage = new ImageView();
-  ;
+  private static GameMode currentGameMode;
 
-  /** deleteIndicator will delete the indicator image */
-  private void deleteIndicator() {
-    // Check if the image is active
-    if (predictionLabel.getGraphic() != null) {
-      // Remove the image
-      predictionLabel.setGraphic(null);
-    }
+  public static GameMode getCurrentGameMode() {
+    return currentGameMode;
   }
 
-  /** addIndicator will add a closer or further image to prediction label */
-  private void addIndicator() {
-    // Check that there is no image set
-    if (predictionLabel.getGraphic() == null) {
-      // Place the image inside the label
-      predictionLabel.setGraphic(predictionImage);
-    }
-  }
-
-  /**
-   * updateIndicator will update the indicator on the canvas
-   *
-   * @param closer will be true if the word is moving up the predictions list
-   */
-  public void updateIndicator(Indicator indicator) {
-    // Switch between the indicators
-    switch (indicator) {
-      case CLOSER:
-        addIndicator();
-
-        // Set the image and text for closer
-        predictionImage.setImage(INDICATOR_CLOSER);
-        predictionLabel.setText("Closer!");
-        break;
-      case FURTHER:
-        addIndicator();
-
-        // Set the image and text for further
-        predictionImage.setImage(INDICATOR_FURTHER);
-        predictionLabel.setText("Further away!");
-        break;
-      case NOT_FOUND:
-        deleteIndicator();
-        // Set the text for not in top 100
-        predictionLabel.setText("Not in top 100!");
-        break;
-      case SAME:
-        deleteIndicator();
-        // Set the text for not changed position
-        predictionLabel.setText("Haven't changed!");
-        break;
-      default:
-        break;
-    }
+  public static void setCurrentGameMode(GameMode currentGameMode) {
+    CanvasController.currentGameMode = currentGameMode;
   }
 
   // Define FXML fields
@@ -151,9 +107,9 @@ public class CanvasController {
   @FXML private Button backToMenuButtonStart;
   @FXML private Button backToMenuButtonEnd;
   @FXML private Button saveButton;
-  @FXML private HBox preGameHBox;
-  @FXML private HBox postGameHBox;
-  @FXML private VBox drawingToolsVBox;
+  @FXML private HBox preGameBox;
+  @FXML private HBox postGameBox;
+  @FXML private VBox drawingToolsBox;
   @FXML private ColorPicker colourPicker;
   @FXML private Tooltip gameToolTip;
   @FXML private Label gameToolTipLabel;
@@ -169,14 +125,10 @@ public class CanvasController {
   private boolean isDrawing;
   private double currentX;
   private double currentY;
-  private Color predictionListColor = Color.DARKSLATEBLUE;
-  private Color predictionHighlightColor = Color.web("#008079");
   private Color predictionTextColor = Color.WHITE;
-  private GameMode currentGameMode;
-  private Font maybeNext;
   private boolean savedImage = false;
   private Label definitionLabel;
-  private ArrayList<Integer> wordCharacters = new ArrayList();
+  private ArrayList<Integer> wordCharacters = new ArrayList<Integer>();
 
   // Task for alternating colour of the title and word label concurrently
   private Task<Void> alternateColoursTask =
@@ -204,7 +156,7 @@ public class CanvasController {
     // Get the graphic from the canvas
     graphic = canvas.getGraphicsContext2D();
     // Load font
-    maybeNext = Font.loadFont(App.class.getResourceAsStream("/fonts/Maybe-Next.ttf"), 0);
+    Font.loadFont(App.class.getResourceAsStream("/fonts/Maybe-Next.ttf"), 0);
     // Create a new thread for the alternating colours task
     Thread colourThread = new Thread(alternateColoursTask);
     // Allow the task to be cancelled on closing of application
@@ -238,15 +190,16 @@ public class CanvasController {
   /**
    * Sets UI elements which are common to the initialisation of the scene and restarting the game.
    *
-   * @throws URISyntaxException
-   * @throws CsvException
-   * @throws IOException
-   * @throws ModelException
-   * @throws WordNotFoundException
+   * @throws IOException reading/writing exception
+   * @throws CsvException reading spreadsheet exceptions
+   * @throws URISyntaxException converting to link exception
+   * @throws ModelException doodle prediction exception
+   * @throws WordNotFoundException word was not found exception
    */
   public void setPreGameInterface()
       throws IOException, CsvException, URISyntaxException, ModelException, WordNotFoundException {
     currentGameMode = GameSelectController.getCurrentGameMode();
+    onClear();
     // Instantiate a new game object on first opening the scene
     CategorySelector.loadCategories();
     // Reset the timer bar's css
@@ -254,7 +207,9 @@ public class CanvasController {
     timerBarLabel.getStyleClass().add("timerBarDefault");
     colourPicker.setValue(Color.BLACK);
     colourPicker.setVisible(true);
+    // Create the game instance
     game = new Game(this, currentGameMode);
+    // Update the tool tip
     updateToolTip();
 
     // Disable/Enable the definition label
@@ -268,8 +223,14 @@ public class CanvasController {
     }
     // Main setup
     if (currentGameMode != GameMode.PROFILE) {
+
       Platform.runLater(
           () -> {
+            for (int i = 0; i < CategorySelector.getAccuracy(); i++) {
+              Line tempLine = createPredictionLine(i);
+              predictionGrid.add(createPredictionLine(i), 0, i);
+              GridPane.setValignment(tempLine, VPos.BOTTOM);
+            }
             cornerLabel.setVisible(true);
             titleLabel.setText("Quick, Draw!");
             isDrawing = false;
@@ -281,6 +242,8 @@ public class CanvasController {
               timerLabel.textProperty().bind(game.getTimeRemainingAsStringBinding());
               timerLabel.setVisible(true);
               colourPicker.setVisible(false);
+              // reset visibilities of line
+
             } else {
               timerBarLabel.setPrefWidth(20000.0);
               timerLabel.setVisible(false);
@@ -290,13 +253,13 @@ public class CanvasController {
             // Set UI elements for pre-game
             canvas.setDisable(true);
             // Enable pre-game button panel
-            preGameHBox.setMouseTransparent(false);
-            preGameHBox.setVisible(true);
+            preGameBox.setMouseTransparent(false);
+            preGameBox.setVisible(true);
             // Disable post-game button panel
-            postGameHBox.setMouseTransparent(true);
-            postGameHBox.setVisible(false);
+            postGameBox.setMouseTransparent(true);
+            postGameBox.setVisible(false);
             // Disable drawing tools
-            drawingToolsVBox.setDisable(true);
+            drawingToolsBox.setDisable(true);
             // Set timer bar max width
             timerBarLabel.setMaxWidth(600.0);
 
@@ -313,6 +276,61 @@ public class CanvasController {
     }
   }
 
+  /** deleteIndicator will delete the indicator image */
+  private void deleteIndicator() {
+    // Check if the image is active
+    if (predictionLabel.getGraphic() != null) {
+      // Remove the image
+      predictionLabel.setGraphic(null);
+    }
+  }
+
+  /** addIndicator will add a closer or further image to prediction label */
+  private void addIndicator() {
+    // Check that there is no image set
+    if (predictionLabel.getGraphic() == null) {
+      // Place the image inside the label
+      predictionLabel.setGraphic(predictionImage);
+    }
+  }
+
+  /**
+   * updateIndicator will update the indicator on the canvas
+   *
+   * @param indicator closer will be true if the word is moving up the predictions list
+   */
+  public void updateIndicator(Indicator indicator) {
+    // Switch between the indicators
+    switch (indicator) {
+      case CLOSER:
+        addIndicator();
+
+        // Set the image and text for closer
+        predictionImage.setImage(INDICATOR_CLOSER);
+        predictionLabel.setText("Closer!");
+        break;
+      case FURTHER:
+        addIndicator();
+
+        // Set the image and text for further
+        predictionImage.setImage(INDICATOR_FURTHER);
+        predictionLabel.setText("Further away!");
+        break;
+      case NOT_FOUND:
+        deleteIndicator();
+        // Set the text for not in top 100
+        predictionLabel.setText("Not in top 100!");
+        break;
+      case SAME:
+        deleteIndicator();
+        // Set the text for not changed position
+        predictionLabel.setText("Haven't changed!");
+        break;
+      default:
+        break;
+    }
+  }
+
   /** setUpDefLabel will set up the definition label */
   private void setUpDefLabel() {
     // Creates a definition label
@@ -321,6 +339,7 @@ public class CanvasController {
     definitionLabel.setAlignment(Pos.CENTER);
     definitionLabel.setTextAlignment(TextAlignment.CENTER);
     definitionLabel.setFont(Font.font(wordLabel.getFont().getFamily(), FontWeight.NORMAL, 20));
+    // Set up the size for the label
     definitionLabel.setPrefSize(1025, 100);
     definitionLabel.setMinSize(1025, 100);
     definitionLabel.setWrapText(true);
@@ -344,8 +363,8 @@ public class CanvasController {
     // Hide other things
     timerLabel.setVisible(false);
     // Enable post-game button panel
-    postGameHBox.setMouseTransparent(false);
-    postGameHBox.setVisible(true);
+    postGameBox.setMouseTransparent(false);
+    postGameBox.setVisible(true);
     // Hide some more
     timerBarLabel.setVisible(false);
     predictionLabel.setVisible(false);
@@ -357,7 +376,7 @@ public class CanvasController {
     cornerLabel.setVisible(false);
     // Enable them to draw
 
-    onStartGame();
+    onStartGame(null);
   }
 
   /**
@@ -393,7 +412,7 @@ public class CanvasController {
 
   /** This method is called when the "Clear" button is pressed. Resets brush to "Brush" mode. */
   @FXML
-  private void onClear() {
+  protected void onClear() {
     // Clear the canvas
     graphic.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
     clearPredictionGrid();
@@ -424,7 +443,22 @@ public class CanvasController {
       // to bottom :
       // highest to lowest rank
       predictionGrid.add(createPredictionLabel(predictionEntry, isPrompt, i), 0, i);
+      if (i < CategorySelector.getAccuracy()) {
+        // Add the prediction line in
+        predictionGrid.add(createPredictionLine(i), 0, i);
+      }
     }
+  }
+
+  private Line createPredictionLine(int index) {
+    // Create a new line
+    Line line = new Line();
+    line.setStrokeType(StrokeType.OUTSIDE);
+    line.setStartX(-100);
+    line.setEndX(148);
+    line.toFront();
+    GridPane.setValignment(line, VPos.BOTTOM);
+    return line;
   }
 
   /**
@@ -460,8 +494,9 @@ public class CanvasController {
 
   /** Clears the prediction grid of entries and fills it with empty string entries. */
   private void clearPredictionGrid() {
-    // Remove all child nodes from the GridPane
+    // Remove all child nodes from the GridPane except lines
     predictionGrid.getChildren().clear();
+
     // Fill the GridPane with empty Label nodes
     for (int i = 0; i < predictionGrid.getRowCount(); i++) {
       predictionGrid.add(createPredictionLabel(" ", false, i), 0, i);
@@ -494,7 +529,7 @@ public class CanvasController {
                       | URISyntaxException
                       | ModelException
                       | WordNotFoundException e) {
-                    // TODO Auto-generated catch block
+                    // Print the error's message
                     e.printStackTrace();
                   }
                 });
@@ -531,15 +566,15 @@ public class CanvasController {
   /**
    * This method will restart the game once the player presses the button
    *
-   * @throws ModelException
-   * @throws CsvException
-   * @throws URISyntaxException
-   * @throws IOException
-   * @throws WordNotFoundException
+   * @throws IOException reading/writing exception
+   * @throws CsvException reading spreadsheet exceptions
+   * @throws URISyntaxException converting to link exception
+   * @throws ModelException doodle prediction exception
+   * @throws WordNotFoundException word was not found exception
    */
   @FXML
-  public void onRestartGame()
-      throws IOException, URISyntaxException, CsvException, ModelException, WordNotFoundException {
+  protected void onRestartGame(ActionEvent event)
+      throws IOException, CsvException, URISyntaxException, ModelException, WordNotFoundException {
     // Clear the canvas
     onClear();
     if (currentGameMode == GameMode.HIDDEN_WORD) {
@@ -551,7 +586,7 @@ public class CanvasController {
     game.resetGame();
     // Reset UI elements (NOTE: CREATES NEW GAME OBJECT!)
     setPreGameInterface();
-    // Reset Timer
+    // Call the method that will restart the timer
     resetTimerBar();
   }
 
@@ -585,7 +620,8 @@ public class CanvasController {
    * @throws IOException If the image cannot be saved.
    */
   private File saveCurrentSnapshotOnFile() throws IOException {
-    File file = null;
+    // Initialise a file
+    File file;
     if (currentGameMode != GameMode.PROFILE) {
       // Create a file chooser
       FileChooser fileChooser = new FileChooser();
@@ -652,13 +688,18 @@ public class CanvasController {
     timeline.play();
   }
 
+  /** decrementTimerBar will decrease the timer bar width */
   public void decrementTimerBar() {
+    // Reduce the width of the timer bar
     timerBarLabel.setPrefWidth(timerBarLabel.getWidth() - (600 - wordLabel.getWidth()) / 60);
   }
 
+  /** resetTimerBar will reset the width and reset the css */
   public void resetTimerBar() {
+    // Remove all the styling and set the default one back
     timerBarLabel.getStyleClass().clear();
     timerBarLabel.getStyleClass().add("timerBarDefault");
+    // Reset the width to 600 (back to default)
     timerBarLabel.setPrefWidth(600.0);
   }
 
@@ -668,9 +709,9 @@ public class CanvasController {
    * won <br>
    * - Prompts user with a pop-up giving them the option to save their drawing
    *
-   * @return isWin The win flag from the game controller, is true if the game was won and false if
+   * @param isWin The win flag from the game controller, is true if the game was won and false if
    *     lost
-   * @throws InterruptedException
+   * @throws InterruptedException interrupted exception will cause the thread to be interrupted
    */
   public void onEndGame(boolean isWin) {
     Platform.runLater(
@@ -680,13 +721,13 @@ public class CanvasController {
           canvas.setDisable(true);
           // Set UI elements for post-game
           // Enable post-game button panel
-          postGameHBox.setMouseTransparent(false);
-          postGameHBox.setVisible(true);
+          postGameBox.setMouseTransparent(false);
+          postGameBox.setVisible(true);
           // Disable pre-game button panel
-          preGameHBox.setMouseTransparent(true);
-          preGameHBox.setVisible(false);
+          preGameBox.setMouseTransparent(true);
+          preGameBox.setVisible(false);
           // Disable drawing tools
-          drawingToolsVBox.setDisable(true);
+          drawingToolsBox.setDisable(true);
           // Unbind label properties bound to game properties
           wordLabel.textProperty().unbind();
           timerLabel.textProperty().unbind();
@@ -695,23 +736,30 @@ public class CanvasController {
           // end of the
           // game.
           if (isWin) {
-            wordLabel.setText(getWinMessage());
             timerBarLabel.getStyleClass().clear();
             timerBarLabel.getStyleClass().add("timerBarWin");
+            // Increase the wins
+            Users.increaseWins();
+            wordLabel.setText(getWinMessage());
+
+            // Add badges for wins
             Badges.winBadge("Wins", "First Win");
             Badges.winDifficultyBadges(
                 DifficultyBuilder.getAccDifficulty(),
                 DifficultyBuilder.getWordsDifficulty(),
                 DifficultyBuilder.getTimeDifficulty(),
                 DifficultyBuilder.getConfDifficulty());
-            Users.increaseWins();
+            Badges.checkWinTime(game.getTimeRemaining());
           } else {
             System.out.println("LOST");
             wordLabel.setText(getLossMessage());
+            // Set the loss css to the timer bar
             timerBarLabel.getStyleClass().clear();
             timerBarLabel.getStyleClass().add("timerBarLoss");
+            // Increment losses and reset consecutive wins to 0
             Users.increaseLosses();
             Users.setConsistentWins(0);
+            Users.addTimeHistory(0, game.getCurrentPrompt());
           }
           timerBarLabel.setPrefWidth(20000.0);
           Users.addGameDifficultyHistory(
@@ -720,6 +768,9 @@ public class CanvasController {
               DifficultyBuilder.getTimeDifficulty().toString(),
               DifficultyBuilder.getConfDifficulty().toString());
           Users.saveUser();
+          // Reset blitz objects if we are playing blitz
+          Game.resetBlitzCounter();
+          Game.resetBlitzTime();
         });
   }
 
@@ -729,6 +780,15 @@ public class CanvasController {
    * @return A string informing the user they have won and how much time they took.
    */
   private String getWinMessage() {
+    // Check to see if we are playing blitz
+    if (currentGameMode == GameMode.BLITZ) {
+      return "You got "
+          + Game.getBlitzCounter()
+          + " words in "
+          + (CategorySelector.getTime() - game.getTimeRemaining())
+          + " seconds!";
+    }
+    // Otherwise for all other game modes
     return "You won! You drew "
         + game.getCurrentWord()
         + " in "
@@ -745,13 +805,16 @@ public class CanvasController {
     // Create custom loss message
     if (currentGameMode == GameMode.HIDDEN_WORD) {
       return String.format("Out of time! The word was %s", game.getCurrentWord());
+    } else if (currentGameMode == GameMode.BLITZ) {
+      return "Unlucky! You got no words in " + CategorySelector.getTime() + " seconds!";
     }
+    // For all other game modes
     return "Out of time! Play again?";
   }
 
   /** This method sets up a new game to be started */
   @FXML
-  public void onStartGame() {
+  protected void onStartGame(ActionEvent event) {
     // Ghost game pretends it is drawing to load and call first update of game services to pre-load
     // them
     if (game.getIsGhostGame()) {
@@ -762,8 +825,8 @@ public class CanvasController {
       game.startGame();
     }
     if (currentGameMode == GameMode.ZEN) {
-      postGameHBox.setMouseTransparent(false);
-      postGameHBox.setVisible(true);
+      postGameBox.setMouseTransparent(false);
+      postGameBox.setVisible(true);
     }
 
     canvas.setDisable(false);
@@ -772,10 +835,10 @@ public class CanvasController {
     onBrush();
 
     // Enable drawing tools
-    drawingToolsVBox.setDisable(false);
+    drawingToolsBox.setDisable(false);
 
     // Hide pre-game buttons
-    preGameHBox.setVisible(false);
+    preGameBox.setVisible(false);
 
     canvas.setOnMousePressed(
         e -> {
@@ -813,18 +876,16 @@ public class CanvasController {
    * Takes the user back to the main menu. Also resets the game in the canvas scene so loading a new
    * game from the menu will present the user with a fresh game.
    *
-   * @param event
-   * @throws IOException
-   * @throws URISyntaxException
-   * @throws CsvException
-   * @throws ModelException
-   * @throws InterruptedException
-   * @throws WordNotFoundException
+   * @param event takes in an event to return back to the menu
+   * @throws IOException If the model cannot be found on the file system.
+   * @throws URISyntaxException converting to link exception
+   * @throws CsvException reading spreadsheet exceptions
+   * @throws ModelException doodle prediction exception
+   * @throws WordNotFoundException word was not found exception
    */
   @FXML
   private void onBackToMenuStart(ActionEvent event)
-      throws IOException, URISyntaxException, CsvException, ModelException, InterruptedException,
-          WordNotFoundException {
+      throws IOException, URISyntaxException, CsvException, ModelException {
 
     // If not in zen mode, cancelling the game counts as a loss
     if (currentGameMode != GameMode.ZEN) {
@@ -852,6 +913,15 @@ public class CanvasController {
     }
   }
 
+  /**
+   * onBack will return back to main menu or creation page
+   *
+   * @param event takes in an event to return back to the menu
+   * @throws IOException reading/writing exception
+   * @throws URISyntaxException converting to link exception
+   * @throws CsvException reading spreadsheet exceptions
+   * @throws ModelException doodle prediction exception
+   */
   @FXML
   private void onBack(ActionEvent event)
       throws IOException, URISyntaxException, CsvException, ModelException {
@@ -883,6 +953,11 @@ public class CanvasController {
     resetTimerBar();
   }
 
+  /**
+   * onBackToMenu will go back to main menu
+   *
+   * @param event takes in the action event click
+   */
   @FXML
   private void onBackToMenu(ActionEvent event) {
     // Get the current scene
@@ -892,9 +967,13 @@ public class CanvasController {
     currentScene.setRoot(SceneManager.getUiRoot(AppUi.MAIN_MENU));
   }
 
+  /**
+   * onBackToCreation will take us back to profile creation scene
+   *
+   * @param event takes in action event click
+   */
   @FXML
-  private void onBackToCreation(ActionEvent event)
-      throws IOException, URISyntaxException, CsvException, ModelException {
+  private void onBackToCreation(ActionEvent event) {
     // Get the current scene
     Button backButton = (Button) event.getSource();
     Scene currentScene = backButton.getScene();
@@ -907,7 +986,7 @@ public class CanvasController {
    * the image on their computer
    *
    * @param event the Action Event taken in from FXML
-   * @throws IOException
+   * @throws IOException If the model cannot be found on the file system.
    */
   @FXML
   private void onSaveImage(ActionEvent event) throws IOException {
@@ -938,25 +1017,36 @@ public class CanvasController {
 
   /** Update the tool tip in the hidden word game */
   public void updateToolTip() {
+    // Check which game mode we are in
     switch (currentGameMode) {
+      case BLITZ:
+        gameToolTip.setText("Draw as many words as you can in the given time!");
+        break;
       case HIDDEN_WORD:
+        // Check if the canvas is enabled
         if (!canvas.isDisabled()) {
+          // Set the tool tip to say there is a hint
           gameToolTip.setText("CLICK FOR A HINT!!!");
         } else {
+          // Otherwise say the default hidden_word message
           gameToolTip.setText(
               "The word is hidden! From the definition, draw the word! Click this during the game for a hint!");
         }
         break;
       case NORMAL:
+        // Normal tool tip message
         gameToolTip.setText("Draw the word and try to win!");
         break;
       case PROFILE:
+        // Profile tool tip message
         gameToolTip.setText("Draw your profile picture!");
         break;
       case ZEN:
+        // Zen tool tip message
         gameToolTip.setText("Feel free to draw!!!");
         break;
       default:
+        // Normal tool tip message
         gameToolTip.setText("Draw the word and try to win!");
         break;
     }
@@ -965,32 +1055,53 @@ public class CanvasController {
   /**
    * onWordHint will give a hint to the player upon request
    *
-   * @param event
+   * @param event takes in a mouse click to ask for hint
    */
   @FXML
   private void onWordHint(MouseEvent event) {
+    // Initialise a random number at 0
     int randomNumber = 0;
+    // Check if the person is playing hidden word gamemode
     if (!canvas.isDisable() && currentGameMode == GameMode.HIDDEN_WORD) {
+      // Find the length of their current word
       int wordLength = game.getCurrentWord().length();
+      // Place underscores the length of their word as the first hint
       String hiddenWord = String.format("%s", "_".repeat(wordLength));
       if (game.getCurrentPrompt().equals("Guess the word then draw it!")) {
         game.setCurrentPrompt(hiddenWord);
       } else {
+        // loop until all the characters are filled in
         while (wordCharacters.size() != wordLength) {
+          // Generate a random number not in the word characters array
           randomNumber = new Random().nextInt(wordLength);
           if (!wordCharacters.contains(randomNumber)) {
+            // Add the random number into the array
             wordCharacters.add(randomNumber);
             break;
           }
         }
+        // Get the corresponding letter from the word at the position
         char wordCharacter = game.getCurrentWord().charAt(randomNumber);
+        // Get the current prompt (partially made up of dashes)
         String currentPrompt = game.getCurrentPrompt();
+        // Set up the current prompt to reveal a letter
         currentPrompt =
             currentPrompt.substring(0, randomNumber)
                 + wordCharacter
                 + currentPrompt.substring(randomNumber + 1);
+        // Update the current prompt
         game.setCurrentPrompt(currentPrompt);
       }
     }
+  }
+
+  /**
+   * onToggleTextToSpeech will toggle the text to speech voice, by default tts is on
+   *
+   * @param event takes in a JavaFX action event
+   */
+  @FXML
+  private void onToggleTextToSpeech(ActionEvent event) {
+    Game.toggleTextToSpeech();
   }
 }

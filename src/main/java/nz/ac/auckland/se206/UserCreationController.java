@@ -25,13 +25,13 @@ import nz.ac.auckland.se206.GameSelectController.GameMode;
 import nz.ac.auckland.se206.ProfileBuilder.UserType;
 import nz.ac.auckland.se206.SceneManager.AppUi;
 
-public class UserCreationController {
+public class UserCreationController extends SoundsController {
 
   // Initialise FXML items
   @FXML private Button createButton;
   @FXML private TextField usernameField;
-  @FXML private VBox userImageVBox;
   @FXML private ImageView editImageView;
+  @FXML private VBox userImageBox;
   @FXML private ImageView userImage;
   @FXML private ImageView imageOption0;
   @FXML private ImageView imageOption1;
@@ -80,7 +80,7 @@ public class UserCreationController {
             onSetImage(e);
           });
     }
-    userImageVBox.addEventHandler(
+    userImageBox.addEventHandler(
         MouseEvent.MOUSE_CLICKED,
         e -> {
           try {
@@ -91,34 +91,40 @@ public class UserCreationController {
           }
         });
     // Hover shows "edit" overlay
-    userImageVBox.addEventHandler(
+    userImageBox.addEventHandler(
         MouseEvent.MOUSE_ENTERED,
         e -> {
           editImageView.setVisible(true);
         });
     // Exit hides "edit" overlay
-    userImageVBox.addEventHandler(
+    userImageBox.addEventHandler(
         MouseEvent.MOUSE_EXITED,
         e -> {
           editImageView.setVisible(false);
         });
-    userImageVBox.addEventHandler(
+    userImageBox.addEventHandler(
         MouseEvent.MOUSE_PRESSED,
         e -> {
           editImageView.setStyle(editImageViewPressed);
         });
-    userImageVBox.addEventHandler(
+    userImageBox.addEventHandler(
         MouseEvent.MOUSE_RELEASED,
         e -> {
           editImageView.setStyle(editImageViewDefault);
         });
   }
 
+  /**
+   * updateImage will update the player's drawn image into their profile picture
+   *
+   * @throws FileNotFoundException if the file was not found
+   */
   public void updateImage() throws FileNotFoundException {
     // creating the image object
     String dir = Users.folderDirectory + "/src/main/resources/images/tempImage.png";
     InputStream stream = new FileInputStream(dir);
     Image image = new Image(stream);
+    // Set the new image
     userImage.setImage(image);
   }
 
@@ -126,11 +132,11 @@ public class UserCreationController {
    * onCreateImage will allow the user to create their own image via drawing It will load the
    * profile picture creation scene
    *
-   * @param event
-   * @throws IOException
-   * @throws CsvException
-   * @throws URISyntaxException
-   * @throws ModelException
+   * @param event takes in a mouse event from FXML clicking
+   * @throws IOException reading/writing exception
+   * @throws CsvException reading spreadsheet exceptions
+   * @throws URISyntaxException converting to link exception
+   * @throws ModelException doodle prediction exception
    */
   private void onCreateImage(MouseEvent event)
       throws IOException, CsvException, URISyntaxException, ModelException {
@@ -237,7 +243,7 @@ public class UserCreationController {
     // Grab the new user
     ProfileBuilder newUser = profiles.get(index);
     // Set up new events to the new user
-    UsersController.addEvents(newUser.userImageVBox, newUser.deleteProfileButton, index);
+    UsersController.addEvents(newUser.userImageBox, newUser.deleteProfileButton, index);
     // Select the new user
     UsersController.currentlySelected = newUser;
     onExitSelection(event);

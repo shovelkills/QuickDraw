@@ -3,6 +3,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Slider?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
@@ -40,14 +41,23 @@
                   <Font name="System Bold" size="60.0" />
                </font>
             </Label>
-            <VBox prefHeight="200.0" prefWidth="100.0" spacing="10.0">
+            <VBox prefHeight="476.0" prefWidth="430.0" spacing="10.0">
                <padding>
                   <Insets top="40.0" />
                </padding>
                <children>
-                  <Button fx:id="startButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onStartGame" prefHeight="75.0" prefWidth="323.0" styleClass="newGameButton" stylesheets="@../css/menu.css" />
-                  <Button fx:id="statsButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onMoveToStats" prefHeight="75.0" prefWidth="323.0" styleClass="statsMenuButton" stylesheets="@../css/menu.css" />
-                  <Button fx:id="exitButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onExitGame" prefHeight="75.0" prefWidth="323.0" styleClass="quitMenuButton" stylesheets="@../css/menu.css" />
+                  <Button fx:id="startButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onStartGame" onMouseClicked="#onButtonClick" onMouseEntered="#onButtonHover" prefHeight="75.0" prefWidth="323.0" styleClass="newGameButton" stylesheets="@../css/menu.css" />
+                  <Button fx:id="statsButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onMoveToStats" onMouseClicked="#onButtonClick" onMouseEntered="#onButtonHover" prefHeight="75.0" prefWidth="323.0" styleClass="statsMenuButton" stylesheets="@../css/menu.css" />
+                  <Button fx:id="exitButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onExitGame" onMouseClicked="#onButtonClick" onMouseEntered="#onButtonHover" prefHeight="75.0" prefWidth="323.0" styleClass="quitMenuButton" stylesheets="@../css/menu.css" />
+                  <Button fx:id="graphButton" mnemonicParsing="false" onAction="#onGraphButton" onMouseClicked="#onButtonClick" onMouseEntered="#onButtonHover" prefHeight="26.0" prefWidth="380.0" text="Graph" />
+                  <Button fx:id="badgesButton" mnemonicParsing="false" onAction="#onShowBadges" prefHeight="26.0" prefWidth="382.0" text="Badges" />
+                  <HBox alignment="CENTER" prefHeight="100.0" prefWidth="430.0">
+                     <children>
+                        <Button fx:id="soundButton" mnemonicParsing="false" onAction="#onSoundToggle" onMouseClicked="#onButtonClick" onMouseEntered="#onButtonHover" prefHeight="25.0" prefWidth="125.0" text="Sound Effects" />
+                        <Button fx:id="musicButton" mnemonicParsing="false" onAction="#onMusicToggle" onMouseClicked="#onButtonClick" onMouseEntered="#onButtonHover" prefHeight="26.0" prefWidth="125.0" text="Music" />
+                        <Slider fx:id="musicSlider" orientation="VERTICAL" value="50.0" />
+                     </children>
+                  </HBox>
                </children>
             </VBox>
          </children>
