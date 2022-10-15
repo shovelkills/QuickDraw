@@ -20,8 +20,103 @@
 	-fx-background-color: #BCC6DD;
 }
 
+.saveProfileButton{
+	-fx-background-color: transparent;
+	-fx-background-image: url(../images/buttons/doneButtonDefault.png);
+}
+
+.saveProfileButton:hover{
+	-fx-background-image: url(../images/buttons/doneButtonHover.png);
+}
+
+.saveProfileButton:pressed{
+	-fx-background-image: url(../images/buttons/doneButtonDown.png);
+	-fx-pref-width: 142;
+	-fx-pref-height: 42;
+}
+
+.cancelProfileButton{
+	-fx-background-color: transparent;
+	-fx-background-image: url(../images/buttons/cancelButtonDefault.png);
+}
+
+.cancelProfileButton:hover{
+	-fx-background-image: url(../images/buttons/cancelButtonHover.png);
+	-fx-cursor: hand;
+}
+
+.cancelProfileButton:pressed{
+	-fx-background-image: url(../images/buttons/cancelButtonDown.png);
+	-fx-pref-width: 142;
+	-fx-pref-height: 42;
+	-fx-cursor: hand;
+}
+
 .usernameTextEntry{
-	-fx-background-color: #FCEFE8;
+	-fx-background-color: #FFE1BE;
 	-fx-background-radius: 10;
 	-fx-font-family: "Maybe Next";
+}
+
+.optionImageView{
+    -fx-effect: dropshadow(gaussian, #fff8f5, 10, 1, 0, 0);
+}
+
+.optionImageView:hover{
+    -fx-scale-y: 1.1;
+    -fx-scale-x: 1.1;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, #fff8f5, 20, 0.8, 0, 0);
+}
+
+.optionImageView:pressed{
+    -fx-scale-y: 1.0;
+    -fx-scale-x: 1.0;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, white, 30, 0.8, 0, 0);
+}
+
+.userImageView{
+    -fx-effect: dropshadow(gaussian, #fff8f5, 10, 1, 0, 0);
+}
+
+.userImageView:hover{
+    -fx-effect: dropshadow(gaussian, #fff8f5, 10, 1, 0, 0);
+    -fx-cursor: hand;
+}
+
+.userImageView:pressed{
+    -fx-effect: dropshadow(gaussian, #fff8f5, 10, 1, 0, 0);
+    -fx-cursor: hand;
+}
+
+.editImageView{
+	-fx-scale-y: 1.1;
+    -fx-scale-x: 1.1;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, #00e8e8, 20, 0.8, 0, 0);
+}
+
+.editImageViewPressed{
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, #00e8e8, 50, 0.8, 0, 0);
+}
+
+.exitSelectionButton{
+	-fx-background-color: transparent;
+	-fx-background-image: url(../images/buttons/menuButtonDefault.png);
+}
+
+.exitSelectionButton:hover{
+	-fx-background-color: transparent;
+	-fx-background-image: url(../images/buttons/menuButtonHover.png);
+    -fx-cursor: hand;
+}
+
+.exitSelectionButton:pressed{
+	-fx-background-color: transparent;
+	-fx-background-image: url(../images/buttons/menuButtonDown.png);
+    -fx-cursor: hand;
+    -fx-pref-width: 142;
+    -fx-pref-height: 42;
 }

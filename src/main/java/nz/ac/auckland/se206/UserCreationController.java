@@ -31,6 +31,7 @@ public class UserCreationController {
   @FXML private Button createButton;
   @FXML private TextField usernameField;
   @FXML private VBox userImageVBox;
+  @FXML private ImageView editImageView;
   @FXML private ImageView userImage;
   @FXML private ImageView imageOption0;
   @FXML private ImageView imageOption1;
@@ -38,11 +39,30 @@ public class UserCreationController {
   @FXML private ImageView imageOption3;
   @FXML private ImageView imageOption4;
   @FXML private ImageView imageOption5;
+
+  // Maximum length for a new username
+  private static final int MAX_USERNAME_LENGTH = 12;
+
   // Initliase array for image options
   private ArrayList<ImageView> imageOptions = new ArrayList<ImageView>();
 
-  /** initialize will be called on start up */
-  public void initialize() {
+  private String editImageViewDefault =
+      "-fx-scale-y: 1.1; -fx-scale-x: 1.1; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, #00e8e8, 20, 0.8, 0, 0);";
+  private String editImageViewPressed =
+      "-fx-scale-y: 1.0; -fx-scale-x: 1.0; -fx-effect: dropshadow(gaussian, #00e8e8, 30, 0.8, 0, 0);";
+
+  /**
+   * initialize will be called on start up
+   *
+   * @throws FileNotFoundException
+   */
+  public void initialize() throws FileNotFoundException {
+    // Set user image edit overlay from file
+    String dir = Users.folderDirectory + "/src/main/resources/images/edit.png";
+    InputStream stream = new FileInputStream(dir);
+    Image editImage = new Image(stream);
+    editImageView.setImage(editImage);
+    editImageView.setVisible(false);
     // Add all the image options into the array
     Collections.addAll(
         imageOptions,
@@ -69,6 +89,28 @@ public class UserCreationController {
             // TODO Auto-generated catch block
             e1.printStackTrace();
           }
+        });
+    // Hover shows "edit" overlay
+    userImageVBox.addEventHandler(
+        MouseEvent.MOUSE_ENTERED,
+        e -> {
+          editImageView.setVisible(true);
+        });
+    // Exit hides "edit" overlay
+    userImageVBox.addEventHandler(
+        MouseEvent.MOUSE_EXITED,
+        e -> {
+          editImageView.setVisible(false);
+        });
+    userImageVBox.addEventHandler(
+        MouseEvent.MOUSE_PRESSED,
+        e -> {
+          editImageView.setStyle(editImageViewPressed);
+        });
+    userImageVBox.addEventHandler(
+        MouseEvent.MOUSE_RELEASED,
+        e -> {
+          editImageView.setStyle(editImageViewDefault);
         });
   }
 
@@ -147,13 +189,33 @@ public class UserCreationController {
     // Get the username inputted
     String username = usernameField.getText();
     // Check if it was a valid username
-    // Store which index it was created in
     Users.userImage = userImage.getImage();
-    if (username == null || username.equals("") || !Users.createUser(username)) {
-      // Set up an error
+    if (username == null || username.equals("")) {
+      // Set up null/empty username error alert
+      Alert alert = new Alert(Alert.AlertType.ERROR);
+      alert.setTitle("Username cannot be blank");
+      alert.setHeaderText("Username cannot be blank!");
+      // Show the error
+      alert.showAndWait();
+      return;
+    }
+    // Check length of username against maximum length and give alert error if username is too long.
+    if (username.length() > MAX_USERNAME_LENGTH) {
+      // Set up username too long error alert
+      Alert alert = new Alert(Alert.AlertType.ERROR);
+      alert.setTitle("Username too long");
+      alert.setHeaderText(
+          "Username too long! Maximum length is " + MAX_USERNAME_LENGTH + "characters.");
+      // Show the error
+      alert.showAndWait();
+      return;
+    }
+    // Check if username is already taken or contains special characters
+    if (!Users.createUser(username)) {
+      // Set up username taken error alert
       Alert alert = new Alert(Alert.AlertType.ERROR);
       alert.setTitle("Username not available");
-      alert.setHeaderText("That username is not available");
+      alert.setHeaderText("That username is not available.");
       // Show the error
       alert.showAndWait();
       return;

@@ -7,6 +7,7 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
@@ -21,107 +22,122 @@
                         <Font name="System Bold" size="52.0" />
                      </font>
                   </Label>
-                  <Label styleClass="userSelectionTitle" text="Your Name:" textFill="#333333">
-                     <VBox.margin>
-                        <Insets />
-                     </VBox.margin>
-                     <font>
-                        <Font name="System Bold" size="22.0" />
-                     </font>
-                  </Label>
-                  <TextField fx:id="usernameField" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="400.0" promptText="Enter Name Here" styleClass="usernameTextEntry" stylesheets="@../css/userselection.css">
-                     <VBox.margin>
-                        <Insets top="10.0" />
-                     </VBox.margin>
-                     <font>
-                        <Font size="20.0" />
-                     </font>
-                  </TextField>
-                  <Label styleClass="userSelectionTitle" text="Your Sticker:" textFill="#333333">
-                     <font>
-                        <Font name="System Bold" size="22.0" />
-                     </font>
-                     <VBox.margin>
-                        <Insets top="20.0" />
-                     </VBox.margin>
-                  </Label>
-                  <Label styleClass="userSelectionTitle" text="Click to create your own!" textFill="#333333">
-                     <font>
-                        <Font name="System Bold" size="18.0" />
-                     </font>
-                  </Label>
-                  <VBox fx:id="userImageVBox" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="150.0" prefWidth="150.0">
-                     <VBox.margin>
-                        <Insets top="10.0" />
-                     </VBox.margin>
+                  <VBox alignment="CENTER" maxWidth="-Infinity" prefHeight="311.0" prefWidth="754.0" style="-fx-background-color: #fcefe8; -fx-background-radius: 20 20 20 20;">
                      <children>
-                        <ImageView fx:id="userImage" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" styleClass="image-style">
-                           <image>
-                              <Image url="@../users/happy.png" />
-                           </image>
-                        </ImageView>
+                        <Label styleClass="userSelectionTitle" text="Your Name:" textFill="#333333">
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin>
+                           <font>
+                              <Font name="System Bold" size="22.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="usernameField" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="400.0" promptText="Enter Name Here" styleClass="usernameTextEntry" stylesheets="@../css/userselection.css">
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin>
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </TextField>
+                        <Label styleClass="userSelectionTitle" text="Your Sticker:" textFill="#333333">
+                           <font>
+                              <Font name="System Bold" size="22.0" />
+                           </font>
+                           <VBox.margin>
+                              <Insets top="10.0" />
+                           </VBox.margin>
+                        </Label>
+                        <VBox fx:id="userImageVBox" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="150.0" prefWidth="150.0">
+                           <VBox.margin>
+                              <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                           </VBox.margin>
+                           <children>
+                              <StackPane prefHeight="150.0" prefWidth="200.0">
+                                 <children>
+                                    <ImageView fx:id="userImage" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" styleClass="userImageView">
+                                       <image>
+                                          <Image url="@../users/happy.png" />
+                                       </image>
+                                    </ImageView>
+                                    <ImageView fx:id="editImageView" fitHeight="150.0" fitWidth="150.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true" styleClass="editImageView" />
+                                 </children>
+                              </StackPane>
+                           </children>
+                        </VBox>
                      </children>
+                     <padding>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                     </padding>
                   </VBox>
                   <Label styleClass="userSelectionTitle" text="Or choose one:" textFill="#333333">
                      <font>
                         <Font name="System Bold" size="18.0" />
                      </font>
                      <VBox.margin>
-                        <Insets top="20.0" />
+                        <Insets top="10.0" />
                      </VBox.margin>
                   </Label>
-                  <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0" spacing="30.0">
+                  <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="1050.0" spacing="30.0">
                      <children>
-                        <ImageView fx:id="imageOption0" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" styleClass="image-style">
+                        <ImageView fx:id="imageOption0" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" styleClass="optionImageView">
                            <image>
                               <Image url="@../images/profile1.png" />
                            </image>
                         </ImageView>
-                        <ImageView fx:id="imageOption1" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" styleClass="image-style">
+                        <ImageView fx:id="imageOption1" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" styleClass="optionImageView">
                            <image>
                               <Image url="@../images/profile2.png" />
                            </image>
                         </ImageView>
-                        <ImageView fx:id="imageOption2" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" styleClass="image-style">
+                        <ImageView fx:id="imageOption2" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" styleClass="optionImageView">
                            <image>
                               <Image url="@../images/profile3.png" />
                            </image>
                         </ImageView>
-                        <ImageView fx:id="imageOption3" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" styleClass="image-style">
+                        <ImageView fx:id="imageOption3" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" styleClass="optionImageView">
                            <image>
                               <Image url="@../images/profile4.png" />
                            </image>
                         </ImageView>
-                        <ImageView fx:id="imageOption4" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" styleClass="image-style">
+                        <ImageView fx:id="imageOption4" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" styleClass="optionImageView">
                            <image>
                               <Image url="@../images/profile5.png" />
                            </image>
                         </ImageView>
-                        <ImageView fx:id="imageOption5" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" styleClass="image-style">
+                        <ImageView fx:id="imageOption5" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" styleClass="optionImageView">
                            <image>
                               <Image url="@../images/profile6.png" />
                            </image>
                         </ImageView>
                      </children>
                      <VBox.margin>
-                        <Insets top="10.0" />
+                        <Insets bottom="20.0" top="20.0" />
                      </VBox.margin>
                   </HBox>
-                  <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
+                  <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
                      <children>
-                        <Button fx:id="createButton" alignment="CENTER" mnemonicParsing="false" onAction="#onCreateProfile" prefHeight="40.0" prefWidth="160.0" style="-fx-cursor: hand;" styleClass="userSelectButton" stylesheets="@../css/userselection.css" text="Save Profile">
-                           <font>
-                              <Font name="System Bold" size="20.0" />
-                           </font>
-                        </Button>
-                        <Button fx:id="returnButton" mnemonicParsing="false" onAction="#onExitSelection" prefHeight="40.0" prefWidth="150.0" style="-fx-cursor: hand;" styleClass="userSelectButton" stylesheets="@../css/userselection.css" text="Cancel">
-                           <font>
-                              <Font name="System Bold" size="20.0" />
-                           </font>
-                        </Button>
+                        <Label alignment="BOTTOM_RIGHT" minHeight="-Infinity" minWidth="-Infinity" prefHeight="46.0" prefWidth="145.0" HBox.hgrow="NEVER">
+                           <graphic>
+                              <Button fx:id="returnButton" alignment="BOTTOM_RIGHT" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onExitSelection" prefHeight="46.0" prefWidth="145.0" styleClass="cancelProfileButton" stylesheets="@../css/userselection.css">
+                                 <font>
+                                    <Font name="System Bold" size="20.0" />
+                                 </font>
+                              </Button>
+                           </graphic>
+                        </Label>
+                        <Label alignment="BOTTOM_RIGHT" layoutX="689.0" layoutY="20.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="46.0" prefWidth="145.0" text="Label" HBox.hgrow="NEVER">
+                           <graphic>
+                              <Button fx:id="createButton" alignment="BOTTOM_RIGHT" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onCreateProfile" prefHeight="46.0" prefWidth="145.0" styleClass="saveProfileButton" stylesheets="@../css/userselection.css">
+                                 <font>
+                                    <Font name="System Bold" size="20.0" />
+                                 </font>
+                              </Button>
+                           </graphic>
+                        </Label>
                      </children>
                      <padding>
-                        <Insets bottom="20.0" top="20.0" />
+                        <Insets bottom="20.0" top="10.0" />
                      </padding>
                   </HBox>
                </children>

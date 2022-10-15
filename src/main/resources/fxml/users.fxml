@@ -18,10 +18,14 @@
          </VBox.margin>
       </Label>
       <HBox fx:id="userHbox" alignment="CENTER" />
-      <Button fx:id="returnButton" mnemonicParsing="false" onAction="#onExitSelection" prefHeight="60.0" prefWidth="120.0" style="-fx-cursor: hand;" styleClass="userSelectButton" stylesheets="@../css/userselection.css" text="Go Back">
-         <font>
-            <Font name="System Bold" size="20.0" />
-         </font>
-      </Button>
+      <Label alignment="BOTTOM_RIGHT" minHeight="-Infinity" minWidth="-Infinity" prefHeight="46.0" prefWidth="145.0">
+         <graphic>
+            <Button fx:id="returnButton" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onExitSelection" prefHeight="46.0" prefWidth="145.0" styleClass="exitSelectionButton" stylesheets="@../css/userselection.css">
+               <font>
+                  <Font name="System Bold" size="20.0" />
+               </font>
+            </Button>
+         </graphic>
+      </Label>
    </children>
 </VBox>
