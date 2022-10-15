@@ -738,6 +738,10 @@ public class CanvasController extends SoundsController {
           if (isWin) {
             timerBarLabel.getStyleClass().clear();
             timerBarLabel.getStyleClass().add("timerBarWin");
+            // Increase the wins
+            Users.increaseWins();
+            wordLabel.setText(getWinMessage());
+
             // Add badges for wins
             Badges.winBadge("Wins", "First Win");
             Badges.winDifficultyBadges(
@@ -745,9 +749,7 @@ public class CanvasController extends SoundsController {
                 DifficultyBuilder.getWordsDifficulty(),
                 DifficultyBuilder.getTimeDifficulty(),
                 DifficultyBuilder.getConfDifficulty());
-            // Increase the wins
-            Users.increaseWins();
-            wordLabel.setText(getWinMessage());
+            Badges.checkWinTime(game.getTimeRemaining());
           } else {
             System.out.println("LOST");
             wordLabel.setText(getLossMessage());

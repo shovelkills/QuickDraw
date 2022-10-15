@@ -265,13 +265,14 @@ public class MenuController extends SoundsController {
    */
   @FXML
   private void onShowBadges(ActionEvent event) throws FileNotFoundException {
-    // Wins the badge at looking at badges
-    Badges.winBadge("Misc", "View Badges Page");
     BadgeController badgeController = App.getBadgeController();
     badgeController.loadBadges();
     // Moves to the badges scene
     Button button = (Button) event.getSource();
     Scene sceneButtonIsIn = button.getScene();
+
+    // Wins the badge at looking at badges
+    Badges.winBadge("Misc", "View Badges Page");
     // Move to the next scene
     sceneButtonIsIn.setRoot(SceneManager.getUiRoot(AppUi.BADGES));
   }
