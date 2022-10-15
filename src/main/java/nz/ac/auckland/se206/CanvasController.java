@@ -731,7 +731,7 @@ public class CanvasController extends SoundsController {
           // Unbind label properties bound to game properties
           wordLabel.textProperty().unbind();
           timerLabel.textProperty().unbind();
-
+          timerBarLabel.setPrefWidth(20000.0);
           // Update the word label to display a win or loss message for the user at the
           // end of the
           // game.
@@ -761,7 +761,6 @@ public class CanvasController extends SoundsController {
             Users.setConsistentWins(0);
             Users.addTimeHistory(0, game.getCurrentPrompt());
           }
-          timerBarLabel.setPrefWidth(20000.0);
           Users.addGameDifficultyHistory(
               DifficultyBuilder.getAccDifficulty().toString(),
               DifficultyBuilder.getWordsDifficulty().toString(),
