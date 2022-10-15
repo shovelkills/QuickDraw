@@ -11,7 +11,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import nz.ac.auckland.se206.SceneManager.AppUi;
 
-public class StatsController {
+public class StatsController extends SoundsController {
   // Declare all the FXML fields
   @FXML private Button backButton;
   @FXML private Button statsTabButton;

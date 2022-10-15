@@ -15,7 +15,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.util.Duration;
 import nz.ac.auckland.se206.SceneManager.AppUi;
 
-public class GraphController {
+public class GraphController extends SoundsController {
 
   private static String difficulty = null;
   private static String gameOutcome;

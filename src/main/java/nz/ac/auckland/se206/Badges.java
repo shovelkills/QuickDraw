@@ -12,7 +12,7 @@ public class Badges {
   private static List<String> difficulties = Arrays.asList("E", "M", "H", "MS");
 
   /**
-   * Changes the badges hasmap so that the user has won the badge
+   * winBadge Changes the badges hash map so that the user has won the badge
    *
    * @param catergory the category of the badge
    * @param level the level of the badge
@@ -22,24 +22,30 @@ public class Badges {
       String nameOfBadge;
       switch (level) {
         case "E":
+          // Set up easy badge
           nameOfBadge = "Easy";
           break;
         case "M":
+          // Set up medium badge
           nameOfBadge = "Medium";
           break;
         case "H":
+          // Set up hard badge
           nameOfBadge = "Hard";
           break;
         case "MS":
+          // Set up master badge
           nameOfBadge = "Master";
           break;
         default:
           nameOfBadge = level;
           break;
       }
+      // Get the badges and then save the user
       Users.getBadges().get(catergory).put(level, true);
       Users.saveUser();
 
+      // Set up a new alert notifying the player
       Alert alert = new Alert(Alert.AlertType.INFORMATION);
       alert.setTitle("Won Badge");
       alert.setHeaderText(
@@ -144,6 +150,11 @@ public class Badges {
     }
   }
 
+  /**
+   * setDrawUserPicture will update the draw users picture badge
+   *
+   * @param drawUserPicture takes in a true or false to update badge
+   */
   public static void setDrawUserPicture(boolean drawUserPicture) {
     Badges.drawUserPicture = drawUserPicture;
   }

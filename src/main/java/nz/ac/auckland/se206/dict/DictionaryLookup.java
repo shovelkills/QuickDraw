@@ -15,6 +15,14 @@ public class DictionaryLookup {
 
   private static final String API_URL = "https://api.dictionaryapi.dev/api/v2/entries/en/";
 
+  /**
+   * searchWordInfo will search up a word on the internet to find its definition
+   *
+   * @param query takes in a word to be defined
+   * @return a WordInfo object containing entries and definitions
+   * @throws IOException reading/writing to file exception
+   * @throws WordNotFoundException exception if the query was not a valid word in the dictionary
+   */
   public static WordInfo searchWordInfo(String query) throws IOException, WordNotFoundException {
     // Grab a requests client
     OkHttpClient client = new OkHttpClient();

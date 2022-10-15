@@ -711,7 +711,7 @@ public class CanvasController extends SoundsController {
    *
    * @param isWin The win flag from the game controller, is true if the game was won and false if
    *     lost
-   * @throws InterruptedException
+   * @throws InterruptedException interrupted exception will cause the thread to be interrupted
    */
   public void onEndGame(boolean isWin) {
     Platform.runLater(
@@ -916,7 +916,7 @@ public class CanvasController extends SoundsController {
   /**
    * onBack will return back to main menu or creation page
    *
-   * @param event
+   * @param event takes in an event to return back to the menu
    * @throws IOException reading/writing exception
    * @throws URISyntaxException converting to link exception
    * @throws CsvException reading spreadsheet exceptions
