@@ -246,7 +246,7 @@ public class ProfileBuilder extends SoundsController {
   /**
    * Highlights this profile by updating visible UI elements.
    *
-   * @param highlight if true this profile will be styled as highlighted
+   * @param selected if true this profile will be styled as highlighted
    */
   public void setSelected(boolean selected) {
     if (selected) {
