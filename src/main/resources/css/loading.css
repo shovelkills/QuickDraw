@@ -1,0 +1,18 @@
+.loadingTitle {
+	-fx-font-family: "Maybe Next";
+}
+
+.progressBar{
+    -fx-background-color:
+        -fx-box-border,
+        linear-gradient(to bottom, derive(-fx-accent,95%), derive(-fx-accent,30%)),
+        goldenrod; /* this line is the background color of the bar */
+	-fx-background-color: #323232;
+	-fx-accent: rgb(7, 200, 218); 
+}
+.loadingLabel {
+	-fx-font-family: "Maybe Next";
+	-fx-font-size: 20px;
+}
+
+
