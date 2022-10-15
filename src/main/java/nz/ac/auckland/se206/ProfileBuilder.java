@@ -264,6 +264,10 @@ public class ProfileBuilder extends SoundsController {
    * @param selected if true this profile will be styled as highlighted
    */
   public void setSelected(boolean selected) {
+    // Reset cursor
+    if (imageView.getScene() != null) {
+      imageView.getScene().setCursor(Cursor.DEFAULT);
+    }
     if (selected) {
       // Update selected style
       isSelected = true;

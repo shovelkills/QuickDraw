@@ -12,6 +12,7 @@ import java.util.Collections;
 import javafx.concurrent.Task;
 import javafx.event.Event;
 import javafx.fxml.FXML;
+import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -166,6 +167,7 @@ public class UserCreationController extends SoundsController {
     preDrawTask.setOnSucceeded(
         e -> {
           progressBar.progressProperty().unbind();
+          sceneButtonIsIn.setCursor(Cursor.DEFAULT);
           sceneButtonIsIn.setRoot(SceneManager.getUiRoot(AppUi.GAME));
         });
     Thread preGameThread = new Thread(preDrawTask);
@@ -264,6 +266,7 @@ public class UserCreationController extends SoundsController {
     // Get the scene currently in
     Button button = (Button) event.getSource();
     Scene sceneButtonIsIn = button.getScene();
+    sceneButtonIsIn.setCursor(Cursor.DEFAULT);
     sceneButtonIsIn.setRoot(SceneManager.getUiRoot(AppUi.USERSELECT));
   }
 }
