@@ -219,11 +219,12 @@ public class GameSelectController extends SoundsController {
   /**
    * onSelectGameMode will change the current GameMode
    *
-   * @param event
+   * @param event takes in an JavaFX event
    */
   @FXML
   private void onSelectGameMode(ActionEvent event) {
     Button gameModeButton = (Button) event.getSource();
+    // Loop through all the buttons
     for (Button button : gameModes) {
       if (button == gameModeButton) {
         button.setDisable(true);
@@ -231,6 +232,7 @@ public class GameSelectController extends SoundsController {
         button.setDisable(false);
       }
     }
+    // See which button was pressed
     switch (gameModeButton.getText()) {
       case "Normal":
         // Switch to normal game mode

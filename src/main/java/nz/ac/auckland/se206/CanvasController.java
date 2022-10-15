@@ -297,7 +297,7 @@ public class CanvasController extends SoundsController {
   /**
    * updateIndicator will update the indicator on the canvas
    *
-   * @param closer will be true if the word is moving up the predictions list
+   * @param indicator closer will be true if the word is moving up the predictions list
    */
   public void updateIndicator(Indicator indicator) {
     // Switch between the indicators
@@ -711,7 +711,7 @@ public class CanvasController extends SoundsController {
    *
    * @param isWin The win flag from the game controller, is true if the game was won and false if
    *     lost
-   * @throws InterruptedException
+   * @throws InterruptedException interrupted exception will cause the thread to be interrupted
    */
   public void onEndGame(boolean isWin) {
     Platform.runLater(
@@ -877,7 +877,7 @@ public class CanvasController extends SoundsController {
    * game from the menu will present the user with a fresh game.
    *
    * @param event takes in an event to return back to the menu
-   * @throws IOException reading/writing exception
+   * @throws IOException If the model cannot be found on the file system.
    * @throws URISyntaxException converting to link exception
    * @throws CsvException reading spreadsheet exceptions
    * @throws ModelException doodle prediction exception
@@ -916,7 +916,7 @@ public class CanvasController extends SoundsController {
   /**
    * onBack will return back to main menu or creation page
    *
-   * @param event
+   * @param event takes in an event to return back to the menu
    * @throws IOException reading/writing exception
    * @throws URISyntaxException converting to link exception
    * @throws CsvException reading spreadsheet exceptions
@@ -986,7 +986,7 @@ public class CanvasController extends SoundsController {
    * the image on their computer
    *
    * @param event the Action Event taken in from FXML
-   * @throws IOException
+   * @throws IOException If the model cannot be found on the file system.
    */
   @FXML
   private void onSaveImage(ActionEvent event) throws IOException {

@@ -16,13 +16,19 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import nz.ac.auckland.se206.SceneManager.AppUi;
 
-public class BadgeController {
+public class BadgeController extends SoundsController {
 
   @FXML private Button menuButton;
 
   @FXML private VBox badgesListBox;
 
-  public void initilize() throws FileNotFoundException {
+  /**
+   * initialize will load in all the badges
+   *
+   * @throws FileNotFoundException if a badge is not found throw an exception
+   */
+  public void initialize() throws FileNotFoundException {
+    // this will load all the types of badges in
     loadBadges();
   }
 
@@ -52,15 +58,19 @@ public class BadgeController {
         // Swaps the letter of the difficulty to the word. The default is the word as it stored as
         switch (badges.getKey()) {
           case "E":
+            // Set up easy badge
             nameOfBadge = "Easy";
             break;
           case "M":
+            // Set up medium badge
             nameOfBadge = "Medium";
             break;
           case "H":
+            // Set up hard badge
             nameOfBadge = "Hard";
             break;
           case "MS":
+            // Set up master badge
             nameOfBadge = "Master";
             break;
           default:
@@ -86,6 +96,11 @@ public class BadgeController {
     }
   }
 
+  /**
+   * onMenu will take the user back to the main menu
+   *
+   * @param event takes in a JavaFX element
+   */
   @FXML
   private void onMenu(ActionEvent event) {
     // Get the current scene
