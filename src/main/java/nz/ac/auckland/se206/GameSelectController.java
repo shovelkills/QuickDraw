@@ -7,6 +7,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -146,9 +147,27 @@ public class GameSelectController extends SoundsController {
             // Update progress to half way and then set up the pre-game interface
             updateProgress(0.5, 1);
             canvas.setPreGameInterface();
-            // Update progress completely
+            canvas.getGame().setIsGhostGame(true);
+            Platform.runLater(
+                () -> {
+                  canvas.onStartGame(null);
+                });
+            // Wait for first cycle of game service
+            Thread.sleep(1500);
+            Platform.runLater(
+                () -> {
+                  try {
+                    canvas.onRestartGame(null);
+                  } catch (Exception e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                  }
+                });
             updateProgress(1, 1);
-            Thread.sleep(100);
+            // Update progress completely
+            Thread.sleep(300);
+            // Wait for UI elements to be in place on restart
+            canvas.getGame().setIsGhostGame(false);
 
             return null;
           }

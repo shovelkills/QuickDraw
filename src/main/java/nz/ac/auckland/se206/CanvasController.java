@@ -670,21 +670,23 @@ public class CanvasController extends SoundsController {
             return null;
           }
         };
-    // Find progress bar on loading screen
-    ProgressBar progressBar = App.getLoadingController().getProgressBar();
-    progressBar.progressProperty().unbind();
-    // Bind progress bar
-    progressBar.progressProperty().bind(restartGameTask.progressProperty());
+    if (!game.getIsGhostGame()) {
+      // Find progress bar on loading screen
+      ProgressBar progressBar = App.getLoadingController().getProgressBar();
+      progressBar.progressProperty().unbind();
+      // Bind progress bar
+      progressBar.progressProperty().bind(restartGameTask.progressProperty());
 
-    Scene sceneButtonIsIn = restartButton.getScene();
+      Scene sceneButtonIsIn = restartButton.getScene();
 
-    sceneButtonIsIn.setRoot(SceneManager.getUiRoot(AppUi.LOADING));
-    restartGameTask.setOnSucceeded(
-        e -> {
-          progressBar.progressProperty().unbind();
-          // Move to the next scene
-          sceneButtonIsIn.setRoot(SceneManager.getUiRoot(AppUi.GAME));
-        });
+      sceneButtonIsIn.setRoot(SceneManager.getUiRoot(AppUi.LOADING));
+      restartGameTask.setOnSucceeded(
+          e -> {
+            progressBar.progressProperty().unbind();
+            // Move to the next scene
+            sceneButtonIsIn.setRoot(SceneManager.getUiRoot(AppUi.GAME));
+          });
+    }
     Thread preGameThread = new Thread(restartGameTask);
     // Allow the task to be cancelled on closing of application
     preGameThread.setDaemon(true);
@@ -889,7 +891,7 @@ public class CanvasController extends SoundsController {
             // Increment losses and reset consecutive wins to 0
             Users.increaseLosses();
             Users.setConsistentWins(0);
-            Users.addTimeHistory(0, game.getCurrentPrompt());
+            Users.addTimeHistory(0, game.getCurrentWord());
           }
           Users.addGameDifficultyHistory(
               DifficultyBuilder.getAccDifficulty().toString(),
