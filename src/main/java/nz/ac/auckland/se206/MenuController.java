@@ -45,46 +45,33 @@ public class MenuController extends SoundsController {
   }
 
   // Declare the menu objects
-  @FXML
-  private Canvas canvas;
-  @FXML
-  private ImageView profileImageView;
-  @FXML
-  private Label titleLabel;
-  @FXML
-  private Label usernameLabel;
+  @FXML private Canvas canvas;
+  @FXML private ImageView profileImageView;
+  @FXML private Label titleLabel;
+  @FXML private Label usernameLabel;
 
-  @FXML
-  private Button badgesButton;
-  @FXML
-  private Button graphButton;
-  @FXML
-  private Button startButton;
-  @FXML
-  private Button statsButton;
-  @FXML
-  private Button exitButton;
-  @FXML
-  private Button exitTipButton;
-  @FXML
-  private Button selectedUserButton;
-  @FXML
-  private Button soundButton;
-  @FXML
-  private Button musicButton;
-  @FXML
-  private Slider musicSlider;
+  @FXML private Button badgesButton;
+  @FXML private Button graphButton;
+  @FXML private Button startButton;
+  @FXML private Button statsButton;
+  @FXML private Button exitButton;
+  @FXML private Button exitTipButton;
+  @FXML private Button selectedUserButton;
+  @FXML private Button soundButton;
+  @FXML private Button musicButton;
+  @FXML private Slider musicSlider;
 
   // This is a task that alternates colours for a label
-  private Task<Void> backgroundTask = new Task<Void>() {
+  private Task<Void> backgroundTask =
+      new Task<Void>() {
 
-    @Override
-    protected Void call() throws Exception {
-      // Alternates colours
-      alternateColours(titleLabel, Color.BLACK, Color.web("#979797"));
-      return null;
-    }
-  };
+        @Override
+        protected Void call() throws Exception {
+          // Alternates colours
+          alternateColours(titleLabel, Color.BLACK, Color.web("#979797"));
+          return null;
+        }
+      };
 
   /**
    * JavaFX calls this method once the GUI elements are loaded. Here we load in the fonts and user's
@@ -113,17 +100,20 @@ public class MenuController extends SoundsController {
     Users.createNewGuest();
     Users.loadUser("Guest");
     // set up user profile selection button
-    selectedUserButton.setOnMouseEntered(e -> {
-      profileImageView.setStyle(HOVER_STYLE);
-      onButtonHover(null);
-    });
-    selectedUserButton.setOnMouseExited(e -> {
-      profileImageView.setStyle(IDLE_STYLE);
-    });
-    selectedUserButton.setOnMousePressed(e -> {
-      profileImageView.setStyle(MOUSE_DOWN_STYLE);
-      onButtonClick(null);
-    });
+    selectedUserButton.setOnMouseEntered(
+        e -> {
+          profileImageView.setStyle(HOVER_STYLE);
+          onButtonHover(null);
+        });
+    selectedUserButton.setOnMouseExited(
+        e -> {
+          profileImageView.setStyle(IDLE_STYLE);
+        });
+    selectedUserButton.setOnMousePressed(
+        e -> {
+          profileImageView.setStyle(MOUSE_DOWN_STYLE);
+          onButtonClick(null);
+        });
   }
 
   /**
@@ -139,14 +129,17 @@ public class MenuController extends SoundsController {
     // Loop three times
     for (int i = 0; i < 3; i++) {
       // Add a new keyframe accordingly
-      timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(2.5 * i),
-          new KeyValue(label.textFillProperty(), i != 1 ? colour1 : colour2)));
+      timeline
+          .getKeyFrames()
+          .add(
+              new KeyFrame(
+                  Duration.seconds(2.5 * i),
+                  new KeyValue(label.textFillProperty(), i != 1 ? colour1 : colour2)));
     }
     // Play the animation indefinitely
     timeline.setCycleCount(Animation.INDEFINITE);
     timeline.play();
   }
-
 
   /**
    * updateUserImage will change the user image based on switching
@@ -219,10 +212,9 @@ public class MenuController extends SoundsController {
     sceneButtonIsIn.setRoot(SceneManager.getUiRoot(AppUi.USERSELECT));
   }
 
-
   /**
    * onExitGame will let us leave the game after asking for confirmation
-   * 
+   *
    * @param event takes in a JavaFX event
    */
   @FXML

@@ -14,28 +14,17 @@ import nz.ac.auckland.se206.SceneManager.AppUi;
 
 public class StatsController extends SoundsController {
   // Declare all the FXML fields
-  @FXML
-  private Button backButton;
-  @FXML
-  private Button statsTabButton;
-  @FXML
-  private Button wordsTabButton;
-  @FXML
-  private Label titleLabel;
-  @FXML
-  private Label winsLabel;
-  @FXML
-  private Label lossesLabel;
-  @FXML
-  private Label fastestWordLabel;
-  @FXML
-  private Label fastestTimeLabel;
-  @FXML
-  private GridPane statsGridPane;
-  @FXML
-  private VBox wordsListPaneBox;
-  @FXML
-  private VBox wordsListBox;
+  @FXML private Button backButton;
+  @FXML private Button statsTabButton;
+  @FXML private Button wordsTabButton;
+  @FXML private Label titleLabel;
+  @FXML private Label winsLabel;
+  @FXML private Label lossesLabel;
+  @FXML private Label fastestWordLabel;
+  @FXML private Label fastestTimeLabel;
+  @FXML private GridPane statsGridPane;
+  @FXML private VBox wordsListPaneBox;
+  @FXML private VBox wordsListBox;
 
   /** JavaFX calls this method once the GUI elements are loaded. */
   public void initialize() {
@@ -46,7 +35,7 @@ public class StatsController extends SoundsController {
   /**
    * Activates when the words list tab button is pressed. Refreshes user stats display for the
    * current user.
-   * 
+   *
    * @param event takes in a java event from from FXML
    */
   @FXML
@@ -64,7 +53,7 @@ public class StatsController extends SoundsController {
   /**
    * on WordsTab Activates when the words list tab button is pressed. Refreshes the displayed word
    * list for the current user.
-   * 
+   *
    * @param event takes in a java event from from FXML
    */
   @FXML
@@ -89,8 +78,8 @@ public class StatsController extends SoundsController {
     // Show special message if no games have been played
     if (Users.getWordHistory().size() == 0) {
       Label wordLabel = new Label();
-      wordLabel
-          .setText("Once you've played Quick Draw, every word you have drawn will be shown here!");
+      wordLabel.setText(
+          "Once you've played Quick Draw, every word you have drawn will be shown here!");
       wordLabel.setMaxWidth(Integer.MAX_VALUE);
       wordLabel.alignmentProperty().set(Pos.CENTER);
       Font font = Font.loadFont("file:src/main/resources/fonts/somethingwild-Regular.ttf", 42);
@@ -138,8 +127,8 @@ public class StatsController extends SoundsController {
     } else {
       // update stats according to current user variables
       fastestWordLabel.setText(Users.getFastestWord());
-      fastestTimeLabel
-          .setText("drawn in " + Integer.toString(Users.getFastestTime()) + " seconds!");
+      fastestTimeLabel.setText(
+          "drawn in " + Integer.toString(Users.getFastestTime()) + " seconds!");
     }
   }
 

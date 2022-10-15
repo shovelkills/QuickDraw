@@ -1,12 +1,12 @@
 package nz.ac.auckland.se206;
 
+import ai.djl.ModelException;
+import com.opencsv.exceptions.CsvException;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import com.opencsv.exceptions.CsvException;
-import ai.djl.ModelException;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -23,7 +23,11 @@ import nz.ac.auckland.se206.words.CategorySelector.Difficulty;
 public class GameSelectController extends SoundsController {
 
   public enum GameMode {
-    HIDDEN_WORD, NORMAL, ZEN, PROFILE, BLITZ
+    HIDDEN_WORD,
+    NORMAL,
+    ZEN,
+    PROFILE,
+    BLITZ
   }
 
   private static GameMode currentGameMode = GameMode.NORMAL;
@@ -44,30 +48,18 @@ public class GameSelectController extends SoundsController {
   }
 
   // Define FXML fields
-  @FXML
-  private Button blitzButton;
-  @FXML
-  private Button definitionButton;
-  @FXML
-  private Button normalButton;
-  @FXML
-  private Button zenButton;
-  @FXML
-  private ChoiceBox<String> accuracyMenu;
-  @FXML
-  private ChoiceBox<String> wordsMenu;
-  @FXML
-  private ChoiceBox<String> timeMenu;
-  @FXML
-  private ChoiceBox<String> confidenceMenu;
-  @FXML
-  private Tooltip toolTip1;
-  @FXML
-  private Tooltip toolTip2;
-  @FXML
-  private Tooltip toolTip3;
-  @FXML
-  private Tooltip toolTip4;
+  @FXML private Button blitzButton;
+  @FXML private Button definitionButton;
+  @FXML private Button normalButton;
+  @FXML private Button zenButton;
+  @FXML private ChoiceBox<String> accuracyMenu;
+  @FXML private ChoiceBox<String> wordsMenu;
+  @FXML private ChoiceBox<String> timeMenu;
+  @FXML private ChoiceBox<String> confidenceMenu;
+  @FXML private Tooltip toolTip1;
+  @FXML private Tooltip toolTip2;
+  @FXML private Tooltip toolTip3;
+  @FXML private Tooltip toolTip4;
 
   // Define arrays and hash maps
   private final HashMap<Difficulty, String> difficultyMap = new HashMap<Difficulty, String>();
@@ -109,7 +101,10 @@ public class GameSelectController extends SoundsController {
     CanvasController canvas = App.getCanvasController();
     try {
       canvas.setPreGameInterface();
-    } catch (IOException | CsvException | URISyntaxException | ModelException
+    } catch (IOException
+        | CsvException
+        | URISyntaxException
+        | ModelException
         | WordNotFoundException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
@@ -120,7 +115,10 @@ public class GameSelectController extends SoundsController {
 
     try {
       canvas.onRestartGame(null);
-    } catch (IOException | URISyntaxException | CsvException | ModelException
+    } catch (IOException
+        | URISyntaxException
+        | CsvException
+        | ModelException
         | WordNotFoundException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
@@ -137,23 +135,24 @@ public class GameSelectController extends SoundsController {
   @FXML
   private void onStartGame(ActionEvent event) {
 
-    Task<Void> preGameTask = new Task<Void>() {
-      @Override
-      protected Void call() throws Exception {
-        // Set up the pre-game UI elements that are in common with restarting the game
-        updateProgress(0, 1);
-        CanvasController canvas = App.getCanvasController();
-        Thread.sleep(100);
-        // Update progress to half way and then set up the pre-game interface
-        updateProgress(0.5, 1);
-        canvas.setPreGameInterface();
-        // Update progress completely
-        updateProgress(1, 1);
-        Thread.sleep(100);
+    Task<Void> preGameTask =
+        new Task<Void>() {
+          @Override
+          protected Void call() throws Exception {
+            // Set up the pre-game UI elements that are in common with restarting the game
+            updateProgress(0, 1);
+            CanvasController canvas = App.getCanvasController();
+            Thread.sleep(100);
+            // Update progress to half way and then set up the pre-game interface
+            updateProgress(0.5, 1);
+            canvas.setPreGameInterface();
+            // Update progress completely
+            updateProgress(1, 1);
+            Thread.sleep(100);
 
-        return null;
-      }
-    };
+            return null;
+          }
+        };
     // Find progress bar on loading screen
     ProgressBar progressBar = App.getLoadingController().getProgressBar();
     progressBar.progressProperty().unbind();
@@ -166,11 +165,15 @@ public class GameSelectController extends SoundsController {
     sceneButtonIsIn.setRoot(SceneManager.getUiRoot(AppUi.LOADING));
     if (currentGameMode != GameMode.ZEN) {
       // Sets the game difficulty to the user
-      Users.setGameDifficulty(accuracyMenu.getValue(), wordsMenu.getValue(), timeMenu.getValue(),
+      Users.setGameDifficulty(
+          accuracyMenu.getValue(),
+          wordsMenu.getValue(),
+          timeMenu.getValue(),
           confidenceMenu.getValue());
 
       // Build the difficulty for all game modes except profile and zen
-      DifficultyBuilder.setDifficulty(Users.getIndividualDifficulty("accuracyDifficulty"),
+      DifficultyBuilder.setDifficulty(
+          Users.getIndividualDifficulty("accuracyDifficulty"),
           Users.getIndividualDifficulty("wordsDifficulty"),
           Users.getIndividualDifficulty("timeDifficulty"),
           Users.getIndividualDifficulty("confidenceDifficulty"));
@@ -178,18 +181,21 @@ public class GameSelectController extends SoundsController {
     if (currentGameMode == GameMode.ZEN) {
       // Set up zen mode
       Badges.winBadge("Misc", "Play Zen Mode");
-      Users.setGameDifficulty(Users.getIndividualDifficulty("accuracyDifficulty"),
-          wordsMenu.getValue(), Users.getIndividualDifficulty("timeDifficulty"),
+      Users.setGameDifficulty(
+          Users.getIndividualDifficulty("accuracyDifficulty"),
+          wordsMenu.getValue(),
+          Users.getIndividualDifficulty("timeDifficulty"),
           Users.getIndividualDifficulty("confidenceDifficulty"));
       // Build the difficulty for zen mode
       DifficultyBuilder.setDifficulty("EASY", wordsMenu.getValue(), "-1", "-1");
     }
     // TODO add badge for Blitz game mode
-    preGameTask.setOnSucceeded(e -> {
-      progressBar.progressProperty().unbind();
-      // Move to the next scene
-      sceneButtonIsIn.setRoot(SceneManager.getUiRoot(AppUi.GAME));
-    });
+    preGameTask.setOnSucceeded(
+        e -> {
+          progressBar.progressProperty().unbind();
+          // Move to the next scene
+          sceneButtonIsIn.setRoot(SceneManager.getUiRoot(AppUi.GAME));
+        });
     Thread preGameThread = new Thread(preGameTask);
     // Allow the task to be cancelled on closing of application
     preGameThread.setDaemon(true);

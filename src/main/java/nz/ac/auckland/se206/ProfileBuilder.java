@@ -16,7 +16,9 @@ public class ProfileBuilder extends SoundsController {
 
   // Define the types of users a profile can be
   public enum UserType {
-    PLAYER, GUEST, ADD
+    PLAYER,
+    GUEST,
+    ADD
   }
 
   // Declare private static objects
@@ -32,13 +34,16 @@ public class ProfileBuilder extends SoundsController {
 
   // Define the scaling in hovering
   private static final String IDLE_STYLE = "-fx-scale-x: 1; -fx-scale-y: 1";
-  private static final String HOVERED_STYLE = "-fx-scale-x: 1.2; -fx-scale-y: 1.2;"
-      + " -fx-effect: dropshadow(gaussian, #fff8f5, 20, 0.8, 0, 0);";
-  private static final String MOUSE_DOWN_STYLE = "-fx-scale-x: 1.0; -fx-scale-y: 1.0;"
-      + " -fx-effect: dropshadow(gaussian, white, 50, 0.8, 0, 0);";
+  private static final String HOVERED_STYLE =
+      "-fx-scale-x: 1.2; -fx-scale-y: 1.2;"
+          + " -fx-effect: dropshadow(gaussian, #fff8f5, 20, 0.8, 0, 0);";
+  private static final String MOUSE_DOWN_STYLE =
+      "-fx-scale-x: 1.0; -fx-scale-y: 1.0;"
+          + " -fx-effect: dropshadow(gaussian, white, 50, 0.8, 0, 0);";
 
-  private static final String HIGHLIGHT_STYLE = "-fx-scale-x: 1.1; -fx-scale-y: 1.1;"
-      + " -fx-effect: dropshadow(gaussian, #fff8f5, 10, 1, 0, 0);";
+  private static final String HIGHLIGHT_STYLE =
+      "-fx-scale-x: 1.1; -fx-scale-y: 1.1;"
+          + " -fx-effect: dropshadow(gaussian, #fff8f5, 10, 1, 0, 0);";
   // #bbff78
   // #a6ffcb
 
@@ -167,31 +172,34 @@ public class ProfileBuilder extends SoundsController {
     VBox.setMargin(vbox.getChildren().get(0), new Insets(0, 0, 20, 0));
 
     // Event for hovering on
-    userImageBox.setOnMouseEntered(e -> {
-      if (!isSelected) {
-        onButtonHover(null);
-        imageView.setStyle(HOVERED_STYLE);
-        if (imageView.getScene() != null) {
-          imageView.getScene().setCursor(Cursor.HAND);
-        }
-      }
-    });
+    userImageBox.setOnMouseEntered(
+        e -> {
+          if (!isSelected) {
+            onButtonHover(null);
+            imageView.setStyle(HOVERED_STYLE);
+            if (imageView.getScene() != null) {
+              imageView.getScene().setCursor(Cursor.HAND);
+            }
+          }
+        });
     // Event for mouse down
-    userImageBox.setOnMousePressed(e -> {
-      if (!isSelected) {
-        onButtonClick(null);
-        imageView.setStyle(MOUSE_DOWN_STYLE);
-      }
-    });
+    userImageBox.setOnMousePressed(
+        e -> {
+          if (!isSelected) {
+            onButtonClick(null);
+            imageView.setStyle(MOUSE_DOWN_STYLE);
+          }
+        });
     // Event for hovering off
-    userImageBox.setOnMouseExited(e -> {
-      if (!isSelected) {
-        imageView.setStyle(IDLE_STYLE);
-        if (imageView.getScene() != null) {
-          imageView.getScene().setCursor(Cursor.DEFAULT);
-        }
-      }
-    });
+    userImageBox.setOnMouseExited(
+        e -> {
+          if (!isSelected) {
+            imageView.setStyle(IDLE_STYLE);
+            if (imageView.getScene() != null) {
+              imageView.getScene().setCursor(Cursor.DEFAULT);
+            }
+          }
+        });
   }
 
   /** createUserNameLabel will set up the username label to be displayed */
@@ -231,12 +239,14 @@ public class ProfileBuilder extends SoundsController {
     deleteProfileButton.setAlignment(Pos.BOTTOM_RIGHT);
     deleteProfileButton.setText("");
     deleteProfileButton.getStyleClass().add("deleteProfileButton");
-    deleteProfileButton.setOnMouseEntered(e -> {
-      onButtonHover(e);
-    });
-    deleteProfileButton.setOnMouseClicked(e -> {
-      onButtonClick(e);
-    });
+    deleteProfileButton.setOnMouseEntered(
+        e -> {
+          onButtonHover(e);
+        });
+    deleteProfileButton.setOnMouseClicked(
+        e -> {
+          onButtonClick(e);
+        });
     deleteButtonVBox.getChildren().add(deleteProfileButton);
     vbox.getChildren().add(deleteButtonVBox);
     // Set the ID for deletion profile button
@@ -266,8 +276,7 @@ public class ProfileBuilder extends SoundsController {
       userSelectedLabel.setVisible(true);
       imageView.setStyle(HIGHLIGHT_STYLE);
       imageView.setEffect(null);
-      if (!this.type.equals(UserType.GUEST))
-        deleteProfileButton.setVisible(true);
+      if (!this.type.equals(UserType.GUEST)) deleteProfileButton.setVisible(true);
     } else {
       // Update non selected style
       isSelected = false;
