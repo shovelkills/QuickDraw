@@ -227,9 +227,7 @@ public class CanvasController extends SoundsController {
       Platform.runLater(
           () -> {
             for (int i = 0; i < CategorySelector.getAccuracy(); i++) {
-              Line tempLine = createPredictionLine(i);
               predictionGrid.add(createPredictionLine(i), 0, i);
-              GridPane.setValignment(tempLine, VPos.BOTTOM);
             }
             cornerLabel.setVisible(true);
             titleLabel.setText("Quick, Draw!");
@@ -458,6 +456,11 @@ public class CanvasController extends SoundsController {
     line.setEndX(148);
     line.toFront();
     GridPane.setValignment(line, VPos.BOTTOM);
+    if (index == CategorySelector.getAccuracy() - 1) {
+      line.setVisible(true);
+    } else {
+      line.setVisible(false);
+    }
     return line;
   }
 
@@ -500,6 +503,7 @@ public class CanvasController extends SoundsController {
     // Fill the GridPane with empty Label nodes
     for (int i = 0; i < predictionGrid.getRowCount(); i++) {
       predictionGrid.add(createPredictionLabel(" ", false, i), 0, i);
+      predictionGrid.add(createPredictionLine(i), 0, i);
     }
   }
 
