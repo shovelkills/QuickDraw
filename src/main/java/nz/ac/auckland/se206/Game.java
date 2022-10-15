@@ -431,6 +431,7 @@ public class Game extends SoundsController {
         continue;
       }
     }
+    // Sets the current word
     setCurrentWord(word);
     List<WordEntry> entries = wordResult.getWordEntries();
     definition = entries.get(0).getDefinitions().get(0);
@@ -480,7 +481,7 @@ public class Game extends SoundsController {
     this.currentWord = currentWord;
   }
 
-  /** startGame will initialize the game */
+  /** startGame will initialize the game fully */
   public void startGame() {
     // Set these fields to false so that tts only speaks once
     spoken = false;

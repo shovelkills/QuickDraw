@@ -28,6 +28,9 @@ import nz.ac.auckland.se206.SceneManager.AppUi;
 
 public class UserCreationController extends SoundsController {
 
+  // Maximum length for a new username
+  private static final int MAX_USERNAME_LENGTH = 12;
+
   // Initialise FXML items
   @FXML private Button createButton;
   @FXML private TextField usernameField;
@@ -41,21 +44,20 @@ public class UserCreationController extends SoundsController {
   @FXML private ImageView imageOption4;
   @FXML private ImageView imageOption5;
 
-  // Maximum length for a new username
-  private static final int MAX_USERNAME_LENGTH = 12;
-
   // Initliase array for image options
   private ArrayList<ImageView> imageOptions = new ArrayList<ImageView>();
 
   private String editImageViewDefault =
-      "-fx-scale-y: 1.1; -fx-scale-x: 1.1; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, #00e8e8, 20, 0.8, 0, 0);";
+      "-fx-scale-y: 1.1; -fx-scale-x: 1.1; -fx-cursor: hand;"
+          + " -fx-effect: dropshadow(gaussian, #00e8e8, 20, 0.8, 0, 0);";
   private String editImageViewPressed =
-      "-fx-scale-y: 1.0; -fx-scale-x: 1.0; -fx-effect: dropshadow(gaussian, #00e8e8, 30, 0.8, 0, 0);";
+      "-fx-scale-y: 1.0; -fx-scale-x: 1.0;"
+          + " -fx-effect: dropshadow(gaussian, #00e8e8, 30, 0.8, 0, 0);";
 
   /**
-   * initialize will be called on start up
+   * initialize will be called on start up of application
    *
-   * @throws FileNotFoundException
+   * @throws FileNotFoundException no file found
    */
   public void initialize() throws FileNotFoundException {
     // Set user image edit overlay from file
@@ -176,7 +178,11 @@ public class UserCreationController extends SoundsController {
     preGameThread.start();
   }
 
-  /** onSetImage will set the users image to the one clicked */
+  /**
+   * onSetImage will set the users image to the one clicked
+   *
+   * @param e takes in an event from FXML
+   */
   @FXML
   private void onSetImage(Event e) {
     // Get the image selected
@@ -189,7 +195,7 @@ public class UserCreationController extends SoundsController {
   /**
    * onCreateProfile method will create a new user profile based on the profile position
    *
-   * @param event Takes in the FXML action event
+   * @param event takes in the FXML action event
    */
   @FXML
   private void onCreateProfile(Event event) {
@@ -254,7 +260,7 @@ public class UserCreationController extends SoundsController {
   /**
    * onExitSelection will leave the profile creation scene
    *
-   * @param event Takes in Mouse Pressed event
+   * @param event takes in Mouse Pressed event
    */
   @FXML
   private void onExitSelection(Event event) {

@@ -1,6 +1,7 @@
 package nz.ac.auckland.se206;
 
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -34,9 +35,11 @@ public class StatsController extends SoundsController {
   /**
    * Activates when the words list tab button is pressed. Refreshes user stats display for the
    * current user.
+   *
+   * @param event takes in a java event from from FXML
    */
   @FXML
-  private void onStatsTab() {
+  private void onStatsTab(Event event) {
     // Set tab title
     titleLabel.setText("Stats for: " + Users.getUserName());
     // Set style of elements to indicate tab is selected
@@ -50,9 +53,11 @@ public class StatsController extends SoundsController {
   /**
    * on WordsTab Activates when the words list tab button is pressed. Refreshes the displayed word
    * list for the current user.
+   *
+   * @param event takes in a java event from from FXML
    */
   @FXML
-  private void onWordsTab() {
+  private void onWordsTab(Event event) {
     // Set tab title
     titleLabel.setText("Word History for: " + Users.getUserName());
     // Set style of elements to indicate tab is selected
@@ -149,6 +154,6 @@ public class StatsController extends SoundsController {
     // Update all stats: the users stats, their words, and the user
     updateUserStats();
     updateWordList();
-    onStatsTab();
+    onStatsTab(null);
   }
 }

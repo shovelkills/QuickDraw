@@ -126,6 +126,7 @@ public class Users {
    * Creates a json file with the user input of username so that it can store data
    *
    * @param username the username the user wants to use
+   * @return returns a boolean either true or false
    */
   public static boolean createUser(String username) {
     if (isValidUsername(username)) {
@@ -187,7 +188,6 @@ public class Users {
       }
 
     } catch (IOException e) {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
 
@@ -315,8 +315,10 @@ public class Users {
 
   /** Saves the List of Users and the recent lists */
   public static void saveUserList() {
+    // Create a new user file
     File dir = new File(folderDirectory + "/src/main/resources/users/");
     try (Writer writer = new FileWriter(new File(dir, "userlist.json"))) {
+      // Create the hash map
       Map<String, Object> saveToJson = new HashMap<>();
       saveToJson.put("recentUser", recentUser);
       saveToJson.put("userList", userList);
@@ -326,7 +328,6 @@ public class Users {
       writer.close();
 
     } catch (IOException e) {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
   }
@@ -352,6 +353,7 @@ public class Users {
   /**
    * Loads the profile picture that the user has drawn
    *
+   * @param user takes in a user's profile picture image
    * @return the image of the profile picture
    */
   public static Image loadProfilePicture(String user) {
@@ -389,7 +391,11 @@ public class Users {
     }
   }
 
-  /** Deletes the profile picture of the user */
+  /**
+   * Deletes the profile picture of the user
+   *
+   * @param user the user that wants their picture to be deleted
+   */
   public static void deleteProfilePicture(String user) {
     File file = new File(folderDirectory + "/src/main/resources/profilepictures/" + user + ".png");
     file.delete();
@@ -461,6 +467,7 @@ public class Users {
   public static void addGameDifficultyHistory(
       String accuracy, String word, String time, String confidence) {
 
+    // Adds params into the history
     accuracyDifficultyHistory.add(accuracy);
     wordDifficultyHistory.add(word);
     timeDifficultyHistory.add(time);
@@ -543,56 +550,123 @@ public class Users {
 
   // Getters and setter methods below.
 
+  /**
+   * setRecentUser will update who the most recent user is
+   *
+   * @param recentuser the most recent user who was selected
+   */
   public static void setRecentUser(String recentuser) {
+    // Set the recent user
     recentUser = recentuser;
     saveUserList();
   }
 
+  /**
+   * getWins will obtain the user's wins
+   *
+   * @return an integer on the amount of wins
+   */
   public static int getWins() {
     return wins;
   }
 
+  /**
+   * getWins will obtain the user's losses
+   *
+   * @return an integer on the amount of losses
+   */
   public static int getLosses() {
     return losses;
   }
 
+  /**
+   * getWordHistory will get all of user's words
+   *
+   * @return a list full of strings
+   */
   public static List<String> getWordHistory() {
     return wordHistory;
   }
 
+  /**
+   * getFastestTime will obtain the user's fastest time
+   *
+   * @return an integer
+   */
   public static int getFastestTime() {
     return fastestTime;
   }
 
+  /**
+   * getUserName will obtain the user's name
+   *
+   * @return a string
+   */
   public static String getUserName() {
     return userName;
   }
 
+  /**
+   * getTimeHistory will get all of user's times
+   *
+   * @return a list full of doubles
+   */
   public static List<Double> getTimeHistory() {
     return timeHistory;
   }
 
+  /**
+   * getFastestTime will obtain the user's fastest word
+   *
+   * @return a string
+   */
   public static String getFastestWord() {
     return fastestWord;
   }
 
+  /**
+   * setFastestWord will update the user's fastest word
+   *
+   * @param fastestword a string
+   */
   public static void setFastestWord(String fastestword) {
     Users.fastestWord = fastestword;
   }
 
+  /**
+   * getRecentList will find out the most recent player
+   *
+   * @return a string
+   */
   public static String getRecentList() {
     return recentUser;
   }
 
+  /**
+   * getUserList will get a list of users
+   *
+   * @return a list full of strings
+   */
   public static List<String> getUserList() {
     return userList;
   }
 
+  /**
+   * getProfilePicture will obtain the user's profile picture
+   *
+   * @return a string leading to the profile picture
+   */
   public static String getProfilePicture() {
     return profilePicture;
   }
 
+  /**
+   * setProfilePicture will update the user's profile picture
+   *
+   * @param profilepicture takes in a string
+   */
   public static void setProfilePicture(String profilepicture) {
+    // Update the user's profile picture
     Users.profilePicture = profilepicture;
   }
 

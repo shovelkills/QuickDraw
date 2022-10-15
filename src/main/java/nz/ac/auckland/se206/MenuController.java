@@ -34,6 +34,16 @@ public class MenuController extends SoundsController {
       "-fx-scale-x: 1.2; -fx-scale-y: 1.2; -fx-effect: dropshadow(gaussian, #fff8f5, 20, 0.8, 0, 0);";
   private static final String MOUSE_DOWN_STYLE =
       "-fx-scale-x: 1.2; -fx-scale-y: 1.2; -fx-effect: dropshadow(gaussian, #fff8f5, 30, 0.8, 0, 0);";
+
+  /**
+   * get's the volume slider on main menu page
+   *
+   * @return a slider object
+   */
+  public static Slider getVolumeSlider() {
+    return volumeSlider;
+  }
+
   // Declare the menu objects
   @FXML private Canvas canvas;
   @FXML private ImageView profileImageView;
@@ -132,15 +142,6 @@ public class MenuController extends SoundsController {
   }
 
   /**
-   * get's the volume slider on main menu page
-   *
-   * @return a slider object
-   */
-  public static Slider getVolumeSlider() {
-    return volumeSlider;
-  }
-
-  /**
    * updateUserImage will change the user image based on switching
    *
    * @param image the player's image that is saved
@@ -211,9 +212,13 @@ public class MenuController extends SoundsController {
     sceneButtonIsIn.setRoot(SceneManager.getUiRoot(AppUi.USERSELECT));
   }
 
-  /** onExitGame will let us leave the game after asking for confirmation */
+  /**
+   * onExitGame will let us leave the game after asking for confirmation
+   *
+   * @param event takes in a JavaFX event
+   */
   @FXML
-  private void onExitGame() {
+  private void onExitGame(ActionEvent event) {
     // Create a pop up for confirming exit
     Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
     alert.setTitle("Exit Game");

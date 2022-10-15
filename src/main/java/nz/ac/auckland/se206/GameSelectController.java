@@ -61,11 +61,11 @@ public class GameSelectController extends SoundsController {
   @FXML private Tooltip toolTip3;
   @FXML private Tooltip toolTip4;
 
+  // Define arrays and hash maps
   private final HashMap<Difficulty, String> difficultyMap = new HashMap<Difficulty, String>();
   private ArrayList<Button> gameModes = new ArrayList<Button>();
   private ArrayList<Tooltip> toolTips = new ArrayList<Tooltip>();
   private ArrayList<ChoiceBox<String>> difficultyMenu = new ArrayList<ChoiceBox<String>>();
-  // Task for alternating colour of the title and word label concurrently
 
   /**
    * initialize method will be called upon starting the game to add all the difficulties into the

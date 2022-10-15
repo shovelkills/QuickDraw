@@ -103,6 +103,7 @@ public class SoundsController {
    * loop the background song to repeat
    */
   public static void soundsInitialize() {
+    // get the volume slider
     volumeSlider = MenuController.getVolumeSlider();
     volumeSlider
         .valueProperty()
@@ -111,12 +112,14 @@ public class SoundsController {
 
               @Override
               public void invalidated(Observable observable) {
+                // Link the slider properties
                 backgroundMedia.setVolume(volumeSlider.getValue() / 100);
               }
             });
     backgroundMedia.setOnEndOfMedia(
         new Runnable() {
           public void run() {
+            // Loop back to beginning
             backgroundMedia.seek(Duration.ZERO);
           }
         });

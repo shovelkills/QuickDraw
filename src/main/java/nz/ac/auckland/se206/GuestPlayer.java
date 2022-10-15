@@ -38,6 +38,7 @@ public class GuestPlayer {
     timeHistory = new ArrayList<Double>();
     wordHistory = new ArrayList<String>();
     fastestWord = " ";
+    // Create new hash map and put in difficulties
     Map<String, String> difficulty = new HashMap<>();
     difficulty.put("accuracyDifficulty", "EASY");
     difficulty.put("wordsDifficulty", "EASY");

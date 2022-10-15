@@ -228,7 +228,9 @@ public class ProfileBuilder extends SoundsController {
 
   /** createDeleteProfileButton will create the delete button for users to delete their profile */
   private void createDeleteProfileButton() {
+    // Creates a new vbox
     VBox deleteButtonVBox = new VBox();
+    // Sets up the box
     deleteButtonVBox.setPrefSize(149, 47);
     deleteButtonVBox.setMinSize(149, 47);
     deleteButtonVBox.setAlignment(Pos.CENTER);
