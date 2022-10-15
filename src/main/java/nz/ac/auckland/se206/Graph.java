@@ -43,8 +43,11 @@ public class Graph {
     // Gets the data from the list
 
     for (int i = 0; i < Users.getWordHistory().size(); i++) {
-      series.getData().add(
-          new Data<String, Number>(Users.getWordHistory().get(i), Users.getTimeHistory().get(i)));
+      series
+          .getData()
+          .add(
+              new Data<String, Number>(
+                  Users.getWordHistory().get(i), Users.getTimeHistory().get(i)));
     }
     return series;
   }
@@ -60,8 +63,9 @@ public class Graph {
     double winPercentage = ((double) Users.getWins()) * 100 / totalGames;
     double lossPercentage = ((double) Users.getLosses()) * 100 / totalGames;
     // Adds data to the piechart
-    ObservableList<PieChart.Data> winLossPieChart = FXCollections.observableArrayList(
-        new PieChart.Data("Wins", winPercentage), new PieChart.Data("Losses", lossPercentage));
+    ObservableList<PieChart.Data> winLossPieChart =
+        FXCollections.observableArrayList(
+            new PieChart.Data("Wins", winPercentage), new PieChart.Data("Losses", lossPercentage));
     return winLossPieChart;
   }
 
@@ -72,8 +76,8 @@ public class Graph {
    * @param difficulty the individual difficulty that the user wants to see
    * @return the data of the difficulty that the user wants
    */
-  public static ObservableList<PieChart.Data> getIndividualDifficultyPieChart(String gameOutcome,
-      String difficulty) {
+  public static ObservableList<PieChart.Data> getIndividualDifficultyPieChart(
+      String gameOutcome, String difficulty) {
 
     boolean wantedGameOutcome = true;
     int totalGames = Users.getWins();
@@ -104,14 +108,15 @@ public class Graph {
 
     // Counts the percentage of each difficulty in the game outcome and adds it to a HashMap
     HashMap<String, Double> countDifficulty = new HashMap<String, Double>();
-    countDifficulty.put("Easy",
-        (double) (Collections.frequency(gameOutcomeDifficulty, "E") * 100 / totalGames));
-    countDifficulty.put("Medium",
-        (double) (Collections.frequency(gameOutcomeDifficulty, "M") * 100 / totalGames));
-    countDifficulty.put("Hard",
-        (double) (Collections.frequency(gameOutcomeDifficulty, "H") * 100 / totalGames));
+    countDifficulty.put(
+        "Easy", (double) (Collections.frequency(gameOutcomeDifficulty, "E") * 100 / totalGames));
+    countDifficulty.put(
+        "Medium", (double) (Collections.frequency(gameOutcomeDifficulty, "M") * 100 / totalGames));
+    countDifficulty.put(
+        "Hard", (double) (Collections.frequency(gameOutcomeDifficulty, "H") * 100 / totalGames));
     if (!difficulty.equals("accuracy")) {
-      countDifficulty.put("Master",
+      countDifficulty.put(
+          "Master",
           (double) (Collections.frequency(gameOutcomeDifficulty, "MS") * 100 / totalGames));
     }
     ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList();
