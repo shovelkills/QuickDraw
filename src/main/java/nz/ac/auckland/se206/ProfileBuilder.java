@@ -38,8 +38,9 @@ public class ProfileBuilder extends SoundsController {
       "-fx-scale-x: 1.2; -fx-scale-y: 1.2;"
           + " -fx-effect: dropshadow(gaussian, #fff8f5, 20, 0.8, 0, 0);";
   private static final String MOUSE_DOWN_STYLE =
-      "-fx-scale-x: 1.2; -fx-scale-y: 1.2;"
+      "-fx-scale-x: 1.0; -fx-scale-y: 1.0;"
           + " -fx-effect: dropshadow(gaussian, white, 50, 0.8, 0, 0);";
+
   private static final String HIGHLIGHT_STYLE =
       "-fx-scale-x: 1.1; -fx-scale-y: 1.1;"
           + " -fx-effect: dropshadow(gaussian, #fff8f5, 10, 1, 0, 0);";
@@ -128,7 +129,7 @@ public class ProfileBuilder extends SoundsController {
       case ADD:
         // Set up according to add new player type
         imageView.setImage(addImage);
-        userNameLabel.setText("Add New Player");
+        userNameLabel.setText("New Player");
         deleteProfileButton.setVisible(false);
         counter = counter - 2;
         break;
