@@ -201,3 +201,151 @@
 	-fx-pref-width: 142;
 	-fx-pref-height: 42;
 }
+
+/*Brush size option buttons */
+
+.brushSizeSmall{
+	-fx-background-color: transparent;
+	-fx-background-image: url(../images/buttons/brushSmallDefault.png);	
+}
+
+.brushSizeSmall:hover{
+	-fx-background-color: transparent;
+	-fx-background-image: url(../images/buttons/brushSmallHover.png);	
+}
+
+.brushSizeSmall:pressed{
+	-fx-background-color: transparent;
+	-fx-background-image: url(../images/buttons/brushSmallDown.png);
+	-fx-pref-width: 102;
+	-fx-pref-height: 102;
+}
+
+.brushSizeSmallSelected{
+	-fx-background-color: transparent;
+	-fx-background-image: url(../images/buttons/brushSmallSelected.png);
+	-fx-pref-width: 102;
+	-fx-pref-height: 102;
+}
+
+.brushSizeMedium{
+	-fx-background-color: transparent;
+	-fx-background-image: url(../images/buttons/brushMediumDefault.png);	
+}
+
+.brushSizeMedium:hover{
+	-fx-background-color: transparent;
+	-fx-background-image: url(../images/buttons/brushMediumHover.png);	
+}
+
+.brushSizeMedium:pressed{
+	-fx-background-color: transparent;
+	-fx-background-image: url(../images/buttons/brushMediumDown.png);
+	-fx-pref-width: 102;
+	-fx-pref-height: 102;
+}
+
+.brushSizeMediumSelected{
+	-fx-background-color: transparent;
+	-fx-background-image: url(../images/buttons/brushMediumSelected.png);
+	-fx-pref-width: 102;
+	-fx-pref-height: 102;
+}
+
+.brushSizeLarge{
+	-fx-background-color: transparent;
+	-fx-background-image: url(../images/buttons/brushLargeDefault.png);	
+}
+
+.brushSizeLarge:hover{
+	-fx-background-color: transparent;
+	-fx-background-image: url(../images/buttons/brushLargeHover.png);	
+}
+
+.brushSizeLarge:pressed{
+	-fx-background-color: transparent;
+	-fx-background-image: url(../images/buttons/brushLargeDown.png);
+	-fx-pref-width: 102;
+	-fx-pref-height: 102;
+}
+
+.brushSizeLargeSelected{
+	-fx-background-color: transparent;
+	-fx-background-image: url(../images/buttons/brushLargeSelected.png);
+	-fx-pref-width: 102;
+	-fx-pref-height: 102;
+}
+
+/*Eraser size option buttons */
+
+.eraserSizeSmall{
+	-fx-background-color: transparent;
+	-fx-background-image: url(../images/buttons/eraserSmallDefault.png);	
+}
+
+.eraserSizeSmall:hover{
+	-fx-background-color: transparent;
+	-fx-background-image: url(../images/buttons/eraserSmallHover.png);	
+}
+
+.eraserSizeSmall:pressed{
+	-fx-background-color: transparent;
+	-fx-background-image: url(../images/buttons/eraserSmallDown.png);
+	-fx-pref-width: 102;
+	-fx-pref-height: 102;
+}
+
+.eraserSizeSmallSelected{
+	-fx-background-color: transparent;
+	-fx-background-image: url(../images/buttons/eraserSmallSelected.png);
+	-fx-pref-width: 102;
+	-fx-pref-height: 102;
+}
+
+.eraserSizeMedium{
+	-fx-background-color: transparent;
+	-fx-background-image: url(../images/buttons/eraserMediumDefault.png);	
+}
+
+.eraserSizeMedium:hover{
+	-fx-background-color: transparent;
+	-fx-background-image: url(../images/buttons/eraserMediumHover.png);	
+}
+
+.eraserSizeMedium:pressed{
+	-fx-background-color: transparent;
+	-fx-background-image: url(../images/buttons/eraserMediumDown.png);
+	-fx-pref-width: 102;
+	-fx-pref-height: 102;
+}
+
+.eraserSizeMediumSelected{
+	-fx-background-color: transparent;
+	-fx-background-image: url(../images/buttons/eraserMediumSelected.png);
+	-fx-pref-width: 102;
+	-fx-pref-height: 102;
+}
+
+.eraserSizeLarge{
+	-fx-background-color: transparent;
+	-fx-background-image: url(../images/buttons/eraserLargeDefault.png);	
+}
+
+.eraserSizeLarge:hover{
+	-fx-background-color: transparent;
+	-fx-background-image: url(../images/buttons/eraserLargeHover.png);	
+}
+
+.eraserSizeLarge:pressed{
+	-fx-background-color: transparent;
+	-fx-background-image: url(../images/buttons/eraserLargeDown.png);
+	-fx-pref-width: 102;
+	-fx-pref-height: 102;
+}
+
+.eraserSizeLargeSelected{
+	-fx-background-color: transparent;
+	-fx-background-image: url(../images/buttons/eraserLargeSelected.png);
+	-fx-pref-width: 102;
+	-fx-pref-height: 102;
+}
