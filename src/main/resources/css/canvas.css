@@ -349,3 +349,10 @@
 	-fx-pref-width: 102;
 	-fx-pref-height: 102;
 }
+
+.colourPicker{
+	-fx-background-color: #FCEFE8;
+	-fx-background-radius: 20;
+	-fx-font-family: "Maybe Next";
+	-fx-font-size: 14;
+}

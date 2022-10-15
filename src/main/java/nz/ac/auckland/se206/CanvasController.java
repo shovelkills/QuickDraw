@@ -246,6 +246,7 @@ public class CanvasController extends SoundsController {
 
       Platform.runLater(
           () -> {
+            cornerLabel.setVisible(true);
             brushOptionsVBox.setVisible(false);
             brushOptionsVBox.setMouseTransparent(true);
             eraserOptionsVBox.setVisible(false);
@@ -268,7 +269,6 @@ public class CanvasController extends SoundsController {
               timerLabel.setVisible(true);
               colourPicker.setVisible(false);
               // reset visibilities of line
-
             } else {
               timerBarLabel.setPrefWidth(20000.0);
               timerLabel.setVisible(false);
@@ -381,6 +381,7 @@ public class CanvasController extends SoundsController {
 
   /** SetProfile will set up the profile creation image process */
   private void setProfile() {
+    cornerLabel.setVisible(false);
     brushOptionsVBox.setVisible(true);
     brushOptionsVBox.setMouseTransparent(false);
     eraserOptionsVBox.setVisible(false);
