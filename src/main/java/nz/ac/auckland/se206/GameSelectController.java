@@ -171,6 +171,7 @@ public class GameSelectController extends SoundsController {
           timeMenu.getValue(),
           confidenceMenu.getValue());
 
+      // Build the difficulty for all game modes except profile and zen
       DifficultyBuilder.setDifficulty(
           Users.getIndividualDifficulty("accuracyDifficulty"),
           Users.getIndividualDifficulty("wordsDifficulty"),
@@ -178,7 +179,15 @@ public class GameSelectController extends SoundsController {
           Users.getIndividualDifficulty("confidenceDifficulty"));
     }
     if (currentGameMode == GameMode.ZEN) {
+      // Set up zen mode
       Badges.winBadge("Misc", "Play Zen Mode");
+      Users.setGameDifficulty(
+          Users.getIndividualDifficulty("accuracyDifficulty"),
+          wordsMenu.getValue(),
+          Users.getIndividualDifficulty("timeDifficulty"),
+          Users.getIndividualDifficulty("confidenceDifficulty"));
+      // Build the difficulty for zen mode
+      DifficultyBuilder.setDifficulty("EASY", wordsMenu.getValue(), "-1", "-1");
     }
     // TODO add badge for Blitz game mode
     preGameTask.setOnSucceeded(
@@ -238,15 +247,14 @@ public class GameSelectController extends SoundsController {
         break;
       case "Zen":
         // Switch to zen game mode
-        wordsMenu.setDisable(true);
-        wordsMenu.setValue("HARD");
+        wordsMenu.setDisable(false);
+        wordsMenu.setValue(Users.getIndividualDifficulty("wordsDifficulty"));
         accuracyMenu.setDisable(true);
         accuracyMenu.setValue("N/A");
         confidenceMenu.setDisable(true);
         confidenceMenu.setValue("N/A");
         timeMenu.setDisable(true);
         timeMenu.setValue("N/A");
-        DifficultyBuilder.setDifficulty("-1", wordsMenu.getValue(), "-1", "-1");
         // Change the local game mode
         localGameMode = GameMode.ZEN;
         break;

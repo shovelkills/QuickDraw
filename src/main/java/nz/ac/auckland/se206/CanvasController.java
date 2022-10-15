@@ -24,6 +24,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.geometry.VPos;
 import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
@@ -42,6 +43,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
+import javafx.scene.shape.StrokeType;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
@@ -196,6 +199,7 @@ public class CanvasController extends SoundsController {
   public void setPreGameInterface()
       throws IOException, CsvException, URISyntaxException, ModelException, WordNotFoundException {
     currentGameMode = GameSelectController.getCurrentGameMode();
+    onClear();
     // Instantiate a new game object on first opening the scene
     CategorySelector.loadCategories();
     // Reset the timer bar's css
@@ -219,8 +223,14 @@ public class CanvasController extends SoundsController {
     }
     // Main setup
     if (currentGameMode != GameMode.PROFILE) {
+
       Platform.runLater(
           () -> {
+            for (int i = 0; i < CategorySelector.getAccuracy(); i++) {
+              Line tempLine = createPredictionLine(i);
+              predictionGrid.add(createPredictionLine(i), 0, i);
+              GridPane.setValignment(tempLine, VPos.BOTTOM);
+            }
             cornerLabel.setVisible(true);
             titleLabel.setText("Quick, Draw!");
             isDrawing = false;
@@ -232,6 +242,8 @@ public class CanvasController extends SoundsController {
               timerLabel.textProperty().bind(game.getTimeRemainingAsStringBinding());
               timerLabel.setVisible(true);
               colourPicker.setVisible(false);
+              // reset visibilities of line
+
             } else {
               timerBarLabel.setPrefWidth(20000.0);
               timerLabel.setVisible(false);
@@ -431,7 +443,22 @@ public class CanvasController extends SoundsController {
       // to bottom :
       // highest to lowest rank
       predictionGrid.add(createPredictionLabel(predictionEntry, isPrompt, i), 0, i);
+      if (i < CategorySelector.getAccuracy()) {
+        // Add the prediction line in
+        predictionGrid.add(createPredictionLine(i), 0, i);
+      }
     }
+  }
+
+  private Line createPredictionLine(int index) {
+    // Create a new line
+    Line line = new Line();
+    line.setStrokeType(StrokeType.OUTSIDE);
+    line.setStartX(-100);
+    line.setEndX(148);
+    line.toFront();
+    GridPane.setValignment(line, VPos.BOTTOM);
+    return line;
   }
 
   /**
@@ -467,8 +494,9 @@ public class CanvasController extends SoundsController {
 
   /** Clears the prediction grid of entries and fills it with empty string entries. */
   private void clearPredictionGrid() {
-    // Remove all child nodes from the GridPane
+    // Remove all child nodes from the GridPane except lines
     predictionGrid.getChildren().clear();
+
     // Fill the GridPane with empty Label nodes
     for (int i = 0; i < predictionGrid.getRowCount(); i++) {
       predictionGrid.add(createPredictionLabel(" ", false, i), 0, i);
