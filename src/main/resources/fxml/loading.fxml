@@ -5,18 +5,17 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
 <VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" styleClass="mainMenuBackground" stylesheets="@../css/menu.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nz.ac.auckland.se206.LoadingController">
    <children>
-      <Label fx:id="titleLabel" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="290.0" prefWidth="1280.0" styleClass="mainMenuTitle" stylesheets="@../css/menu.css" text="Quick, Draw!" textAlignment="CENTER">
+      <Label fx:id="titleLabel" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="290.0" prefWidth="1280.0" styleClass="loadingTitle" stylesheets="@../css/loading.css" text="Quick, Draw!" textAlignment="CENTER">
          <font>
             <Font name="System Bold" size="60.0" />
          </font>
       </Label>
       <VBox alignment="CENTER" prefHeight="216.0" prefWidth="1280.0">
          <children>
-            <Label text="Loading" />
-            <ProgressBar fx:id="progressBar" prefWidth="200.0" progress="0.0" />
+            <Label styleClass="loadingLabel" stylesheets="@../css/loading.css" text="Loading" />
+            <ProgressBar fx:id="progressBar" prefWidth="200.0" progress="0.0" styleClass="progressBar" stylesheets="@../css/loading.css" />
          </children>
       </VBox>
    </children>
