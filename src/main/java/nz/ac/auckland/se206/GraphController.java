@@ -9,7 +9,10 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseEvent;
+import javafx.util.Duration;
 import nz.ac.auckland.se206.SceneManager.AppUi;
 
 public class GraphController {
@@ -18,20 +21,23 @@ public class GraphController {
   private static String gameOutcome;
   @FXML private Button accuracyButton;
   @FXML private Button confidenceButton;
-  @FXML private Button lossButton;
   @FXML private Button menuButton;
   @FXML private Button timeButton;
   @FXML private Button wordButton;
-  @FXML private Button winButton;
   @FXML private CategoryAxis xAxis;
+  @FXML private Label indvidualDifficultyLabel;
   @FXML private LineChart<String, Number> timeLineChart;
   @FXML private NumberAxis yAxis;
   @FXML private PieChart individualDifficultyPieChart;
   @FXML private PieChart winsLossPieChart;
+  @FXML private Tooltip toolTip;
 
   /** JavaFX will call this method to initialize the UI */
   public void initialize() {
     loadGraphData();
+    toolTip.setShowDelay(Duration.ZERO);
+    toolTip.setWrapText(true);
+    toolTip.setAutoFix(true);
   }
 
   /** Loads the data from the user to the graph */
@@ -41,7 +47,11 @@ public class GraphController {
     timeLineChart.getData().add(Graph.getLineChartData());
     timeLineChart.getXAxis().setTickLabelsVisible(false);
     winsLossPieChart.setData(Graph.getWinsLossPieChart());
-
+    // Enables the difficulty buttons
+    timeButton.setDisable(true);
+    wordButton.setDisable(true);
+    accuracyButton.setDisable(true);
+    confidenceButton.setDisable(true);
     // Makes it so when pressing on the winloss piechart is changes the difficulty piegraph
     winsLossPieChart
         .getData()
@@ -68,14 +78,12 @@ public class GraphController {
   }
 
   /** onShowWins will show the wins pie chart */
-  @FXML
   private void onShowWins() {
     gameOutcome = "Win";
     loadIndividualDifficulyPieChart();
   }
 
   /** onShowLoss will show the loss pie chart */
-  @FXML
   private void onShowLoss() {
     gameOutcome = "Loss";
     loadIndividualDifficulyPieChart();
@@ -86,6 +94,12 @@ public class GraphController {
     if (difficulty == null) {
       difficulty = "accuracy";
     }
+    // Disable the difficulty buttons
+    timeButton.setDisable(false);
+    wordButton.setDisable(false);
+    accuracyButton.setDisable(false);
+    confidenceButton.setDisable(false);
+    indvidualDifficultyLabel.setText(difficulty);
     individualDifficultyPieChart.setData(
         Graph.getIndividualDifficultyPieChart(gameOutcome, difficulty));
   }

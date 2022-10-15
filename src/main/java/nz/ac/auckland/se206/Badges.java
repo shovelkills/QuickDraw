@@ -2,6 +2,9 @@ package nz.ac.auckland.se206;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import nz.ac.auckland.se206.words.CategorySelector.Difficulty;
 
 public class Badges {
@@ -15,8 +18,37 @@ public class Badges {
    * @param level the level of the badge
    */
   public static void winBadge(String catergory, String level) {
-    Users.getBadges().get(catergory).put(level, true);
-    Users.saveUser();
+    if (!Users.getBadges().get(catergory).get(level)) {
+      String nameOfBadge;
+      switch (level) {
+        case "E":
+          nameOfBadge = "Easy";
+          break;
+        case "M":
+          nameOfBadge = "Medium";
+          break;
+        case "H":
+          nameOfBadge = "Hard";
+          break;
+        case "MS":
+          nameOfBadge = "Master";
+          break;
+        default:
+          nameOfBadge = level;
+          break;
+      }
+      Users.getBadges().get(catergory).put(level, true);
+      Users.saveUser();
+
+      Alert alert = new Alert(Alert.AlertType.INFORMATION);
+      alert.setTitle("Won Badge");
+      alert.setHeaderText(
+          "You have won the " + nameOfBadge + " badge in the " + catergory + " category");
+      Optional<ButtonType> result = alert.showAndWait();
+      if (result.get() == ButtonType.OK) {
+        return;
+      }
+    }
   }
 
   /**
@@ -54,10 +86,10 @@ public class Badges {
 
     // Get the badges hash map
     // Store the current difficulty badges in the user's profile
-    Users.getBadges().get("Accuracy").put(accuracy.toString(), true);
-    Users.getBadges().get("Words").put(word.toString(), true);
-    Users.getBadges().get("Time").put(time.toString(), true);
-    Users.getBadges().get("Confidence").put(confidence.toString(), true);
+    winBadge("Accuracy", accuracy.toString());
+    winBadge("Words", word.toString());
+    winBadge("Time", time.toString());
+    winBadge("Confidence", confidence.toString());
     // Check all the badges
     for (String difficulty : difficulties) {
       checkDifficulty(difficulty);

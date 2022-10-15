@@ -438,7 +438,6 @@ public class Users {
    * @param word the word the user had to draw
    */
   public static void checkFastestTime(int time, String word) {
-    Badges.checkWinTime(time);
     // Checks if it is the fastest time
     if (time <= Users.fastestTime || (Users.fastestTime == -1 && time != 60)) {
       Users.fastestTime = time;
