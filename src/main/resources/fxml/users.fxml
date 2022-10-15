@@ -20,7 +20,7 @@
       <HBox fx:id="userHbox" alignment="CENTER" />
       <Label alignment="BOTTOM_RIGHT" minHeight="-Infinity" minWidth="-Infinity" prefHeight="46.0" prefWidth="145.0">
          <graphic>
-            <Button fx:id="returnButton" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onExitSelection" prefHeight="46.0" prefWidth="145.0" styleClass="exitSelectionButton" stylesheets="@../css/userselection.css">
+            <Button fx:id="returnButton" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onExitSelection" onMouseClicked="#onButtonClick" onMouseEntered="#onButtonHover" prefHeight="46.0" prefWidth="145.0" styleClass="exitSelectionButton" stylesheets="@../css/userselection.css">
                <font>
                   <Font name="System Bold" size="20.0" />
                </font>

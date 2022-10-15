@@ -173,6 +173,7 @@ public class App extends Application {
     scene.getStylesheets().add("/css/creation.css");
     scene.getStylesheets().add("/css/stats.css");
     scene.getStylesheets().add("/css/gameselect.css");
+    scene.getStylesheets().add("/css/userselection.css");
 
     // Set the scene and then show
     stage.setTitle("Draw Game");
