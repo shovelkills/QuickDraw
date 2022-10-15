@@ -81,6 +81,7 @@ public class CanvasController extends SoundsController {
       new Image(Users.folderDirectory + "/src/main/resources/images/indicatorFurther.png");
   private static ImageView predictionImage = new ImageView();
   private static GameMode currentGameMode;
+  private static int hints = 0;
 
   public static GameMode getCurrentGameMode() {
     return currentGameMode;
@@ -720,6 +721,8 @@ public class CanvasController extends SoundsController {
   public void onEndGame(boolean isWin) {
     Platform.runLater(
         () -> {
+          // reset hints
+          hints = 0;
           // Stop drawing and prediction
           isDrawing = false;
           canvas.setDisable(true);
@@ -1028,8 +1031,12 @@ public class CanvasController extends SoundsController {
       case HIDDEN_WORD:
         // Check if the canvas is enabled
         if (!canvas.isDisabled()) {
-          // Set the tool tip to say there is a hint
-          gameToolTip.setText("CLICK FOR A HINT!!!");
+          if (hints < 3) {
+            // Set the tool tip to say there is a hint
+            gameToolTip.setText("CLICK FOR A HINT! You have " + (3 - hints) + " remaining!");
+          } else {
+            gameToolTip.setText("You have no hints remaining!");
+          }
         } else {
           // Otherwise say the default hidden_word message
           gameToolTip.setText(
@@ -1065,7 +1072,9 @@ public class CanvasController extends SoundsController {
     // Initialise a random number at 0
     int randomNumber = 0;
     // Check if the person is playing hidden word gamemode
-    if (!canvas.isDisable() && currentGameMode == GameMode.HIDDEN_WORD) {
+    if (!canvas.isDisable() && currentGameMode == GameMode.HIDDEN_WORD && hints < 3) {
+      hints++;
+      updateToolTip();
       // Find the length of their current word
       int wordLength = game.getCurrentWord().length();
       // Place underscores the length of their word as the first hint
