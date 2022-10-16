@@ -1,14 +1,15 @@
 {
   "username": "mr-V",
   "gamesWon": 2,
-  "gamesLost": 0,
+  "gamesLost": 1,
   "wordHistory": [
     "skull",
     "bee",
     "television",
     "bottlecap",
     "car",
-    "camel"
+    "camel",
+    "dishwasher"
   ],
   "fastestGame": 3,
   "fastestWord": "bottlecap",
@@ -18,12 +19,13 @@
     8.0,
     3.0,
     0.0,
-    6.0
+    6.0,
+    0.0
   ],
   "gameDifficulty": {
     "accuracyDifficulty": "EASY",
     "wordsDifficulty": "HARD",
-    "timeDifficulty": "MEDIUM",
+    "timeDifficulty": "MASTER",
     "confidenceDifficulty": "EASY"
   },
   "Badges": {
@@ -73,25 +75,30 @@
       "View Badges Page": true
     }
   },
-  "consistentWins": 2,
+  "consistentWins": 0,
   "accuracyDifficultyHistory": [
+    "E",
     "E",
     "E"
   ],
   "wordDifficultyHistory": [
     "E",
+    "H",
     "H"
   ],
   "timeDifficultyHistory": [
     "E",
-    "M"
+    "M",
+    "MS"
   ],
   "confidenceDifficultyHistory": [
+    "E",
     "E",
     "E"
   ],
   "winHistory": [
     true,
-    true
+    true,
+    false
   ]
 }
