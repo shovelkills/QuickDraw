@@ -40,7 +40,7 @@
                         <Insets bottom="4.0" right="4.0" />
                      </padding>
                   </Label>
-                  <Label fx:id="timerBarLabel" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="600.0" styleClass="timerBarDefault" stylesheets="@../css/canvas.css" textFill="WHITE">
+                  <Label fx:id="timerBarLabel" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="600.0" styleClass="timerBarClassic" stylesheets="@../css/canvas.css" textFill="WHITE">
                      <font>
                         <Font name="System Bold" size="32.0" />
                      </font>
