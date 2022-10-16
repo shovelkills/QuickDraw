@@ -73,6 +73,8 @@ public class Users {
       System.err.println("You cannot have special characters in username");
       return;
     }
+    // Set the guest tag off if not currently logged in as guest
+    Badges.setGuest(false);
     // Creates a jsonParser to read the file
     try (FileReader reader =
         new FileReader(folderDirectory + "/src/main/resources/users/" + username + ".json")) {
@@ -222,8 +224,8 @@ public class Users {
     badgeList.put("All Difficulties", difficulty);
     // Generate hashMap for badges based on time wins
     Map<String, Boolean> timedWins = new LinkedHashMap<>();
-    timedWins.put("10 Seconds", false);
     timedWins.put("30 Seconds", false);
+    timedWins.put("10 Seconds", false);
     timedWins.put("Last Second", false);
     badgeList.put("Timed Wins", timedWins);
     // Generate hashMap for badges based on Wins

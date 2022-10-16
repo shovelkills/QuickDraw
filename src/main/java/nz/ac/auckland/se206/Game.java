@@ -133,7 +133,7 @@ public class Game extends SoundsController {
                   // When starting speak that its starting (Unless ghost game)
                   if (timer.get() == gameTime - 1 && !hasWon && !isGhostGame) {
                     textToSpeech.speak("Starting");
-                  } else if (timer.get() == ((int) (gameTime / 2) + 1)) {
+                  } else if (!hasWon && timer.get() == ((int) (gameTime / 2) + 1)) {
                     // When half way speak thats it is halfway
                     textToSpeech.speak((gameTime / 2) + " Seconds Remaining");
                   }
