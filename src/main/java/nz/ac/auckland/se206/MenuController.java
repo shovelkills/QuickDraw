@@ -60,7 +60,7 @@ public class MenuController extends SoundsController {
   @FXML private Button soundButton;
   @FXML private Button musicButton;
   @FXML private Slider musicSlider;
-  
+
   private boolean musicOn = true;
   private boolean soundOn = true;
 
@@ -308,7 +308,7 @@ public class MenuController extends SoundsController {
   protected void onSoundToggle(ActionEvent event) {
     // Toggle ALL sound effects
     SoundsController.toggleSoundEffect();
-    if(soundOn) {
+    if (soundOn) {
       soundButton.getStyleClass().clear();
       soundButton.getStyleClass().add("soundOff");
       soundOn = !soundOn;
