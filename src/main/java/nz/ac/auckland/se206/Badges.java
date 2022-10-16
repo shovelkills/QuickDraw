@@ -16,11 +16,11 @@ public class Badges {
   /**
    * winBadge Changes the badges hash map so that the user has won the badge
    *
-   * @param catergory the category of the badge
+   * @param category the category of the badge
    * @param level the level of the badge
    */
-  public static void winBadge(String catergory, String level) {
-    if (!Users.getBadges().get(catergory).get(level)) {
+  public static void winBadge(String category, String level) {
+    if (!Users.getBadges().get(category).get(level)) {
       String nameOfBadge;
       switch (level) {
         case "E":
@@ -44,16 +44,23 @@ public class Badges {
           break;
       }
       // Get the badges and then save the user
-      Users.getBadges().get(catergory).put(level, true);
+      Users.getBadges().get(category).put(level, true);
       Users.saveUser();
 
       // Set up a new alert notifying the player
       Alert alert = new Alert(Alert.AlertType.INFORMATION);
       alert.setTitle("Won Badge");
       alert.setHeaderText(
-          "You have won the " + nameOfBadge + " badge in the " + catergory + " category");
+          "You have won the " + nameOfBadge + " badge in the " + category + " category");
       // Gets the badge image
-      Image image = new Image(Users.folderDirectory + "/src/main/resources/badges/profile5.png");
+      Image image =
+          new Image(
+              Users.folderDirectory
+                  + "/src/main/resources/images/badges/"
+                  + category.replaceAll("\\s", "_")
+                  + "/"
+                  + level.replaceAll("\\s", "_")
+                  + ".png");
       ImageView imageView = new ImageView(image);
       alert.setGraphic(imageView);
       Optional<ButtonType> result = alert.showAndWait();
@@ -111,24 +118,24 @@ public class Badges {
   /**
    * Checks if the difficulties across all aspects of the game are meet
    *
-   * @param Difficulty the difficulty that is being checked
+   * @param difficulty the difficulty that is being checked
    */
-  public static void checkDifficulty(String Difficulty) {
+  public static void checkDifficulty(String difficulty) {
     // This function comments probably need a rewrite
     // Checks if the Accuracy, words, time and confidence levels are the are all won
-    if (!Difficulty.equals("MS")
-        && Users.getBadges().get("Accuracy").get(Difficulty)
-        && Users.getBadges().get("Words").get(Difficulty)
-        && Users.getBadges().get("Time").get(Difficulty)
-        && Users.getBadges().get("Confidence").get(Difficulty)) {
+    if (!difficulty.equals("MS")
+        && Users.getBadges().get("Accuracy").get(difficulty)
+        && Users.getBadges().get("Words").get(difficulty)
+        && Users.getBadges().get("Time").get(difficulty)
+        && Users.getBadges().get("Confidence").get(difficulty)) {
       // Win the badge for all difficulties
       // Checks the Accuracy, word, time and confidence
-      winBadge("All difficulties", Difficulty);
-    } else if (Users.getBadges().get("Words").get(Difficulty)
-        && Users.getBadges().get("Time").get(Difficulty)
-        && Users.getBadges().get("Confidence").get(Difficulty)) {
+      winBadge("All difficulties", difficulty);
+    } else if (Users.getBadges().get("Words").get(difficulty)
+        && Users.getBadges().get("Time").get(difficulty)
+        && Users.getBadges().get("Confidence").get(difficulty)) {
       // Checks the Words, Time and Confidence for the Master Difficulty
-      winBadge("All difficulties", Difficulty);
+      winBadge("All difficulties", difficulty);
     }
   }
 
