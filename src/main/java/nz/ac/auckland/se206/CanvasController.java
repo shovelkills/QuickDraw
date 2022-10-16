@@ -231,7 +231,10 @@ public class CanvasController extends SoundsController {
     // Update brush size to small (5px)
     brushSize = BRUSH_SMALL;
     // Updates the timeBar
-    initialTime = game.getTimeRemaining();
+    if (currentGameMode != GameMode.ZEN) {
+      initialTime = game.getTimeRemaining();
+    }
+
     // Update eraser size to medium (9px)
     eraserSize = ERASER_MEDIUM;
     // Disable/Enable the definition label
