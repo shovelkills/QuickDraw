@@ -130,12 +130,12 @@ public class Badges {
         && Users.getBadges().get("Confidence").get(difficulty)) {
       // Win the badge for all difficulties
       // Checks the Accuracy, word, time and confidence
-      winBadge("All difficulties", difficulty);
+      winBadge("All Difficulties", difficulty);
     } else if (Users.getBadges().get("Words").get(difficulty)
         && Users.getBadges().get("Time").get(difficulty)
         && Users.getBadges().get("Confidence").get(difficulty)) {
       // Checks the Words, Time and Confidence for the Master Difficulty
-      winBadge("All difficulties", difficulty);
+      winBadge("All Difficulties", difficulty);
     }
   }
 
