@@ -192,10 +192,10 @@ public class MenuController extends SoundsController {
     Button button = (Button) event.getSource();
     Scene sceneButtonIsIn = button.getScene();
 
-    // Wins badge that looks at stats
-    Badges.winBadge("Misc", "View Stats Page");
     // Move to the next scene
     sceneButtonIsIn.setRoot(SceneManager.getUiRoot(AppUi.STATS));
+    // Wins badge that looks at stats
+    Badges.winBadge("Misc", "View Stats Page");
   }
 
   /**
@@ -276,10 +276,10 @@ public class MenuController extends SoundsController {
     Button button = (Button) event.getSource();
     Scene sceneButtonIsIn = button.getScene();
 
-    // Wins the badge at looking at badges
-    Badges.winBadge("Misc", "View Badges Page");
     // Move to the next scene
     sceneButtonIsIn.setRoot(SceneManager.getUiRoot(AppUi.BADGES));
+    // Wins the badge at looking at badges
+    Badges.winBadge("Misc", "View Badges Page");
   }
 
   /**

@@ -206,7 +206,6 @@ public class GameSelectController extends SoundsController {
     }
     if (currentGameMode == GameMode.ZEN) {
       // Set up zen mode
-      Badges.winBadge("Misc", "Play Zen Mode");
       Users.setGameDifficulty(
           Users.getIndividualDifficulty("accuracyDifficulty"),
           wordsMenu.getValue(),
@@ -221,6 +220,10 @@ public class GameSelectController extends SoundsController {
           progressBar.progressProperty().unbind();
           // Move to the next scene
           sceneButtonIsIn.setRoot(SceneManager.getUiRoot(AppUi.GAME));
+          if (currentGameMode == GameMode.ZEN) {
+            // Add the played zen badge
+            Badges.winBadge("Misc", "Play Zen Mode");
+          }
         });
     Thread preGameThread = new Thread(preGameTask);
     // Allow the task to be cancelled on closing of application

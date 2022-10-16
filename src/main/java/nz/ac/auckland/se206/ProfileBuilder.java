@@ -278,7 +278,9 @@ public class ProfileBuilder extends SoundsController {
       userSelectedLabel.setVisible(true);
       imageView.setStyle(HIGHLIGHT_STYLE);
       imageView.setEffect(null);
-      if (!this.type.equals(UserType.GUEST)) deleteProfileButton.setVisible(true);
+      if (!this.type.equals(UserType.GUEST)) {
+        deleteProfileButton.setVisible(true);
+      }
     } else {
       // Update non selected style
       isSelected = false;
