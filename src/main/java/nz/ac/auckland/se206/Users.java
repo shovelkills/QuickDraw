@@ -446,7 +446,7 @@ public class Users {
    */
   public static void checkFastestTime(int time, String word) {
     // Checks if it is the fastest time
-    if (time <= Users.fastestTime || (Users.fastestTime == -1 && time != 60)) {
+    if (Game.getWon() && (time <= Users.fastestTime || (Users.fastestTime == -1 && time != 60))) {
       Users.fastestTime = time;
       setFastestWord(word);
     }
@@ -538,12 +538,17 @@ public class Users {
   public static void addTimeHistory(int time, String word) {
     // Calculate time difference
     int solveTime;
-    // Check if game mode is blitz
-    if (GameSelectController.getCurrentGameMode() == GameMode.BLITZ) {
-      // get the last blitz time minus current time
-      solveTime = Game.getBlitzTime() - time;
+    if (time != 0) {
+      // Check if game mode is blitz
+      if (GameSelectController.getCurrentGameMode() == GameMode.BLITZ) {
+        // get the last blitz time minus current time
+        solveTime = Game.getBlitzTime() - time;
+      } else {
+        solveTime = CategorySelector.getTime() - time;
+      }
     } else {
-      solveTime = CategorySelector.getTime() - time;
+      // Set the solve time to 0
+      solveTime = time;
     }
     Users.timeHistory.add((double) solveTime);
     checkFastestTime(solveTime, word);
