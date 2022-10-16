@@ -21,6 +21,7 @@ import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -1146,7 +1147,7 @@ public class CanvasController extends SoundsController {
    * @throws ModelException doodle prediction exception
    */
   @FXML
-  private void onBack(ActionEvent event)
+  private void onBack(Event event)
       throws IOException, URISyntaxException, CsvException, ModelException {
 
     // Clear the hidden word game mode hints and labels
@@ -1156,15 +1157,27 @@ public class CanvasController extends SoundsController {
     }
 
     // Clear the profile creation game modes
-    if (currentGameMode == GameMode.PROFILE) {
+    if (currentGameMode == GameMode.PROFILE && UserCreationController.getNewUser()) {
       // Check if the player saved the image
       if (savedImage) {
         // update the user's image in the create scene
+        Badges.setDrawUserPicture(true);
         App.getCreationController().updateImage();
         savedImage = false;
       }
+      UserCreationController.setNewUser(false);
       // Go back to the creation scene
       onBackToCreation(event);
+    } else if (currentGameMode == GameMode.PROFILE && !UserCreationController.getNewUser()) {
+      if (savedImage) {
+        // update the user's image in the create scene
+        UsersController.updateImage();
+        savedImage = false;
+      }
+
+      // Go back to the creation scene
+      onBackToUsers(event);
+
     } else {
       // Go back to main menu
       onBackToMenu(event);
@@ -1182,7 +1195,7 @@ public class CanvasController extends SoundsController {
    * @param event takes in the action event click
    */
   @FXML
-  private void onBackToMenu(ActionEvent event) {
+  private void onBackToMenu(Event event) {
     // Get the current scene
     Button backButton = (Button) event.getSource();
     Scene currentScene = backButton.getScene();
@@ -1196,7 +1209,7 @@ public class CanvasController extends SoundsController {
    * @param event takes in action event click
    */
   @FXML
-  private void onBackToCreation(ActionEvent event) {
+  private void onBackToCreation(Event event) {
     // Get the current scene
     Button backButton = (Button) event.getSource();
     Scene currentScene = backButton.getScene();
@@ -1205,14 +1218,32 @@ public class CanvasController extends SoundsController {
   }
 
   /**
+   * onBackToCreation will take us back to profile creation scene
+   *
+   * @param event takes in action event click
+   */
+  @FXML
+  private void onBackToUsers(Event event) {
+    // Get the current scene
+    Button backButton = (Button) event.getSource();
+    Scene currentScene = backButton.getScene();
+    // Move back to main menu
+    currentScene.setRoot(SceneManager.getUiRoot(AppUi.USERSELECT));
+  }
+
+  /**
    * onSaveImage will ask the user if they want to save their image and then allow the user to save
    * the image on their computer
    *
    * @param event the Action Event taken in from FXML
    * @throws IOException If the model cannot be found on the file system.
+   * @throws ModelException Model exception cant find model
+   * @throws CsvException Can't read spreadsheet
+   * @throws URISyntaxException Can't convert to URI
    */
   @FXML
-  private void onSaveImage(ActionEvent event) throws IOException {
+  private void onSaveImage(Event event)
+      throws IOException, URISyntaxException, CsvException, ModelException {
     if (currentGameMode != GameMode.PROFILE) {
       // Create a new alert
       Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -1233,10 +1264,13 @@ public class CanvasController extends SoundsController {
         return;
       }
     } else {
-      Badges.setDrawUserPicture(true);
+      // Give player the draw user badge
+      if (!UserCreationController.getNewUser()) {
+        Badges.setDrawUserPicture(true);
+        Badges.checkDrawnUserPicture();
+      }
       saveCurrentSnapshotOnFile();
-      App.getCreationController().updateImage();
-      onBackToCreation(event);
+      onBack(event);
     }
   }
 

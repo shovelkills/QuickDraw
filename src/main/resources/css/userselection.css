@@ -140,3 +140,22 @@
 	-fx-pref-height: 43;
 	-fx-cursor: hand;
 }
+
+.editStickerButton{
+	-fx-background-color: transparent;
+	-fx-background-image: url(../images/buttons/editButtonDefault.png);
+}
+
+.editStickerButton:hover{
+	-fx-background-color: transparent;
+	-fx-background-image: url(../images/buttons/editButtonHover.png);
+	-fx-cursor: hand;
+}
+
+.editStickerButton:pressed{
+	-fx-background-color: transparent;
+	-fx-background-image: url(../images/buttons/editButtonDown.png);
+	-fx-pref-width: 145;
+	-fx-pref-height: 43;
+	-fx-cursor: hand;
+}

@@ -286,8 +286,10 @@ public class MenuController extends SoundsController {
         return;
       }
     }
+    Badges.winBadge("Misc", "View Badges Page");
     // Gets the badge controller
     BadgeController badgeController = App.getBadgeController();
+    // Wins the badge at looking at badges
     badgeController.loadBadges();
     // Moves to the badges scene
     Button button = (Button) event.getSource();
@@ -295,8 +297,6 @@ public class MenuController extends SoundsController {
 
     // Move to the next scene
     sceneButtonIsIn.setRoot(SceneManager.getUiRoot(AppUi.BADGES));
-    // Wins the badge at looking at badges
-    Badges.winBadge("Misc", "View Badges Page");
   }
 
   /**

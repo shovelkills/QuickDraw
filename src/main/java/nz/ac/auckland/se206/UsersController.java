@@ -1,5 +1,12 @@
 package nz.ac.auckland.se206;
 
+import ai.djl.ModelException;
+import com.opencsv.exceptions.CsvException;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -11,6 +18,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -25,6 +33,7 @@ public class UsersController extends SoundsController {
   protected static ProfileBuilder currentlySelected = null;
   // Max profiles we are having
   private static int profileCap = 7;
+  private static int editUserId = 0;
 
   /**
    * onSelectProfile will select a user profile and make that user the current selected user
@@ -139,13 +148,47 @@ public class UsersController extends SoundsController {
   }
 
   /**
+   * onEditSticker will edit the user's sticker
+   *
+   * @param e takes in a JavaFX event
+   * @throws IOException throws reader writer exception
+   * @throws CsvException throws cant read spreadsheet exception
+   * @throws URISyntaxException throws URI exception
+   * @throws ModelException throws model exception
+   */
+  private static void onEditSticker(Event event)
+      throws IOException, CsvException, URISyntaxException, ModelException {
+    Button button = (Button) event.getSource();
+    String string = button.getId().toString();
+    UserCreationController.onCreateImage(event);
+    // Get the index number from the button
+    editUserId = (Integer.parseInt(String.valueOf(string.charAt(string.length() - 1))));
+  }
+
+  /**
+   * updateImage will update the player's drawn image into their profile picture
+   *
+   * @throws FileNotFoundException if the file was not found
+   */
+  public static void updateImage() throws FileNotFoundException {
+    // creating the image object
+    String dir = Users.folderDirectory + "/src/main/resources/images/tempImage.png";
+    InputStream stream = new FileInputStream(dir);
+    Image image = new Image(stream);
+    // Set the new image
+    ProfileBuilder currentProfile = profiles.get(editUserId);
+    currentProfile.imageView.setImage(image);
+  }
+
+  /**
    * addEvents will add the events to the image and buttons
    *
    * @param image new profile's image
    * @param deleteButton new profile's delete button
    * @param number new profile's slot
    */
-  protected static void addEvents(VBox imageBox, Button deleteButton, int profileId) {
+  protected static void addEvents(
+      VBox imageBox, Button deleteButton, Button stickerButton, int profileId) {
     // Add the event handler to the image
     imageBox.addEventHandler(
         MouseEvent.MOUSE_CLICKED,
@@ -153,12 +196,24 @@ public class UsersController extends SoundsController {
           // Add select profile event
           onSelectProfile(e);
         });
-    // ADd the event handler to the delete profile button
+    // Add the event handler to the delete profile button
     deleteButton.addEventHandler(
         MouseEvent.MOUSE_CLICKED,
         e -> {
           // Add delete event
           onDeleteProfile(e);
+        });
+
+    stickerButton.addEventFilter(
+        MouseEvent.MOUSE_CLICKED,
+        e -> {
+          // Add edit sticker event
+          try {
+            onEditSticker(e);
+          } catch (IOException | CsvException | URISyntaxException | ModelException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+          }
         });
     selectUser(profileId);
   }
@@ -203,6 +258,17 @@ public class UsersController extends SoundsController {
           ActionEvent.ACTION,
           e -> {
             onDeleteProfile(e);
+          });
+      // Add edit image sticker event
+      profile.stickerButton.addEventHandler(
+          ActionEvent.ACTION,
+          e -> {
+            try {
+              onEditSticker(e);
+            } catch (IOException | CsvException | URISyntaxException | ModelException e1) {
+              // TODO Auto-generated catch block
+              e1.printStackTrace();
+            }
           });
     }
     // Default select guest profile on boot

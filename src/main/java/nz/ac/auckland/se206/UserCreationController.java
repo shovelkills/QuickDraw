@@ -13,6 +13,7 @@ import javafx.concurrent.Task;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -28,8 +29,65 @@ import nz.ac.auckland.se206.SceneManager.AppUi;
 
 public class UserCreationController extends SoundsController {
 
+  private static boolean newUser;
   // Maximum length for a new username
   private static final int MAX_USERNAME_LENGTH = 12;
+
+  /**
+   * onCreateImage will allow the user to create their own image via drawing It will load the
+   * profile picture creation scene
+   *
+   * @param event takes in a mouse event from FXML clicking
+   * @throws IOException reading/writing exception
+   * @throws CsvException reading spreadsheet exceptions
+   * @throws URISyntaxException converting to link exception
+   * @throws ModelException doodle prediction exception
+   */
+  protected static void onCreateImage(Event event)
+      throws IOException, CsvException, URISyntaxException, ModelException {
+    GameSelectController.setCurrentGameMode(GameMode.PROFILE);
+
+    Object image = event.getSource();
+    Scene sceneButtonIsIn = ((Node) image).getScene();
+    Task<Void> preDrawTask =
+        new Task<Void>() {
+          @Override
+          protected Void call() throws Exception {
+            // Set up the pre-game UI elements that are in common with restarting the game
+            updateProgress(0, 1);
+            sceneButtonIsIn.setRoot(SceneManager.getUiRoot(AppUi.LOADING));
+            System.out.println("Loading");
+            App.getCanvasController().setPreGameInterface();
+            updateProgress(1, 1);
+            Thread.sleep(50);
+            return null;
+          }
+        };
+    // Find progress bar on loading screen
+    ProgressBar progressBar = App.getLoadingController().getProgressBar();
+    progressBar.progressProperty().unbind();
+    // Bind progress bar
+    progressBar.progressProperty().bind(preDrawTask.progressProperty());
+    // On finish loading move from loading screen to game screen
+    preDrawTask.setOnSucceeded(
+        e -> {
+          progressBar.progressProperty().unbind();
+          sceneButtonIsIn.setCursor(Cursor.DEFAULT);
+          sceneButtonIsIn.setRoot(SceneManager.getUiRoot(AppUi.GAME));
+        });
+    Thread preGameThread = new Thread(preDrawTask);
+    // Allow the task to be cancelled on closing of application
+    preGameThread.setDaemon(true);
+    preGameThread.start();
+  }
+
+  public static boolean getNewUser() {
+    return newUser;
+  }
+
+  public static void setNewUser(boolean newUser) {
+    UserCreationController.newUser = newUser;
+  }
 
   // Initialise FXML items
   @FXML private Button createButton;
@@ -87,6 +145,7 @@ public class UserCreationController extends SoundsController {
         MouseEvent.MOUSE_CLICKED,
         e -> {
           try {
+            setNewUser(true);
             onCreateImage(e);
           } catch (IOException | CsvException | URISyntaxException | ModelException e1) {
             // TODO Auto-generated catch block
@@ -129,53 +188,6 @@ public class UserCreationController extends SoundsController {
     Image image = new Image(stream);
     // Set the new image
     userImage.setImage(image);
-  }
-
-  /**
-   * onCreateImage will allow the user to create their own image via drawing It will load the
-   * profile picture creation scene
-   *
-   * @param event takes in a mouse event from FXML clicking
-   * @throws IOException reading/writing exception
-   * @throws CsvException reading spreadsheet exceptions
-   * @throws URISyntaxException converting to link exception
-   * @throws ModelException doodle prediction exception
-   */
-  private void onCreateImage(MouseEvent event)
-      throws IOException, CsvException, URISyntaxException, ModelException {
-    GameSelectController.setCurrentGameMode(GameMode.PROFILE);
-    VBox image = (VBox) event.getSource();
-    Scene sceneButtonIsIn = image.getScene();
-    Task<Void> preDrawTask =
-        new Task<Void>() {
-          @Override
-          protected Void call() throws Exception {
-            // Set up the pre-game UI elements that are in common with restarting the game
-            updateProgress(0, 1);
-            sceneButtonIsIn.setRoot(SceneManager.getUiRoot(AppUi.LOADING));
-            System.out.println("Loading");
-            App.getCanvasController().setPreGameInterface();
-            updateProgress(1, 1);
-            Thread.sleep(50);
-            return null;
-          }
-        };
-    // Find progress bar on loading screen
-    ProgressBar progressBar = App.getLoadingController().getProgressBar();
-    progressBar.progressProperty().unbind();
-    // Bind progress bar
-    progressBar.progressProperty().bind(preDrawTask.progressProperty());
-    // On finish loading move from loading screen to game screen
-    preDrawTask.setOnSucceeded(
-        e -> {
-          progressBar.progressProperty().unbind();
-          sceneButtonIsIn.setCursor(Cursor.DEFAULT);
-          sceneButtonIsIn.setRoot(SceneManager.getUiRoot(AppUi.GAME));
-        });
-    Thread preGameThread = new Thread(preDrawTask);
-    // Allow the task to be cancelled on closing of application
-    preGameThread.setDaemon(true);
-    preGameThread.start();
   }
 
   /**
@@ -251,7 +263,8 @@ public class UserCreationController extends SoundsController {
     // Grab the new user
     ProfileBuilder newUser = profiles.get(index);
     // Set up new events to the new user
-    UsersController.addEvents(newUser.userImageBox, newUser.deleteProfileButton, index);
+    UsersController.addEvents(
+        newUser.userImageBox, newUser.deleteProfileButton, newUser.stickerButton, index);
     // Select the new user
     UsersController.currentlySelected = newUser;
 
