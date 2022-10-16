@@ -245,6 +245,8 @@ public class CanvasController extends SoundsController {
     updateToolTip();
     // Update brush size to small (5px)
     brushSize = BRUSH_SMALL;
+    // Update eraser size to medium (9px)
+    eraserSize = ERASER_MEDIUM;
     // Disable/Enable the definition label
     if (currentGameMode == GameMode.HIDDEN_WORD) {
       setUpDefLabel();
@@ -392,6 +394,8 @@ public class CanvasController extends SoundsController {
 
   /** SetProfile will set up the profile creation image process */
   private void setProfile() {
+    // Update eraser
+    eraserSize = ERASER_SMALL;
     // Set all java fx properties
     textSpeechButton.setVisible(false);
     cornerLabel.setVisible(false);
