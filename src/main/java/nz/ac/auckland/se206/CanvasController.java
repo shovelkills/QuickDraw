@@ -152,6 +152,7 @@ public class CanvasController extends SoundsController {
   private double brushSize;
   private double eraserSize;
   private Timeline timeline = new Timeline();
+  private int initialTime;
 
   /**
    * JavaFX calls this method once the GUI elements are loaded. In our case we create a listener for
