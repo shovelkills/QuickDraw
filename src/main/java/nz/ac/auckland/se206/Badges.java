@@ -10,7 +10,8 @@ import javafx.scene.image.ImageView;
 import nz.ac.auckland.se206.words.CategorySelector.Difficulty;
 
 public class Badges {
-  private static boolean drawUserPicture;
+  private static boolean isUserPictureDrawn;
+  private static boolean isGuest = true;
   private static List<String> difficulties = Arrays.asList("E", "M", "H", "MS");
 
   /**
@@ -20,6 +21,9 @@ public class Badges {
    * @param level the level of the badge
    */
   public static void winBadge(String category, String level) {
+    if (isGuest) {
+      return;
+    }
     if (!Users.getBadges().get(category).get(level)) {
       String nameOfBadge;
       switch (level) {
@@ -157,10 +161,10 @@ public class Badges {
 
   /** checkDrawnUserPicture will check if the user has drawn a profile picture for their badge */
   public static void checkDrawnUserPicture() {
-    if (drawUserPicture) {
+    if (isUserPictureDrawn) {
       // Give the draw profile picture badge
       winBadge("Misc", "Draw User Profile");
-      drawUserPicture = false;
+      isUserPictureDrawn = false;
     }
   }
 
@@ -170,6 +174,10 @@ public class Badges {
    * @param drawUserPicture takes in a true or false to update badge
    */
   public static void setDrawUserPicture(boolean drawUserPicture) {
-    Badges.drawUserPicture = drawUserPicture;
+    Badges.isUserPictureDrawn = drawUserPicture;
+  }
+
+  public static void setGuest(boolean isGuest) {
+    Badges.isGuest = isGuest;
   }
 }
