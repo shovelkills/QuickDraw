@@ -24,6 +24,10 @@ public class Graph {
     List<Double> timeHistory = Users.getTimeHistory();
     if (!timeHistory.isEmpty()) {
       for (Double time : timeHistory) {
+        // Don't contribute less than 1 time to average
+        if (time < 1) {
+          continue;
+        }
         // Adds time each time
         sum += time;
       }
@@ -43,6 +47,10 @@ public class Graph {
     // Gets the data from the list
 
     for (int i = 0; i < Users.getWordHistory().size(); i++) {
+      // Check if time is 0
+      if (Users.getTimeHistory().get(i) < 1) {
+        continue;
+      }
       series
           .getData()
           .add(
