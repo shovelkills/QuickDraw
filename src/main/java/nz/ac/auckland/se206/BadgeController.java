@@ -51,10 +51,10 @@ public class BadgeController extends SoundsController {
         // Checks if the user has won the badge
         String badgeImageLocation = badges.getKey();
         if (!badges.getValue()) {
-          if (badges.getKey() == "E"
-              || badges.getKey() == "M"
-              || badges.getKey() == "H"
-              || badges.getKey() == "MS") {
+          if (badges.getKey().equals("E")
+              || badges.getKey().equals("M")
+              || badges.getKey().equals("H")
+              || badges.getKey().equals("MS")) {
             badgeImageLocation = "Null";
           } else {
             badgeImageLocation = badgeImageLocation + "_Null";
