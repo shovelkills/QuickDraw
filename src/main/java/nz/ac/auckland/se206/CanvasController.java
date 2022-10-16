@@ -951,8 +951,9 @@ public class CanvasController extends SoundsController {
             Users.increaseWins();
             wordLabel.setText(getWinMessage());
 
-            // Add badges for wins
+            // First win badge
             Badges.winBadge("Wins", "First Win");
+            // Difficulty badges
             Badges.winDifficultyBadges(
                 DifficultyBuilder.getAccDifficulty(),
                 DifficultyBuilder.getWordsDifficulty(),
