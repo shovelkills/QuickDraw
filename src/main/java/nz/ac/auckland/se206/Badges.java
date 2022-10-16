@@ -160,6 +160,7 @@ public class Badges {
     if (drawUserPicture) {
       // Give the draw profile picture badge
       winBadge("Misc", "Draw User Profile");
+      drawUserPicture = false;
     }
   }
 
