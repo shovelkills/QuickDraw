@@ -3,6 +3,8 @@ package nz.ac.auckland.se206;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Map.Entry;
 import javafx.event.ActionEvent;
@@ -12,19 +14,26 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.util.Duration;
 import nz.ac.auckland.se206.SceneManager.AppUi;
 
 public class BadgeController extends SoundsController {
+
+  // Count the number of badges
+  private static int badgeCounter = 0;
 
   @FXML private Button menuButton;
 
   @FXML private VBox badgesListBox;
   @FXML private Label badgeTitleLabel;
+
+  private ArrayList<String> badgeStringArray = new ArrayList<String>();
 
   /**
    * initialize will load in all the badges
@@ -32,6 +41,47 @@ public class BadgeController extends SoundsController {
    * @throws FileNotFoundException if a badge is not found throw an exception
    */
   public void initialize() throws FileNotFoundException {
+    // Initialise all the tool tip texts
+    // First 3 texts refer to the accuracy badges
+    // Next 4 refer to the words badges
+    // Next 4 refer to the time badges
+    // Next 4 refer to the confidence badges
+    // Next 4 refer to having all the difficulty badges
+    // Next 3 refer to time ticking down badges
+    // Next 3 refer to wins and consecutive wins badges
+    // Last 4 are for misc badges
+    Collections.addAll(
+        badgeStringArray,
+        "Win the game with your word being in the top 3 guesses!",
+        "Win a game with your word being in the top 2 guesses!",
+        "Win a game with your word being the top guess!",
+        "Win a game on difficulty Easy for Words!",
+        "Win a game on difficulty Medium for Words!",
+        "Win a game on difficulty Hard for Words!",
+        "Win a game on difficulty Master for Words!",
+        "Win a game on difficulty Easy for Time!",
+        "Win a game on difficulty Medium for Time!",
+        "Win a game on difficulty Hard for Time!",
+        "Win a game on difficulty Master for Time!",
+        "Win a game on difficulty Easy for Confidence!",
+        "Win a game on difficulty Medium for Confidence!",
+        "Win a game on difficulty Hard for Confidence!",
+        "Win a game on difficulty Master for Confidence!",
+        "Have all the Easy difficulty badges",
+        "Have all the Medium difficulty badges",
+        "Have all the Hard difficulty badges",
+        "Have all the Master difficulty badges",
+        "Win a game in the last 30 seconds",
+        "Win a game in the last 10 seconds",
+        "Win a game in the last second!",
+        "Win a game!",
+        "Win 2 games in a row!",
+        "Win 5 games in a row!",
+        "Draw your own profile picture!",
+        "Play Zen Mode",
+        "View the Stats Page",
+        "View the Badges Page");
+
     // this will load all the types of badges in
     loadBadges();
   }
@@ -81,6 +131,8 @@ public class BadgeController extends SoundsController {
         Image image = new Image(stream);
         ImageView imageView = new ImageView();
         imageView.setImage(image);
+        Tooltip toolTip = updateToolTip(badgeCounter);
+
         String nameOfBadge;
         // Swaps the letter of the difficulty to the word. The default is the word as it stored as
         switch (badges.getKey()) {
@@ -112,6 +164,7 @@ public class BadgeController extends SoundsController {
         vbox.setMinWidth(180);
         vbox.setPadding(new Insets(10));
         vbox.getChildren().add(imageView);
+        // Create the new label for the badge
         Label badgeLabel = new Label();
         badgeLabel.setText(nameOfBadge);
         badgeLabel.setStyle("-fx-font-family: 'Maybe Next'; -fx-font-size: 20;");
@@ -120,10 +173,32 @@ public class BadgeController extends SoundsController {
         // Adds the label and the vBox to the overall category
         vbox.getChildren().add(badgeLabel);
         categoryBox.getChildren().add(vbox);
+        // Add in the tool tip
+        Tooltip.install(imageView, toolTip);
+        // Increment the badge counter
+        badgeCounter++;
       }
       // Adds the category to the overall badgelist
       badgesListBox.getChildren().add(categoryBox);
     }
+    // Reset the badge counter
+    badgeCounter = 0;
+  }
+
+  /**
+   * updateToolTip will create a tool tip and update the image
+   *
+   * @param counter takes in the badge position
+   * @return the tool tip with respective text
+   */
+  private Tooltip updateToolTip(int counter) {
+    Tooltip toolTip = new Tooltip();
+    // set show duration to 0
+    toolTip.setShowDelay(Duration.ZERO);
+    // Set the designated text
+    toolTip.setText(badgeStringArray.get(counter));
+    toolTip.getStyleClass().add("toolTip");
+    return toolTip;
   }
 
   /**

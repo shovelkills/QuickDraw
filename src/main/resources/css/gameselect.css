@@ -18,6 +18,8 @@
 	-fx-background-radius: 10;
 	-fx-padding: 10;
 	-fx-position: absolute;
+	-fx-font-family: "Maybe Next";
+	-fx-font-size: 16;
 }
 
 .gameSelectLabel{
@@ -148,9 +150,4 @@
 	-fx-pref-width: 142;
 	-fx-pref-height: 42;
 	-fx-cursor: hand;
-}
-
-.toolTip{
-	-fx-font-family: "Maybe Next";
-	-fx-font-size: 16;
 }
