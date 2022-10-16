@@ -254,6 +254,9 @@ public class UserCreationController extends SoundsController {
     UsersController.addEvents(newUser.userImageBox, newUser.deleteProfileButton, index);
     // Select the new user
     UsersController.currentlySelected = newUser;
+
+    // Sets the badge guest boolean to false
+    Badges.setGuest(false);
     onExitSelection(event);
   }
 

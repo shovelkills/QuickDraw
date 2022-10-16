@@ -270,6 +270,20 @@ public class MenuController extends SoundsController {
    */
   @FXML
   private void onShowBadges(ActionEvent event) throws FileNotFoundException {
+    // Added an alert to tell the user that a guest cannot view badges
+    if (Users.getUserName().equals("Guest")) {
+      // Create a new alert
+      Alert alert = new Alert(Alert.AlertType.WARNING);
+      alert.setTitle("Guest User");
+      alert.setHeaderText(
+          "You are on the guest profile. To view and save badges, create or select a user profile.");
+      alert.setResizable(false);
+      Optional<ButtonType> result = alert.showAndWait();
+      if (result.get() == ButtonType.OK) {
+        return;
+      }
+    }
+    // Gets the badge controller
     BadgeController badgeController = App.getBadgeController();
     badgeController.loadBadges();
     // Moves to the badges scene

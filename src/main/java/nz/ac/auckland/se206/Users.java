@@ -64,6 +64,7 @@ public class Users {
     // Check for guest profile
     if (username == "Guest") {
       loadGuest(guestPlayer);
+      Badges.setGuest(true);
       setRecentUser(username);
       return;
     }

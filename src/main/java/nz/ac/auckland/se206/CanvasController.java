@@ -229,6 +229,8 @@ public class CanvasController extends SoundsController {
     updateToolTip();
     // Update brush size to small (5px)
     brushSize = BRUSH_SMALL;
+    // Updates the timeBar
+    initialTime = game.getTimeRemaining();
     // Update eraser size to medium (9px)
     eraserSize = ERASER_MEDIUM;
     // Disable/Enable the definition label
@@ -899,7 +901,8 @@ public class CanvasController extends SoundsController {
   /** decrementTimerBar will decrease the timer bar width */
   public void decrementTimerBar() {
     // Reduce the width of the timer bar
-    timerBarLabel.setPrefWidth(timerBarLabel.getWidth() - (600 - wordLabel.getWidth()) / 60);
+    timerBarLabel.setPrefWidth(
+        timerBarLabel.getWidth() - (600 - wordLabel.getWidth()) / initialTime);
   }
 
   /** resetTimerBar will reset the width and reset the css */
