@@ -1,48 +1,90 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.chart.CategoryAxis?>
 <?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.chart.PieChart?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="876.0" prefWidth="1143.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nz.ac.auckland.se206.GraphController">
+
+<VBox alignment="CENTER" prefHeight="720.0" prefWidth="1280.0" styleClass="statsBackground" stylesheets="@../css/stats.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nz.ac.auckland.se206.GraphController">
    <children>
-      <BorderPane layoutX="-128.0" layoutY="-55.0" prefHeight="200.0" prefWidth="200.0" />
-      <LineChart fx:id="timeLineChart" layoutX="36.0" layoutY="31.0" title="Time Taken VS Word">
-        <xAxis>
-          <CategoryAxis fx:id="horizontalAxis" label="Word" side="BOTTOM" />
-        </xAxis>
-        <yAxis>
-          <NumberAxis fx:id="verticalAxis" label="Time Taken in Seconds" side="LEFT" />
-        </yAxis>
-      </LineChart>
-      <PieChart fx:id="winsLossPieChart" layoutX="622.0" layoutY="20.0" prefHeight="362.0" prefWidth="469.0" title="Game Outcome" />
-      <Button fx:id="accuracyButton" layoutX="596.0" layoutY="563.0" mnemonicParsing="false" onAction="#onShowAccuracyDifficulty" text="Accuracy" />
-      <Button fx:id="wordButton" layoutX="676.0" layoutY="563.0" mnemonicParsing="false" onAction="#onShowWordDifficulty" text="Word" />
-      <Button fx:id="timeButton" layoutX="775.0" layoutY="563.0" mnemonicParsing="false" onAction="#onShowTimeDifficulty" text="Time" />
-      <Button fx:id="confidenceButton" layoutX="857.0" layoutY="563.0" mnemonicParsing="false" onAction="#onShowConfidenceDifficulty" text="Confidence" />
-      <Button fx:id="menuButton" layoutX="724.0" layoutY="660.0" mnemonicParsing="false" onAction="#onMenuReturn" text="Menu" />
-      <Label layoutX="853.0" layoutY="448.0">
-         <graphic>
-            <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../images/qmark.png" />
-               </image>
-            </ImageView>
-         </graphic>
-         <tooltip>
-            <Tooltip fx:id="toolTip" text="Click the pie chart to learn more about your wins and losses" />
-         </tooltip>
-      </Label>
-      <PieChart fx:id="individualDifficultyPieChart" layoutX="64.0" layoutY="460.0" />
-      <PieChart fx:id="individualDifficultyPieChart1" layoutX="74.0" layoutY="470.0" />
-      <Label fx:id="indvidualDifficultyLabel" alignment="CENTER" layoutX="204.0" layoutY="439.0" prefHeight="18.0" prefWidth="219.0" />
+      <VBox style="-fx-background-color: #a55a29; -fx-background-radius: 10;" VBox.vgrow="ALWAYS">
+         <children>
+            <ScrollPane prefHeight="879.0" prefWidth="1280.0" style="-fx-fit-to-height: true; -fx-fit-to-width: true; -fx-background: transparent; -fx-background-color: fcefe8; -fx-background-radius: 10;">
+               <content>
+                  <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+                     <children>
+                        <HBox alignment="CENTER" spacing="20.0">
+                           <children>
+                              <PieChart id="chart" fx:id="winsLossPieChart" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="400.0" style="-fx-background-color: fbb13c; -fx-background-radius: 10;" styleClass="graphGraph" stylesheets="@../css/stats.css" title="Game Outcome">
+                                 <HBox.margin>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                 </HBox.margin>
+                              </PieChart>
+                              <Label>
+                                 <graphic>
+                                    <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../images/qmark.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                                 <tooltip>
+                                    <Tooltip fx:id="toolTip" text="Click the pie chart to learn more about your wins and losses" />
+                                 </tooltip>
+                              </Label>
+                              <PieChart id="chart" fx:id="individualDifficultyPieChart" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="400.0" style="-fx-background-color: fbb13c; -fx-background-radius: 10;" styleClass="graphGraph" stylesheets="@../css/stats.css">
+                                 <HBox.margin>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                 </HBox.margin>
+                              </PieChart>
+                           </children>
+                        </HBox>
+                        <HBox alignment="CENTER" spacing="10.0">
+                           <children>
+                              <Button fx:id="accuracyButton" mnemonicParsing="false" onAction="#onShowAccuracyDifficulty" styleClass="graphButton" stylesheets="@../css/stats.css" text="Accuracy" />
+                              <Button fx:id="wordButton" mnemonicParsing="false" onAction="#onShowWordDifficulty" styleClass="graphButton" stylesheets="@../css/stats.css" text="Word" />
+                              <Button fx:id="timeButton" mnemonicParsing="false" onAction="#onShowTimeDifficulty" styleClass="graphButton" stylesheets="@../css/stats.css" text="Time" />
+                              <Button fx:id="confidenceButton" mnemonicParsing="false" onAction="#onShowConfidenceDifficulty" styleClass="graphButton" stylesheets="@../css/stats.css" text="Confidence" />
+                           </children>
+                        </HBox>
+                        <LineChart id="chart" fx:id="timeLineChart" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="600.0" style="-fx-background-color: fbb13c; -fx-background-radius: 10;" styleClass="graphGraph" stylesheets="@../css/stats.css" title="Time Taken VS Word">
+                          <xAxis>
+                            <CategoryAxis fx:id="horizontalAxis" label="Word" side="BOTTOM" />
+                          </xAxis>
+                          <yAxis>
+                            <NumberAxis fx:id="verticalAxis" label="Time Taken in Seconds" side="LEFT" />
+                          </yAxis>
+                           <VBox.margin>
+                              <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                           </VBox.margin>
+                        </LineChart>
+                        <Label fx:id="indvidualDifficultyLabel" alignment="CENTER" prefHeight="18.0" prefWidth="219.0" />
+                     </children>
+                  </VBox>
+               </content>
+               <VBox.margin>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </VBox.margin>
+            </ScrollPane>
+         </children>
+         <VBox.margin>
+            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+         </VBox.margin>
+      </VBox>
+      <Button fx:id="menuButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onMenuReturn" onMouseClicked="#onButtonClick" onMouseEntered="#onButtonHover" prefHeight="46.0" prefWidth="146.0" styleClass="backStatsButton" stylesheets="@../css/stats.css">
+         <VBox.margin>
+            <Insets bottom="20.0" top="20.0" />
+         </VBox.margin>
+      </Button>
    </children>
-</AnchorPane>
+</VBox>

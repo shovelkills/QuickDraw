@@ -88,3 +88,28 @@
 .statsBackground{
 	-fx-background-image: url(../images/SoftPaper.png);
 }
+
+.graphButton{
+	-fx-background-color: #fbb13c;
+	-fx-text-fill: white;
+	-fx-font-family: "Maybe Next";
+	-fx-font-size: 18;
+}
+
+.graphButton:hover{
+	-fx-background-color: #ffcc00;
+}
+
+.graphButton:pressed{
+	-fx-background-color: #ff6600;
+}
+
+.graphGraph{
+	-fx-font-family: "Maybe Next";
+	-fx-font-size: 18;
+	-fx-text-fill: black;
+}
+
+.axis-label{
+	-fx-text-fill: black;
+}
