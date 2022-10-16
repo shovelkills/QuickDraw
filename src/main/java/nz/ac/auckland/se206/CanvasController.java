@@ -957,7 +957,10 @@ public class CanvasController extends SoundsController {
             // Increase the wins
             Users.increaseWins();
             wordLabel.setText(getWinMessage());
-
+            if (currentGameMode == GameMode.BLITZ) {
+              Game.setHasWon(false);
+              Users.addTimeHistory(0, game.getCurrentWord());
+            }
             // First win badge
             Badges.winBadge("Wins", "First Win");
             // Difficulty badges

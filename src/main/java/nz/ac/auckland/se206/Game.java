@@ -47,6 +47,7 @@ public class Game extends SoundsController {
   private static boolean spoken = false;
   private static int blitzCounter;
   private static int blitzTime = CategorySelector.getTime();
+  private static boolean hasWon = false;
 
   /**
    * createModel will create the doodle prediction model
@@ -96,6 +97,13 @@ public class Game extends SoundsController {
     return difficulty;
   }
 
+  public static void setHasWon(boolean hasWon) {
+    Game.hasWon = hasWon;
+  }
+
+  public static boolean getWon() {
+    return hasWon;
+  }
   // Declare fields used in the game
 
   private CanvasController canvas;
@@ -107,7 +115,6 @@ public class Game extends SoundsController {
   private int gameTime;
   private int topMatch;
   private float confidence;
-  private boolean hasWon = false;
   private GameMode currentGame;
   private boolean isGhostGame;
   private int currentPos = 100;
@@ -131,7 +138,7 @@ public class Game extends SoundsController {
                     textToSpeech.speak((gameTime / 2) + " Seconds Remaining");
                   }
                   // Speak if the person has won
-                  if (hasWon && !spoken) {
+                  if (hasWon && !spoken && currentGame != GameMode.BLITZ) {
                     textToSpeech.speak("You Won!");
                     // Set that it has spoken
                     spoken = true;
@@ -192,6 +199,7 @@ public class Game extends SoundsController {
                                             .get(i)
                                             .getClassName()
                                             .replace("_", " "))) {
+                              setHasWon(true);
                               Users.addTimeHistory(timer.getValue().intValue(), getCurrentWord());
                               // Check if playing BLITZ
                               if (currentGame == GameMode.BLITZ) {
@@ -209,7 +217,6 @@ public class Game extends SoundsController {
                               }
                               // End the game
                               if (!isGhostGame && currentGame != GameMode.BLITZ) {
-                                hasWon = true;
                                 endGame(true);
                               }
                             }
@@ -381,6 +388,8 @@ public class Game extends SoundsController {
     timer = new SimpleIntegerProperty(gameTime);
     setCurrentWord(word);
     currentPrompt.setValue(word);
+    blitzTime = CategorySelector.getTime();
+    blitzCounter = 0;
   }
 
   /**
@@ -488,7 +497,7 @@ public class Game extends SoundsController {
   public void startGame() {
     // Set these fields to false so that tts only speaks once
     spoken = false;
-    hasWon = false;
+    setHasWon(false);
     service.start();
     ttsService.start();
   }
