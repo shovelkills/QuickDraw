@@ -25,6 +25,7 @@ import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
+import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
@@ -81,11 +82,11 @@ public class CanvasController extends SoundsController {
       new Image(Users.folderDirectory + "/src/main/resources/images/indicatorFurther.png");
   // Define preset brush and eraser sizes
   private static final double BRUSH_SMALL = 5;
-  private static final double BRUSH_MEDIUM = 20;
-  private static final double BRUSH_LARGE = 50;
-  private static final double ERASER_SMALL = 10;
-  private static final double ERASER_MEDIUM = 20;
-  private static final double ERASER_LARGE = 50;
+  private static final double BRUSH_MEDIUM = 8;
+  private static final double BRUSH_LARGE = 12;
+  private static final double ERASER_SMALL = 6;
+  private static final double ERASER_MEDIUM = 9;
+  private static final double ERASER_LARGE = 13;
   private static ImageView predictionImage = new ImageView();
   private static GameMode currentGameMode;
   private static int hints = 0;
@@ -123,16 +124,17 @@ public class CanvasController extends SoundsController {
   @FXML private Tooltip gameToolTip;
   @FXML private Label gameToolTipLabel;
   @FXML private VBox aboveVbox;
-  @FXML private VBox rightPanelVBox;
+  @FXML private VBox rightPanelBox;
   @FXML private Label cornerLabel;
-  @FXML private VBox brushOptionsVBox;
-  @FXML private VBox eraserOptionsVBox;
+  @FXML private VBox brushOptionsBox;
+  @FXML private VBox eraserOptionsBox;
   @FXML private Button brushSmallButton;
   @FXML private Button brushMediumButton;
   @FXML private Button brushLargeButton;
   @FXML private Button eraserSmallButton;
   @FXML private Button eraserMediumButton;
   @FXML private Button eraserLargeButton;
+  @FXML private Button textSpeechButton;
 
   // Define game object
   private Game game;
@@ -194,12 +196,20 @@ public class CanvasController extends SoundsController {
     gameToolTipLabel.setOnMouseEntered(
         e -> {
           gameToolTipLabel.setStyle(HOVERED_STYLE);
+          // Hover effect
+          playButtonHover();
+          if (currentGameMode == GameMode.HIDDEN_WORD && hints < 3) {
+            // Switch to hand
+            gameToolTipLabel.getScene().setCursor(Cursor.HAND);
+          }
         });
 
     // Event for hovering off
     gameToolTipLabel.setOnMouseExited(
         e -> {
           gameToolTipLabel.setStyle(IDLE_STYLE);
+          // Remove hover effect
+          gameToolTipLabel.getScene().setCursor(Cursor.DEFAULT);
         });
   }
 
@@ -229,9 +239,12 @@ public class CanvasController extends SoundsController {
     colourPicker.setVisible(true);
     // Create the game instance
     game = new Game(this, currentGameMode);
+    // Set UI elements for pre-game
+    canvas.setDisable(true);
     // Update the tool tip
     updateToolTip();
-
+    // Update brush size to small (5px)
+    brushSize = BRUSH_SMALL;
     // Disable/Enable the definition label
     if (currentGameMode == GameMode.HIDDEN_WORD) {
       setUpDefLabel();
@@ -243,17 +256,17 @@ public class CanvasController extends SoundsController {
     }
     // Main setup
     if (currentGameMode != GameMode.PROFILE) {
-
+      textSpeechButton.setVisible(true);
       Platform.runLater(
           () -> {
             cornerLabel.setVisible(true);
-            brushOptionsVBox.setVisible(false);
-            brushOptionsVBox.setMouseTransparent(true);
-            eraserOptionsVBox.setVisible(false);
-            eraserOptionsVBox.setMouseTransparent(true);
+            brushOptionsBox.setVisible(false);
+            brushOptionsBox.setMouseTransparent(true);
+            eraserOptionsBox.setVisible(false);
+            eraserOptionsBox.setMouseTransparent(true);
             drawUserBox.setVisible(false);
             drawUserBox.setMouseTransparent(true);
-            rightPanelVBox.setPrefWidth(260);
+            rightPanelBox.setPrefWidth(260);
             for (int i = 0; i < CategorySelector.getAccuracy(); i++) {
               predictionGrid.add(createPredictionLine(i), 0, i);
             }
@@ -275,8 +288,6 @@ public class CanvasController extends SoundsController {
               // Set visible to color picker
               colourPicker.setVisible(true);
             }
-            // Set UI elements for pre-game
-            canvas.setDisable(true);
             // Enable pre-game button panel
             preGameBox.setMouseTransparent(false);
             preGameBox.setVisible(true);
@@ -381,11 +392,13 @@ public class CanvasController extends SoundsController {
 
   /** SetProfile will set up the profile creation image process */
   private void setProfile() {
+    // Set all java fx properties
+    textSpeechButton.setVisible(false);
     cornerLabel.setVisible(false);
-    brushOptionsVBox.setVisible(true);
-    brushOptionsVBox.setMouseTransparent(false);
-    eraserOptionsVBox.setVisible(false);
-    eraserOptionsVBox.setMouseTransparent(true);
+    brushOptionsBox.setVisible(true);
+    brushOptionsBox.setMouseTransparent(false);
+    eraserOptionsBox.setVisible(false);
+    eraserOptionsBox.setMouseTransparent(true);
     // Set the drawing to true instantly
     isDrawing = true;
     // Allow the player to use the canvas
@@ -404,7 +417,7 @@ public class CanvasController extends SoundsController {
     predictionLabel.setVisible(false);
     predictionGrid.setVisible(false);
     // Nudge the canvas into the middle by shrinking the prediction grid area
-    rightPanelVBox.setPrefWidth(170);
+    rightPanelBox.setPrefWidth(170);
     restartButton.setVisible(false);
     // Change the text of the title
     titleLabel.setText("Draw Your Sticker!");
@@ -412,7 +425,7 @@ public class CanvasController extends SoundsController {
     cornerLabel.setVisible(false);
     // Enable them to draw
     onSmallBrush();
-    onSmallEraser();
+    onSmallErase();
 
     onStartGame(null);
   }
@@ -436,47 +449,62 @@ public class CanvasController extends SoundsController {
     brushButton.getStyleClass().add("brushButtonSelected");
     eraseButton.getStyleClass().clear();
     eraseButton.getStyleClass().add("eraserButton");
+    // Check if we are in sticker creation
     if (currentGameMode.equals(GameMode.PROFILE)) {
-      brushOptionsVBox.setVisible(true);
-      brushOptionsVBox.setMouseTransparent(false);
-      eraserOptionsVBox.setVisible(false);
-      eraserOptionsVBox.setMouseTransparent(true);
+      // Set the brush options to visible
+      brushOptionsBox.setVisible(true);
+      brushOptionsBox.setMouseTransparent(false);
+      // Turn off erasers
+      eraserOptionsBox.setVisible(false);
+      eraserOptionsBox.setMouseTransparent(true);
     }
   }
 
   /** Sets the brush size to small */
   @FXML
   private void onSmallBrush() {
+    // Clear the brush styles
     brushSmallButton.getStyleClass().clear();
+    // Add that the small brush style is on
     brushSmallButton.getStyleClass().add("brushSizeSmallSelected");
+    // Change the styles of the other two brush buttons
     brushMediumButton.getStyleClass().clear();
     brushMediumButton.getStyleClass().add("brushSizeMedium");
     brushLargeButton.getStyleClass().clear();
     brushLargeButton.getStyleClass().add("brushSizeLarge");
+    // Set the brush size to small
     brushSize = BRUSH_SMALL;
   }
 
   /** Sets the brush size to medium */
   @FXML
   private void onMediumBrush() {
+    // Clear the brush styles
     brushMediumButton.getStyleClass().clear();
+    // Add that the medium brush style is on
     brushMediumButton.getStyleClass().add("brushSizeMediumSelected");
+    // Change the styles of the other two brush buttons
     brushSmallButton.getStyleClass().clear();
     brushSmallButton.getStyleClass().add("brushSizeSmall");
     brushLargeButton.getStyleClass().clear();
     brushLargeButton.getStyleClass().add("brushSizeLarge");
+    // Set the brush size to medium
     brushSize = BRUSH_MEDIUM;
   }
 
   /** Sets the brush size to large */
   @FXML
   private void onLargeBrush() {
+    // Clear the brush styles
     brushLargeButton.getStyleClass().clear();
+    // Add that the large brush style is on
     brushLargeButton.getStyleClass().add("brushSizeLargeSelected");
+    // Change the styles of the other two brush buttons
     brushMediumButton.getStyleClass().clear();
     brushMediumButton.getStyleClass().add("brushSizeMedium");
     brushSmallButton.getStyleClass().clear();
     brushSmallButton.getStyleClass().add("brushSizeSmall");
+    // Set the brush size to large
     brushSize = BRUSH_LARGE;
   }
 
@@ -485,51 +513,67 @@ public class CanvasController extends SoundsController {
   private void onErase() {
     // Disable the brush (Enables erase)
     brush = false;
+    // Clear the brush and eraser style and add the new styles
     brushButton.getStyleClass().clear();
     brushButton.getStyleClass().add("brushButton");
     eraseButton.getStyleClass().clear();
     eraseButton.getStyleClass().add("eraserButtonSelected");
+    // Check if we are in sticker creation
     if (currentGameMode.equals(GameMode.PROFILE)) {
-      eraserOptionsVBox.setVisible(true);
-      eraserOptionsVBox.setMouseTransparent(false);
-      brushOptionsVBox.setVisible(false);
-      brushOptionsVBox.setMouseTransparent(true);
+      // Set the eraser options to visible
+      eraserOptionsBox.setVisible(true);
+      eraserOptionsBox.setMouseTransparent(false);
+      // Turn off brushes
+      brushOptionsBox.setVisible(false);
+      brushOptionsBox.setMouseTransparent(true);
     }
   }
 
   /** Sets the eraser size to small */
   @FXML
-  private void onSmallEraser() {
+  private void onSmallErase() {
+    // Clear the eraser styles
     eraserSmallButton.getStyleClass().clear();
+    // Add that the small eraser style is on
     eraserSmallButton.getStyleClass().add("eraserSizeSmallSelected");
+    // Change the styles of the other two buttons
     eraserMediumButton.getStyleClass().clear();
     eraserMediumButton.getStyleClass().add("eraserSizeMedium");
     eraserLargeButton.getStyleClass().clear();
     eraserLargeButton.getStyleClass().add("eraserSizeLarge");
+    // Set the eraser to small
     eraserSize = ERASER_SMALL;
   }
 
   /** Sets the eraser size to medium */
   @FXML
-  private void onMediumEraser() {
+  private void onMediumErase() {
+    // Clear the eraser styles
     eraserMediumButton.getStyleClass().clear();
+    // Add that the medium eraser style is on
     eraserMediumButton.getStyleClass().add("eraserSizeMediumSelected");
+    // Change the styles of the other two buttons
     eraserSmallButton.getStyleClass().clear();
     eraserSmallButton.getStyleClass().add("eraserSizeSmall");
     eraserLargeButton.getStyleClass().clear();
     eraserLargeButton.getStyleClass().add("eraserSizeLarge");
+    // Set the eraser to medium
     eraserSize = ERASER_MEDIUM;
   }
 
   /** Sets the eraser size to large */
   @FXML
-  private void onLargeEraser() {
+  private void onLargeErase() {
+    // Clear the eraser styles
     eraserLargeButton.getStyleClass().clear();
+    // Add that the large eraser style is on
     eraserLargeButton.getStyleClass().add("eraserSizeLargeSelected");
+    // Change the styles of the other two buttons
     eraserMediumButton.getStyleClass().clear();
     eraserMediumButton.getStyleClass().add("eraserSizeMedium");
     eraserSmallButton.getStyleClass().clear();
     eraserSmallButton.getStyleClass().add("eraserSizeSmall");
+    // Set the eraser to medium
     eraserSize = ERASER_LARGE;
   }
 
@@ -576,11 +620,14 @@ public class CanvasController extends SoundsController {
   private Line createPredictionLine(int index) {
     // Create a new line
     Line line = new Line();
+    // Update line properties
     line.setStrokeType(StrokeType.OUTSIDE);
     line.setStartX(-100);
     line.setEndX(148);
     line.toFront();
+    // Align the line
     GridPane.setValignment(line, VPos.BOTTOM);
+    // Based on accuracy set the correct one to be visible
     if (index == CategorySelector.getAccuracy() - 1) {
       line.setVisible(true);
     } else {
@@ -995,6 +1042,7 @@ public class CanvasController extends SoundsController {
               graphic.strokeLine(currentX, currentY, x, y);
 
             } else {
+              // Select eraser's properties
               size = eraserSize;
               graphic.clearRect(x, y, size, size);
             }
@@ -1158,7 +1206,7 @@ public class CanvasController extends SoundsController {
         break;
       case HIDDEN_WORD:
         // Check if the canvas is enabled
-        if (!canvas.isDisabled()) {
+        if (!canvas.isDisable()) {
           if (hints < 3) {
             // Set the tool tip to say there is a hint
             gameToolTip.setText("CLICK FOR A HINT! You have " + (3 - hints) + " remaining!");
@@ -1203,6 +1251,7 @@ public class CanvasController extends SoundsController {
     if (!canvas.isDisable() && currentGameMode == GameMode.HIDDEN_WORD && hints < 3) {
       hints++;
       updateToolTip();
+      playButtonClick();
       // Find the length of their current word
       int wordLength = game.getCurrentWord().length();
       // Place underscores the length of their word as the first hint
@@ -1242,6 +1291,16 @@ public class CanvasController extends SoundsController {
    */
   @FXML
   private void onToggleTextToSpeech(ActionEvent event) {
+    // Clear the current style
+    textSpeechButton.getStyleClass().clear();
+    if (Game.getTextToSpeech()) {
+      // Change the styling to off
+      textSpeechButton.getStyleClass().add("voiceAssistantOff");
+    } else {
+      // Change the styling to on
+      textSpeechButton.getStyleClass().add("voiceAssistantOn");
+    }
+    // Toggle the sound
     Game.toggleTextToSpeech();
   }
 }

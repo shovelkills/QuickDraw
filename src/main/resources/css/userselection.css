@@ -27,6 +27,7 @@
 
 .saveProfileButton:hover{
 	-fx-background-image: url(../images/buttons/doneButtonHover.png);
+	-fx-cursor:hand;
 }
 
 .saveProfileButton:pressed{
