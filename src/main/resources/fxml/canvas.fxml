@@ -67,7 +67,7 @@
                         <Insets left="5.0" />
                      </HBox.margin>
                   </Label>
-                  <Button mnemonicParsing="false" onAction="#onToggleTextToSpeech" text="Text To Speech">
+                  <Button mnemonicParsing="false" onAction="#onToggleTextToSpeech" text="Voice Assistant">
                      <HBox.margin>
                         <Insets left="10.0" />
                      </HBox.margin>
@@ -78,11 +78,6 @@
                <children>
                   <VBox fx:id="drawingToolsBox" alignment="CENTER_RIGHT" prefHeight="400.0" prefWidth="176.0" spacing="5.0">
                      <children>
-                        <ColorPicker fx:id="colourPicker" visible="false">
-                           <value>
-                              <Color />
-                           </value>
-                        </ColorPicker>
                         <Label alignment="BOTTOM_RIGHT" minHeight="-Infinity" minWidth="-Infinity" prefHeight="108.0" prefWidth="108.0">
                            <graphic>
                               <Button fx:id="brushButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onBrush" onMouseClicked="#onButtonClick" onMouseEntered="#onButtonHover" prefHeight="108.0" prefWidth="108.0" styleClass="brushButton" stylesheets="@../css/canvas.css">
@@ -158,6 +153,11 @@
                         </VBox>
                         <VBox fx:id="brushOptionsVBox" alignment="CENTER_LEFT" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="140.0" spacing="5.0">
                            <children>
+                              <ColorPicker fx:id="colourPicker" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="108.0" styleClass="colourPicker" stylesheets="@../css/canvas.css">
+                                 <value>
+                                    <Color />
+                                 </value>
+                              </ColorPicker>
                               <Label alignment="BOTTOM_RIGHT" minHeight="-Infinity" minWidth="-Infinity" prefHeight="108.0" prefWidth="108.0">
                                  <graphic>
                                     <Button fx:id="brushSmallButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onSmallBrush" onMouseClicked="#onButtonClick" onMouseEntered="#onButtonHover" prefHeight="108.0" prefWidth="108.0" styleClass="brushSizeSmall" stylesheets="@../css/canvas.css">
@@ -187,7 +187,7 @@
                               </Label>
                            </children>
                            <padding>
-                              <Insets left="10.0" top="30.0" />
+                              <Insets left="10.0" />
                            </padding>
                         </VBox>
                         <VBox fx:id="eraserOptionsVBox" alignment="CENTER_LEFT" layoutX="10.0" layoutY="10.0" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="140.0" spacing="5.0">
@@ -221,7 +221,7 @@
                               </Label>
                            </children>
                            <padding>
-                              <Insets left="10.0" top="30.0" />
+                              <Insets left="10.0" top="45.0" />
                            </padding>
                         </VBox>
                      </children>
