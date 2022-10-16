@@ -17,7 +17,7 @@
       <VBox alignment="CENTER" prefHeight="54.0" prefWidth="1240.0" BorderPane.alignment="CENTER">
          <children>
             <Label alignment="CENTER" prefHeight="18.0" prefWidth="556.0" text="Badges" />
-            <Button fx:id="menuButton" mnemonicParsing="false" onAction="#onMenu" text="Menu" />
+            <Button fx:id="menuButton" mnemonicParsing="false" onAction="#onMenuReturn" text="Menu" />
          </children>
       </VBox>
    </top>
