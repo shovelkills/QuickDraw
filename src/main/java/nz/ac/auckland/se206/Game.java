@@ -217,6 +217,7 @@ public class Game extends SoundsController {
                               }
                               // End the game
                               if (!isGhostGame && currentGame != GameMode.BLITZ) {
+                                SoundsController.playDingEffect();
                                 endGame(true);
                               }
                             }
