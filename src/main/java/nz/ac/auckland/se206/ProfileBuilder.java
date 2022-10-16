@@ -79,6 +79,7 @@ public class ProfileBuilder extends SoundsController {
     // Reset all the ids
     for (ProfileBuilder profile : UsersController.profiles) {
       profile.deleteProfileButton.setId(String.format("deleteProfileButton%d", id));
+      profile.stickerButton.setId(String.format("stickerButton%d", id));
       profile.userImageBox.setId(String.format("image%d", id));
       id++;
     }
@@ -90,6 +91,7 @@ public class ProfileBuilder extends SoundsController {
   protected Label userNameLabel;
   protected Label userSelectedLabel;
   protected Button deleteProfileButton;
+  protected Button stickerButton;
   protected VBox vbox;
   protected UserType type;
   private Font maybeNext =
@@ -109,6 +111,7 @@ public class ProfileBuilder extends SoundsController {
     createImageView();
     createUserNameLabel();
     createSelectedLabel();
+    createStickerButton();
     createDeleteProfileButton();
 
     // Set up profiles according to their type
@@ -125,12 +128,14 @@ public class ProfileBuilder extends SoundsController {
         userNameLabel.setText("Guest");
         userSelectedLabel.setVisible(true);
         deleteProfileButton.setVisible(false);
+        stickerButton.setVisible(false);
         break;
       case ADD:
         // Set up according to add new player type
         imageView.setImage(addImage);
         userNameLabel.setText("New Player");
         deleteProfileButton.setVisible(false);
+        stickerButton.setVisible(false);
         counter = counter - 2;
         break;
     }
@@ -255,6 +260,35 @@ public class ProfileBuilder extends SoundsController {
     deleteProfileButton.setId(String.format("deleteProfileButton%d", counter));
   }
 
+  /** createStickerButton will create a new sticker button for the player to edit their sticker */
+  private void createStickerButton() {
+    // Creates a new vbox
+    VBox stickerButtonBox = new VBox();
+    // Sets up the box
+    stickerButtonBox.setPrefSize(149, 47);
+    stickerButtonBox.setMinSize(149, 47);
+    stickerButtonBox.setAlignment(Pos.BOTTOM_CENTER);
+    // Set up new delete button
+    stickerButton = new Button();
+    // Add the styling to it
+    stickerButton.setPrefSize(149, 47);
+    stickerButton.setAlignment(Pos.BOTTOM_RIGHT);
+    stickerButton.setText("");
+    stickerButton.getStyleClass().add("editStickerButton");
+    stickerButton.setOnMouseEntered(
+        e -> {
+          onButtonHover(e);
+        });
+    stickerButton.setOnMouseClicked(
+        e -> {
+          onButtonClick(e);
+        });
+    stickerButtonBox.getChildren().add(stickerButton);
+    vbox.getChildren().add(stickerButtonBox);
+    // Set the ID for deletion profile button
+    stickerButton.setId(String.format("stickerButton%d", counter));
+  }
+
   /** deleteProfile will delete the user selected for deletion */
   public void deleteProfile() {
     // Remove's the vbox from the hbox
@@ -280,12 +314,14 @@ public class ProfileBuilder extends SoundsController {
       imageView.setEffect(null);
       if (!this.type.equals(UserType.GUEST)) {
         deleteProfileButton.setVisible(true);
+        stickerButton.setVisible(true);
       }
     } else {
       // Update non selected style
       isSelected = false;
       deleteProfileButton.setVisible(false);
       userSelectedLabel.setVisible(false);
+      stickerButton.setVisible(false);
       imageView.setStyle(IDLE_STYLE);
     }
   }

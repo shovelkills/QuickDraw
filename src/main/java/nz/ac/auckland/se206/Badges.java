@@ -26,7 +26,6 @@ public class Badges {
     }
     if (!Users.getBadges().get(category).get(level)) {
       String nameOfBadge;
-      System.out.println(level);
       switch (level) {
         case "E":
           // Set up easy badge
