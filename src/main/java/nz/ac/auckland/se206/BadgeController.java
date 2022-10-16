@@ -48,8 +48,26 @@ public class BadgeController extends SoundsController {
       badgesListBox.getChildren().add(categoryLabel);
       // Get each individual badge from the category
       for (Entry<String, Boolean> badges : category.getValue().entrySet()) {
-        // Gets the badge image
-        String dir = Users.folderDirectory + "/src/main/resources/badges/profile5.png";
+        // Checks if the user has won the badge
+        String badgeImageLocation = badges.getKey();
+        if (!badges.getValue()) {
+          if (badges.getKey() == "E"
+              || badges.getKey() == "M"
+              || badges.getKey() == "H"
+              || badges.getKey() == "MS") {
+            badgeImageLocation = "Null";
+          } else {
+            badgeImageLocation = badgeImageLocation + "_Null";
+          }
+        }
+        // Gets the badge image from the file location
+        String dir =
+            Users.folderDirectory
+                + "/src/main/resources/images/badges/"
+                + category.getKey().toString().replaceAll("\\s", "_")
+                + "/"
+                + badgeImageLocation.replaceAll("\\s", "_")
+                + ".png";
         InputStream stream = new FileInputStream(dir);
         Image image = new Image(stream);
         ImageView imageView = new ImageView();
@@ -78,18 +96,14 @@ public class BadgeController extends SoundsController {
             break;
         }
 
-        // Checks if the user has won the badge
-        if (!badges.getValue()) {
-          imageView.setOpacity(0.25);
-        }
         // Creates a new VBox to store the badge and label
-        VBox vBox = new VBox();
-        vBox.getChildren().add(imageView);
+        VBox vbox = new VBox();
+        vbox.getChildren().add(imageView);
         Label badgeLabel = new Label();
         badgeLabel.setText(nameOfBadge);
         // Adds the label and the vBox to the overall category
-        vBox.getChildren().add(badgeLabel);
-        categoryBox.getChildren().add(vBox);
+        vbox.getChildren().add(badgeLabel);
+        categoryBox.getChildren().add(vbox);
       }
       // Adds the category to the overall badgelist
       badgesListBox.getChildren().add(categoryBox);

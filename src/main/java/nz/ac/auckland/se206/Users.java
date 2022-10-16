@@ -218,7 +218,7 @@ public class Users {
     badgeList.put("Words", difficulty);
     badgeList.put("Time", difficulty);
     badgeList.put("Confidence", difficulty);
-    badgeList.put("All difficulties", difficulty);
+    badgeList.put("All Difficulties", difficulty);
     // Generate hashMap for badges based on time wins
     Map<String, Boolean> timedWins = new LinkedHashMap<>();
     timedWins.put("10 Seconds", false);
