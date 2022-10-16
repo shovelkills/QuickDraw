@@ -90,8 +90,8 @@ public class Badges {
     if (time <= 30) {
       winBadge("Timed Wins", "30 Seconds");
     }
-    // Check if the time is less than 60 seconds
-    if (time == 59) {
+    // Check if the time is less than 1 seconds
+    if (time <= 2) {
       winBadge("Timed Wins", "Last Second");
     }
   }

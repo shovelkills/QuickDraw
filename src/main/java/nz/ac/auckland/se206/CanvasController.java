@@ -969,7 +969,10 @@ public class CanvasController extends SoundsController {
                 DifficultyBuilder.getWordsDifficulty(),
                 DifficultyBuilder.getTimeDifficulty(),
                 DifficultyBuilder.getConfDifficulty());
-            Badges.checkWinTime(game.getTimeRemaining());
+            // Check if the game is not blitz
+            if (currentGameMode != GameMode.BLITZ) {
+              Badges.checkWinTime(game.getTimeRemaining());
+            }
           } else {
             System.out.println("LOST");
             wordLabel.setText(getLossMessage());
