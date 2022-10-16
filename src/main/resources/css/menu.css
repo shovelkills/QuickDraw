@@ -26,6 +26,7 @@
 
 .newGameButton:pressed{
 	-fx-background-image: url(../images/buttons/newGameButtonDown.png);
+	-fx-cursor: hand;
 }
 
 .statsMenuButton{
@@ -40,6 +41,7 @@
 
 .statsMenuButton:pressed{
 	-fx-background-image: url(../images/buttons/statsMenuButtonDown.png);
+	-fx-cursor: hand;
 }
 
 .quitMenuButton{
@@ -54,6 +56,37 @@
 
 .quitMenuButton:pressed{
 	-fx-background-image: url(../images/buttons/quitMenuButtonDown.png);
+	-fx-cursor: hand;
+}
+
+.badgesMenuButton{
+	-fx-background-color: transparent;
+	-fx-background-image: url(../images/buttons/badgeMenuButtonDefault.png);
+}
+
+.badgesMenuButton:hover{
+	-fx-background-image: url(../images/buttons/badgeMenuButtonHover.png);
+	-fx-cursor: hand;
+}
+
+.badgesMenuButton:pressed{
+	-fx-background-image: url(../images/buttons/badgeMenuButtonDown.png);
+	-fx-cursor: hand;
+}
+
+.graphsMenuButton{
+	-fx-background-color: transparent;
+	-fx-background-image: url(../images/buttons/graphsMenuButtonDefault.png);
+}
+
+.graphsMenuButton:hover{
+	-fx-background-image: url(../images/buttons/graphsMenuButtonHover.png);
+	-fx-cursor: hand;
+}
+
+.graphsMenuButton:pressed{
+	-fx-background-image: url(../images/buttons/graphsMenuButtonDown.png);
+	-fx-cursor:hand;
 }
 
 .profileImageView{
@@ -69,4 +102,88 @@
 	-fx-background-color: #FCEFE8;
 	-fx-background-radius: 10 10 0 0;
 	-fx-background-insets: 0 0 0 10;
+}
+
+.musicOn{
+	-fx-background-color: transparent;
+	-fx-background-image: url(../images/buttons/musicOn.png);
+}
+
+.musicOn:hover{
+	-fx-background-image: url(../images/buttons/musicOnHover.png);
+}
+
+.musicOn:pressed{
+	-fx-background-image: url(../images/buttons/musicOnDown.png);
+}
+
+.musicOff{
+	-fx-background-color: transparent;
+	-fx-background-image: url(../images/buttons/musicOff.png);
+	-fx-pref-width: 82;
+	-fx-pref-height: 50;
+}
+
+.musicOff:hover{
+	-fx-background-image: url(../images/buttons/musicOffHover.png);
+	-fx-pref-width: 82;
+	-fx-pref-height: 50;
+}
+
+.musicOff:pressed{
+	-fx-background-image: url(../images/buttons/musicOffDown.png);
+	-fx-pref-width: 82;
+	-fx-pref-height: 50;
+}
+
+.soundOn{
+	-fx-background-color: transparent;
+	-fx-background-image: url(../images/buttons/soundOn.png);
+}
+
+.soundOn:hover{
+	-fx-background-image: url(../images/buttons/soundOnHover.png);
+}
+
+.soundOn:pressed{
+	-fx-background-image: url(../images/buttons/soundOnDown.png);
+}
+
+.soundOff{
+	-fx-background-color: transparent;
+	-fx-background-image: url(../images/buttons/soundOff.png);
+	-fx-pref-width: 69;
+}
+
+.soundOff:hover{
+	-fx-background-image: url(../images/buttons/soundOffHover.png);
+	-fx-pref-width: 69;
+}
+
+.soundOff:pressed{
+	-fx-background-image: url(../images/buttons/soundOffDown.png);
+	-fx-pref-width: 69;
+}
+
+.slider .thumb{
+	-fx-background-color: #006969;
+	-fx-border-color: #006969;
+	-fx-border-radius: 20;
+	-fx-border-width: 2;
+}
+
+.slider .thumb:hover{
+	-fx-cursor: hand;
+}
+
+.slider .track{
+	-fx-background-color: #FCEFE8;
+	-fx-border-color: #FCEFE8;
+	-fx-border-width: 2;
+}
+
+.scroll-bar .track{
+	-fx-background: transparent;
+	-fx-background-color: transparent;
+	-fx-border-color: transparent;
 }

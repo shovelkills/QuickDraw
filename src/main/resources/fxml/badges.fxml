@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
-
 
 <VBox alignment="CENTER" prefHeight="720.0" prefWidth="1280.0" styleClass="statsBackground" stylesheets="@../css/stats.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nz.ac.auckland.se206.BadgeController">
    <children>
@@ -27,16 +27,20 @@
             <Insets bottom="20.0" left="40.0" right="40.0" top="20.0" />
          </VBox.margin>
          <children>
-            <ScrollPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" styleClass="badgesScrollPane" stylesheets="@../css/stats.css" VBox.vgrow="ALWAYS">
+            <ScrollPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" styleClass="badgesScrollPane" VBox.vgrow="ALWAYS">
                <content>
                   <VBox fx:id="badgesListBox" alignment="TOP_CENTER" prefHeight="0.0" prefWidth="0.0" stylesheets="@../css/stats.css" />
                </content>
+               <stylesheets>
+                  <URL value="@../css/stats.css" />
+                  <URL value="@../css/menu.css" />
+               </stylesheets>
             </ScrollPane>
          </children>
       </VBox>
       <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="46.0" prefWidth="146.0">
          <children>
-            <Button fx:id="menuButton" mnemonicParsing="false" onAction="#onMenuReturn" prefHeight="46.0" prefWidth="146.0" styleClass="backStatsButton" />
+            <Button fx:id="menuButton" mnemonicParsing="false" onAction="#onMenuReturn" onMouseClicked="#onButtonClick" onMouseEntered="#onButtonHover" prefHeight="46.0" prefWidth="146.0" styleClass="backStatsButton" />
          </children>
          <VBox.margin>
             <Insets bottom="20.0" top="10.0" />

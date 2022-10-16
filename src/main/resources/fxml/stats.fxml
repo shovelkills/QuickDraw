@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import java.lang.String?>
+<?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
@@ -11,7 +12,6 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
-
 
 <VBox alignment="CENTER" prefHeight="720.0" prefWidth="1280.0" styleClass="statsBackground" stylesheets="@../css/stats.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nz.ac.auckland.se206.StatsController">
    <children>
@@ -147,7 +147,7 @@
                         <Insets bottom="20.0" top="20.0" />
                      </padding>
                   </Label>
-                  <ScrollPane hbarPolicy="NEVER" prefHeight="700.0" prefWidth="0.0" style="-fx-fit-to-width: true;" styleClass="tabPane" stylesheets="@../css/stats.css" VBox.vgrow="ALWAYS">
+                  <ScrollPane hbarPolicy="NEVER" prefHeight="700.0" prefWidth="0.0" style="-fx-fit-to-width: true;" styleClass="tabPane" VBox.vgrow="ALWAYS">
                      <content>
                         <VBox fx:id="wordsListBox" alignment="TOP_CENTER" fillWidth="false" prefHeight="152.0" prefWidth="408.0" spacing="5.0">
                            <children>
@@ -158,6 +158,10 @@
                      <VBox.margin>
                         <Insets bottom="20.0" left="20.0" right="20.0" />
                      </VBox.margin>
+                     <stylesheets>
+                        <URL value="@../css/stats.css" />
+                        <URL value="@../css/menu.css" />
+                     </stylesheets>
                   </ScrollPane>
                </children>
             </VBox>
