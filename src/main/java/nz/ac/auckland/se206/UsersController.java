@@ -2,6 +2,7 @@ package nz.ac.auckland.se206;
 
 import ai.djl.ModelException;
 import com.opencsv.exceptions.CsvException;
+import java.awt.image.BufferedImage;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -10,6 +11,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
@@ -178,6 +180,10 @@ public class UsersController extends SoundsController {
     // Set the new image
     ProfileBuilder currentProfile = profiles.get(editUserId);
     currentProfile.imageView.setImage(image);
+    BufferedImage bufferedImage = SwingFXUtils.fromFXImage(image, null);
+    // Save the user's image
+    Users.saveProfilePicture(bufferedImage);
+    App.getMenuController().updateUserImage(image);
   }
 
   /**
