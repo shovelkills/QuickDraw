@@ -1,5 +1,5 @@
-.background{
-	-fx-background-image: url("../images/drawn_wallpaper.png");
+.gameSelectBackground{
+	-fx-background-image: url("../images/SoftPaper.png");
 	-fx-background-size: 1920 1080;
 }
 .labelBackground{
@@ -8,12 +8,149 @@
 	-fx-padding: -11;
 }
 .difficultyDropdown{
-	-fx-background-color: #EFFBF5;
-	-fx-background-radius: 10 0 0 10;
+	-fx-background-color: #FCEFE8;
+	-fx-background-radius: 20;
+	-fx-font-family: "Maybe Next";
+	-fx-font-size: 18;
 }
 .toolTip{
 	-fx-background-color: BLACK;
 	-fx-background-radius: 10;
 	-fx-padding: 10;
 	-fx-position: absolute;
+}
+
+.gameSelectLabel{
+	-fx-font-family: "Maybe Next";
+}
+
+.zenButton{
+	-fx-background-color: transparent;
+	-fx-background-image: url(../images/buttons/zenButtonDefault.png);
+}
+
+.zenButton:hover{
+	-fx-background-image: url(../images/buttons/zenButtonHover.png);
+	-fx-cursor: hand;
+}
+
+.zenButton:pressed{
+	-fx-background-image: url(../images/buttons/zenButtonDown.png);
+	-fx-pref-width: 164;
+	-fx-pref-height: 164;
+	-fx-cursor: hand;
+}
+
+.zenButtonSelected{
+	-fx-background-image: url(../images/buttons/zenButtonSelected.png);
+	-fx-pref-width: 164;
+	-fx-pref-height: 164;
+}
+
+.normalButton{
+	-fx-background-color: transparent;
+	-fx-background-image: url(../images/buttons/normalButtonDefault.png);
+}
+
+.normalButton:hover{
+	-fx-background-image: url(../images/buttons/normalButtonHover.png);
+	-fx-cursor: hand;
+}
+
+.normalButton:pressed{
+	-fx-background-image: url(../images/buttons/normalButtonDown.png);
+	-fx-pref-width: 164;
+	-fx-pref-height: 164;
+	-fx-cursor: hand;
+}
+
+.normalButtonSelected{
+	-fx-background-image: url(../images/buttons/normalButtonSelected.png);
+	-fx-pref-width: 164;
+	-fx-pref-height: 164;
+}
+
+.hiddenButton{
+	-fx-background-color: transparent;
+	-fx-background-image: url(../images/buttons/hiddenButtonDefault.png);
+}
+
+.hiddenButton:hover{
+	-fx-background-image: url(../images/buttons/hiddenButtonHover.png);
+	-fx-cursor: hand;
+}
+
+.hiddenButton:pressed{
+	-fx-background-image: url(../images/buttons/hiddenButtonDown.png);
+	-fx-pref-width: 164;
+	-fx-pref-height: 164;
+	-fx-cursor: hand;
+}
+
+.hiddenButtonSelected{
+	-fx-background-image: url(../images/buttons/hiddenButtonSelected.png);
+	-fx-pref-width: 164;
+	-fx-pref-height: 164;
+}
+
+.blitzButton{
+	-fx-background-color: transparent;
+	-fx-background-image: url(../images/buttons/blitzButtonDefault.png);
+}
+
+.blitzButton:hover{
+	-fx-background-image: url(../images/buttons/blitzButtonHover.png);
+	-fx-cursor: hand;
+}
+
+.blitzButton:pressed{
+	-fx-background-image: url(../images/buttons/blitzButtonDown.png);
+	-fx-pref-width: 164;
+	-fx-pref-height: 164;
+	-fx-cursor: hand;
+}
+
+.blitzButtonSelected{
+	-fx-background-image: url(../images/buttons/blitzButtonSelected.png);
+	-fx-pref-width: 164;
+	-fx-pref-height: 164;
+}
+
+.cancelGameSelectButton{
+	-fx-background-color: transparent;
+	-fx-background-image: url(../images/buttons/cancelButtonDefault.png);
+}
+
+.cancelGameSelectButton:hover{
+	-fx-background-image: url(../images/buttons/cancelButtonHover.png);
+	-fx-cursor: hand;
+}
+
+.cancelGameSelectButton:pressed{
+	-fx-background-image: url(../images/buttons/cancelButtonDown.png);
+	-fx-pref-width: 142;
+	-fx-pref-height: 42;
+	-fx-cursor: hand;
+}
+
+.startGameSelectButton{
+	-fx-background-color: transparent;
+	-fx-background-image: url(../images/buttons/startAltButtonDefault.png);
+}
+
+.startGameSelectButton:hover{
+	-fx-background-image: url(../images/buttons/startAltButtonHover.png);
+	-fx-cursor: hand;
+}
+
+.startGameSelectButton:pressed{
+	-fx-background-image: url(../images/buttons/startAltButtonDown.png);
+	-fx-pref-width: 142;
+	-fx-pref-height: 42;
+	-fx-cursor: hand;
+}
+
+.toolTip{
+	-fx-font-family: "Maybe Next";
+	-fx-font-size: 16;
 }

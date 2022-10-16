@@ -136,7 +136,7 @@ public class Game extends SoundsController {
                     // Set that it has spoken
                     spoken = true;
 
-                  } else if (timer.get() == 0 && !spoken) {
+                  } else if (timer.get() == 0 && !spoken && currentGame != GameMode.BLITZ) {
                     // Speak if the person has lost
                     textToSpeech.speak("YOU LOST!");
                     // Set that it has spoken

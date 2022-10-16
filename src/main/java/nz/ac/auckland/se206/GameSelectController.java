@@ -16,6 +16,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Tooltip;
+import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 import nz.ac.auckland.se206.SceneManager.AppUi;
 import nz.ac.auckland.se206.dict.WordNotFoundException;
@@ -61,6 +62,10 @@ public class GameSelectController extends SoundsController {
   @FXML private Tooltip toolTip2;
   @FXML private Tooltip toolTip3;
   @FXML private Tooltip toolTip4;
+  @FXML private VBox zenDescription;
+  @FXML private VBox normalDescription;
+  @FXML private VBox definitionDescription;
+  @FXML private VBox blitzDescription;
 
   // Define arrays and hash maps
   private final HashMap<Difficulty, String> difficultyMap = new HashMap<Difficulty, String>();
@@ -93,6 +98,7 @@ public class GameSelectController extends SoundsController {
     // Sets the menus to the defaults
     // Set the local game mode
     setLocalGameMode();
+    updateGameModeStyle("normalButton");
     for (Tooltip toolTip : toolTips) {
       toolTip.setShowDelay(Duration.ZERO);
       toolTip.setWrapText(true);
@@ -101,6 +107,7 @@ public class GameSelectController extends SoundsController {
 
     CanvasController canvas = App.getCanvasController();
     try {
+      // Set up the pregame
       canvas.setPreGameInterface();
     } catch (IOException
         | CsvException
@@ -199,7 +206,6 @@ public class GameSelectController extends SoundsController {
     }
     if (currentGameMode == GameMode.ZEN) {
       // Set up zen mode
-      Badges.winBadge("Misc", "Play Zen Mode");
       Users.setGameDifficulty(
           Users.getIndividualDifficulty("accuracyDifficulty"),
           wordsMenu.getValue(),
@@ -214,6 +220,10 @@ public class GameSelectController extends SoundsController {
           progressBar.progressProperty().unbind();
           // Move to the next scene
           sceneButtonIsIn.setRoot(SceneManager.getUiRoot(AppUi.GAME));
+          if (currentGameMode == GameMode.ZEN) {
+            // Add the played zen badge
+            Badges.winBadge("Misc", "Play Zen Mode");
+          }
         });
     Thread preGameThread = new Thread(preGameTask);
     // Allow the task to be cancelled on closing of application
@@ -252,8 +262,9 @@ public class GameSelectController extends SoundsController {
       }
     }
     // See which button was pressed
-    switch (gameModeButton.getText()) {
-      case "Normal":
+    String buttonID = gameModeButton.getId();
+    switch (buttonID) {
+      case "normalButton":
         // Switch to normal game mode
         wordsMenu.setDisable(false);
         wordsMenu.setValue(Users.getIndividualDifficulty("wordsDifficulty"));
@@ -263,10 +274,11 @@ public class GameSelectController extends SoundsController {
         confidenceMenu.setValue(Users.getIndividualDifficulty("confidenceDifficulty"));
         timeMenu.setDisable(false);
         timeMenu.setValue(Users.getIndividualDifficulty("timeDifficulty"));
+        updateGameModeStyle(buttonID);
         // Change the local game mode
         localGameMode = GameMode.NORMAL;
         break;
-      case "Zen":
+      case "zenButton":
         // Switch to zen game mode
         wordsMenu.setDisable(false);
         wordsMenu.setValue(Users.getIndividualDifficulty("wordsDifficulty"));
@@ -276,10 +288,11 @@ public class GameSelectController extends SoundsController {
         confidenceMenu.setValue("N/A");
         timeMenu.setDisable(true);
         timeMenu.setValue("N/A");
+        updateGameModeStyle(buttonID);
         // Change the local game mode
         localGameMode = GameMode.ZEN;
         break;
-      case "Hidden Word":
+      case "definitionButton":
         // Switch to hidden word game mode
         wordsMenu.setDisable(false);
         wordsMenu.setValue(Users.getIndividualDifficulty("wordsDifficulty"));
@@ -289,10 +302,11 @@ public class GameSelectController extends SoundsController {
         confidenceMenu.setValue(Users.getIndividualDifficulty("confidenceDifficulty"));
         timeMenu.setDisable(false);
         timeMenu.setValue(Users.getIndividualDifficulty("timeDifficulty"));
+        updateGameModeStyle(buttonID);
         // Change the local game mode
         localGameMode = GameMode.HIDDEN_WORD;
         break;
-      case "Blitz":
+      case "blitzButton":
         // Switch to blitz game mode
         wordsMenu.setDisable(false);
         wordsMenu.setValue(Users.getIndividualDifficulty("wordsDifficulty"));
@@ -302,6 +316,7 @@ public class GameSelectController extends SoundsController {
         confidenceMenu.setValue(Users.getIndividualDifficulty("confidenceDifficulty"));
         timeMenu.setDisable(false);
         timeMenu.setValue(Users.getIndividualDifficulty("timeDifficulty"));
+        updateGameModeStyle(buttonID);
         localGameMode = GameMode.BLITZ;
         break;
       default:
@@ -309,7 +324,70 @@ public class GameSelectController extends SoundsController {
         localGameMode = GameMode.NORMAL;
         break;
     }
+    // Update the local game mode
     setLocalGameMode();
+  }
+
+  /**
+   * gameModeButtonSelect will update the styling for each class
+   *
+   * @param buttonID takes in the current button being switched
+   */
+  private void updateGameModeStyle(String buttonID) {
+    // Clear all the buttons styles
+    zenButton.getStyleClass().clear();
+    normalButton.getStyleClass().clear();
+    definitionButton.getStyleClass().clear();
+    blitzButton.getStyleClass().clear();
+    // Set the visibilities of all the buttons to false
+    zenDescription.setVisible(false);
+    normalDescription.setVisible(false);
+    definitionDescription.setVisible(false);
+    blitzDescription.setVisible(false);
+    switch (buttonID) {
+      case "zenButton":
+        // Set zen to be selected
+        zenButton.getStyleClass().add("zenButtonSelected");
+        // Update all the other styling
+        normalButton.getStyleClass().add("normalButton");
+        definitionButton.getStyleClass().add("hiddenButton");
+        blitzButton.getStyleClass().add("blitzButton");
+        // Set the zen description's visibility on
+        zenDescription.setVisible(true);
+        break;
+      case "normalButton":
+        // Set normal to be selected
+        normalButton.getStyleClass().add("normalButtonSelected");
+        // Update all the other styling
+        zenButton.getStyleClass().add("zenButton");
+        definitionButton.getStyleClass().add("hiddenButton");
+        blitzButton.getStyleClass().add("blitzButton");
+        // Set the normal description's visibility on
+        normalDescription.setVisible(true);
+        break;
+      case "definitionButton":
+        // Set hidden to be selected
+        definitionButton.getStyleClass().add("hiddenButtonSelected");
+        // Update all the other styling
+        zenButton.getStyleClass().add("zenButton");
+        normalButton.getStyleClass().add("normalButton");
+        blitzButton.getStyleClass().add("blitzButton");
+        // Set the definition description's visibility on
+        definitionDescription.setVisible(true);
+        break;
+      case "blitzButton":
+        // Set blitz to be selected
+        blitzButton.getStyleClass().add("blitzButtonSelected");
+        // Update all the other styling
+        zenButton.getStyleClass().add("zenButton");
+        normalButton.getStyleClass().add("normalButton");
+        definitionButton.getStyleClass().add("hiddenButton");
+        // Set the blitz description's visibility on
+        blitzDescription.setVisible(true);
+        break;
+      default:
+        break;
+    }
   }
 
   /** Sets the difficulties of the choice menus of the users previous difficulties selected */

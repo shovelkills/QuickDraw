@@ -3,27 +3,22 @@ package nz.ac.auckland.se206;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import nz.ac.auckland.se206.SceneManager.AppUi;
 
 public class StatsController extends SoundsController {
   // Declare all the FXML fields
-  @FXML private Button backButton;
-  @FXML private Button statsTabButton;
-  @FXML private Button wordsTabButton;
   @FXML private Label titleLabel;
   @FXML private Label winsLabel;
   @FXML private Label lossesLabel;
   @FXML private Label fastestWordLabel;
   @FXML private Label fastestTimeLabel;
-  @FXML private GridPane statsGridPane;
-  @FXML private VBox wordsListPaneBox;
   @FXML private VBox wordsListBox;
 
   /** JavaFX calls this method once the GUI elements are loaded. */
@@ -42,30 +37,6 @@ public class StatsController extends SoundsController {
   private void onStatsTab(Event event) {
     // Set tab title
     titleLabel.setText("Stats for: " + Users.getUserName());
-    // Set style of elements to indicate tab is selected
-    wordsListPaneBox.setVisible(false);
-    statsGridPane.setVisible(true);
-    statsTabButton.setStyle(
-        "-fx-background-color: linear-gradient(to right, #FFCAE9, #E7AEE8); -fx-text-fill: #791E94;");
-    wordsTabButton.setStyle(".tabButton");
-  }
-
-  /**
-   * on WordsTab Activates when the words list tab button is pressed. Refreshes the displayed word
-   * list for the current user.
-   *
-   * @param event takes in a java event from from FXML
-   */
-  @FXML
-  private void onWordsTab(Event event) {
-    // Set tab title
-    titleLabel.setText("Word History for: " + Users.getUserName());
-    // Set style of elements to indicate tab is selected
-    statsGridPane.setVisible(false);
-    wordsListPaneBox.setVisible(true);
-    wordsTabButton.setStyle(
-        "-fx-background-color: linear-gradient(to right, #FFCAE9, #E7AEE8); -fx-text-fill: #791E94;");
-    statsTabButton.setStyle(".tabButton");
   }
 
   /**
@@ -82,9 +53,12 @@ public class StatsController extends SoundsController {
           "Once you've played Quick Draw, every word you have drawn will be shown here!");
       wordLabel.setMaxWidth(Integer.MAX_VALUE);
       wordLabel.alignmentProperty().set(Pos.CENTER);
-      Font font = Font.loadFont("file:src/main/resources/fonts/somethingwild-Regular.ttf", 42);
+      Font font = Font.loadFont("file:src/main/resources/fonts/Maybe-Next.ttf", 26);
       wordLabel.setFont(font);
-      wordLabel.setStyle("-fx-background-color: #FFCAE9");
+      wordLabel.setStyle("-fx-background-color: #FFDEB0; -fx-background-radius: 10;");
+      wordLabel.setWrapText(true);
+      wordLabel.setPadding(new Insets(5, 10, 5, 10));
+      wordLabel.setPrefHeight(100);
       wordsListBox.getChildren().add(wordLabel);
       return;
     }
@@ -94,16 +68,17 @@ public class StatsController extends SoundsController {
       // Create the label to be used for this word in the history and set the label text accordingly
       Label wordLabel = new Label();
       wordLabel.setText(word);
+      wordLabel.setPadding(new Insets(5, 10, 5, 10));
 
       // Set every second label background to a contrasting colour for readability
       if (index % 2 == 0) {
-        wordLabel.setStyle("-fx-background-color: #FFCAE9");
+        wordLabel.setStyle("-fx-background-color: #FFDEB0; -fx-background-radius: 10;");
       }
 
       // Set label formatting properties
-      wordLabel.setMaxWidth(Integer.MAX_VALUE);
+      wordLabel.setPrefWidth(Integer.MAX_VALUE);
       wordLabel.alignmentProperty().set(Pos.CENTER);
-      Font font = Font.loadFont("file:src/main/resources/fonts/somethingwild-Regular.ttf", 42);
+      Font font = Font.loadFont("file:src/main/resources/fonts/Maybe-Next.ttf", 26);
       wordLabel.setFont(font);
 
       // Add labels to the VBox container within the scrollpane

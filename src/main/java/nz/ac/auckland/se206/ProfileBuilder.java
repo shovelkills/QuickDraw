@@ -229,12 +229,14 @@ public class ProfileBuilder extends SoundsController {
   /** createDeleteProfileButton will create the delete button for users to delete their profile */
   private void createDeleteProfileButton() {
     // Creates a new vbox
-    VBox deleteButtonVBox = new VBox();
+    VBox deleteButtonBox = new VBox();
     // Sets up the box
-    deleteButtonVBox.setPrefSize(149, 47);
-    deleteButtonVBox.setMinSize(149, 47);
-    deleteButtonVBox.setAlignment(Pos.CENTER);
+    deleteButtonBox.setPrefSize(149, 47);
+    deleteButtonBox.setMinSize(149, 47);
+    deleteButtonBox.setAlignment(Pos.CENTER);
+    // Set up new delete button
     deleteProfileButton = new Button();
+    // Add the styling to it
     deleteProfileButton.setPrefSize(149, 47);
     deleteProfileButton.setAlignment(Pos.BOTTOM_RIGHT);
     deleteProfileButton.setText("");
@@ -247,8 +249,8 @@ public class ProfileBuilder extends SoundsController {
         e -> {
           onButtonClick(e);
         });
-    deleteButtonVBox.getChildren().add(deleteProfileButton);
-    vbox.getChildren().add(deleteButtonVBox);
+    deleteButtonBox.getChildren().add(deleteProfileButton);
+    vbox.getChildren().add(deleteButtonBox);
     // Set the ID for deletion profile button
     deleteProfileButton.setId(String.format("deleteProfileButton%d", counter));
   }
@@ -276,7 +278,9 @@ public class ProfileBuilder extends SoundsController {
       userSelectedLabel.setVisible(true);
       imageView.setStyle(HIGHLIGHT_STYLE);
       imageView.setEffect(null);
-      if (!this.type.equals(UserType.GUEST)) deleteProfileButton.setVisible(true);
+      if (!this.type.equals(UserType.GUEST)) {
+        deleteProfileButton.setVisible(true);
+      }
     } else {
       // Update non selected style
       isSelected = false;

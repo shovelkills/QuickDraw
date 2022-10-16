@@ -116,7 +116,7 @@ public class BadgeController extends SoundsController {
    * @param event takes in a JavaFX element
    */
   @FXML
-  private void onMenu(ActionEvent event) {
+  private void onMenuReturn(ActionEvent event) {
     // Get the current scene
     Button backButton = (Button) event.getSource();
     Scene currentScene = backButton.getScene();

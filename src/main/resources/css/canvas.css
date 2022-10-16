@@ -14,10 +14,31 @@
 	-fx-background-image: url(../images/timerLabel.png);
 }
 
-.timerBarDefault{
+.timerBarClassic{
 	-fx-background-color: #008080;
 	-fx-background-radius: 0 20 20 0;
 }
+
+.timerBarBlitz{
+	-fx-background-color: #f45b69;
+	-fx-background-radius: 0 20 20 0;
+}
+
+.timerBarHidden{
+	-fx-background-color: #fbb13c;
+	-fx-background-radius: 0 20 20 0;
+}
+
+.timerBarProfile{
+	-fx-background-color: #68217a;
+	-fx-background-radius: 0 20 20 0;
+}
+
+.timerBarZen{
+	-fx-background-color: #4dae4d;
+	-fx-background-radius: 0 20 20 0;
+}
+
 
 .timerBarWin{
 	-fx-background-color: #40BF4A;
