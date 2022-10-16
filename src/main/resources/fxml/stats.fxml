@@ -1,44 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.String?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" styleClass="background" stylesheets="@../css/stats.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nz.ac.auckland.se206.StatsController">
-   <left>
-      <VBox prefHeight="0.0" prefWidth="150.0" BorderPane.alignment="CENTER">
+
+<VBox alignment="CENTER" prefHeight="720.0" prefWidth="1280.0" styleClass="statsBackground" stylesheets="@../css/stats.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nz.ac.auckland.se206.StatsController">
+   <children>
+      <Label fx:id="titleLabel" styleClass="statsLabel" stylesheets="@../css/stats.css" text="Stats For: Guest">
+         <font>
+            <Font size="52.0" />
+         </font>
+         <padding>
+            <Insets bottom="10.0" top="40.0" />
+         </padding>
+      </Label>
+      <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0" VBox.vgrow="ALWAYS">
          <children>
-            <Button fx:id="statsTabButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onStatsTab" prefHeight="0.0" prefWidth="150.0" styleClass="tabButton" stylesheets="@../css/stats.css" text="Your Stats" textAlignment="CENTER" textFill="WHITE" wrapText="true" VBox.vgrow="ALWAYS">
-               <font>
-                  <Font name="System Bold" size="20.0" />
-               </font>
-            </Button>
-            <Button fx:id="wordsTabButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onWordsTab" prefHeight="0.0" prefWidth="150.0" styleClass="tabButton" stylesheets="@../css/stats.css" text="Your Words" textAlignment="CENTER" textFill="WHITE" wrapText="true" VBox.vgrow="ALWAYS">
-               <font>
-                  <Font name="System Bold" size="20.0" />
-               </font>
-            </Button>
-         </children>
-      </VBox>
-   </left>
-   <center>
-      <VBox prefHeight="310.0" prefWidth="0.0" styleClass="tabPane" stylesheets="@../css/stats.css" BorderPane.alignment="CENTER">
-         <children>
-            <StackPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="310.0" prefWidth="527.0" styleClass="tabPane" stylesheets="@../css/stats.css" VBox.vgrow="ALWAYS">
+            <VBox styleClass="tabPane" stylesheets="@../css/stats.css">
                <children>
-                  <GridPane fx:id="statsGridPane" alignment="CENTER" styleClass="tabPane" stylesheets="@../css/stats.css">
+                  <GridPane fx:id="statsGridPane" alignment="CENTER" prefHeight="720.0" prefWidth="1110.0" stylesheets="@../css/stats.css">
                     <columnConstraints>
-                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="267.0" minWidth="10.0" prefWidth="150.0" />
-                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="357.0" minWidth="10.0" prefWidth="250.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="351.0" minWidth="10.0" prefWidth="267.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="357.0" minWidth="10.0" prefWidth="303.0" />
                     </columnConstraints>
                     <rowConstraints>
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -50,17 +42,21 @@
                         <Insets bottom="50.0" left="20.0" right="20.0" top="50.0" />
                      </padding>
                      <children>
-                        <Label alignment="BOTTOM_RIGHT" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" prefHeight="50.0" prefWidth="306.0" style="-fx-background-color: #EFFBF5; -fx-background-radius: 30 0 0 30; -fx-text-fill: #CF4526;" text="Wins: " GridPane.halignment="RIGHT" GridPane.valignment="CENTER">
+                        <Label alignment="BOTTOM_RIGHT" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" prefHeight="50.0" prefWidth="306.0" stylesheets="@../css/stats.css" text="Wins: " GridPane.halignment="RIGHT" GridPane.valignment="CENTER">
                            <font>
-                              <Font name="System Bold" size="20.0" />
+                              <Font name="System Bold" size="26.0" />
                            </font>
                            <padding>
                               <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                            </padding>
+                           <styleClass>
+                              <String fx:value="statsLabel" />
+                              <String fx:value="statDescriptionLabel" />
+                           </styleClass>
                         </Label>
-                        <Label alignment="BOTTOM_RIGHT" maxWidth="1.7976931348623157E308" style="-fx-background-color: #EFFBF5; -fx-background-radius: 30 0 0 30; -fx-text-fill: #05668D;" text="Losses: " GridPane.halignment="CENTER" GridPane.rowIndex="1">
+                        <Label alignment="BOTTOM_RIGHT" maxWidth="1.7976931348623157E308" stylesheets="@../css/stats.css" text="Losses: " GridPane.halignment="CENTER" GridPane.rowIndex="1">
                            <font>
-                              <Font name="System Bold" size="20.0" />
+                              <Font name="System Bold" size="26.0" />
                            </font>
                            <padding>
                               <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
@@ -68,91 +64,119 @@
                            <GridPane.margin>
                               <Insets />
                            </GridPane.margin>
+                           <styleClass>
+                              <String fx:value="statsLabel" />
+                              <String fx:value="statDescriptionLabel" />
+                           </styleClass>
                         </Label>
-                        <Label alignment="BOTTOM_RIGHT" maxWidth="1.7976931348623157E308" style="-fx-background-color: #EFFBF5; -fx-background-radius: 30 0 0 30; -fx-text-fill: #791E94;" text="Fastest Word: " GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
+                        <Label alignment="BOTTOM_RIGHT" maxWidth="1.7976931348623157E308" stylesheets="@../css/stats.css" text="Fastest Word: " GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
                            <font>
-                              <Font name="System Bold" size="20.0" />
+                              <Font name="System Bold" size="26.0" />
                            </font>
                            <padding>
                               <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                            </padding>
+                           <styleClass>
+                              <String fx:value="statsLabel" />
+                              <String fx:value="statDescriptionLabel" />
+                           </styleClass>
                         </Label>
-                        <Label fx:id="fastestTimeLabel" alignment="TOP_LEFT" style="-fx-background-color: #EFFBF5; -fx-background-radius: 0 0 20 20; -fx-text-fill: #791E94;" text="drawn in 0 seconds!" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="3" GridPane.valignment="TOP">
+                        <Label fx:id="fastestTimeLabel" alignment="TOP_LEFT" stylesheets="@../css/stats.css" text="drawn in 0 seconds!" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="3" GridPane.valignment="TOP">
                            <font>
-                              <Font size="20.0" />
+                              <Font size="22.0" />
                            </font>
                            <padding>
                               <Insets bottom="20.0" left="20.0" right="30.0" top="20.0" />
                            </padding>
+                           <styleClass>
+                              <String fx:value="statsLabel" />
+                              <String fx:value="fastestTimeLabel" />
+                           </styleClass>
                         </Label>
-                        <Label fx:id="winsLabel" alignment="BOTTOM_LEFT" style="-fx-background-color: #CF4526; -fx-background-radius: 20;" text="No Games Yet!" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.valignment="CENTER">
+                        <Label fx:id="winsLabel" alignment="BOTTOM_LEFT" stylesheets="@../css/stats.css" text="No Games Yet!" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.valignment="CENTER">
                            <font>
-                              <Font name="System Bold" size="32.0" />
+                              <Font name="System Bold" size="36.0" />
                            </font>
                            <padding>
                               <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
                            </padding>
+                           <styleClass>
+                              <String fx:value="statsLabel" />
+                              <String fx:value="winsLabel" />
+                           </styleClass>
                         </Label>
-                        <Label fx:id="lossesLabel" alignment="BOTTOM_LEFT" style="-fx-background-color: #05668D; -fx-background-radius: 20;" text="No Games yet!" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                        <Label fx:id="lossesLabel" alignment="BOTTOM_LEFT" stylesheets="@../css/stats.css" text="No Games yet!" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="CENTER">
                            <font>
-                              <Font name="System Bold" size="32.0" />
+                              <Font name="System Bold" size="36.0" />
                            </font>
                            <padding>
                               <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
                            </padding>
+                           <styleClass>
+                              <String fx:value="statsLabel" />
+                              <String fx:value="lossesLabel" />
+                           </styleClass>
                         </Label>
-                        <Label fx:id="fastestWordLabel" alignment="BOTTOM_LEFT" style="-fx-background-color: #791E94; -fx-background-radius: 20 20 0 0;" text="No Words Yet!" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
+                        <Label fx:id="fastestWordLabel" alignment="BOTTOM_LEFT" stylesheets="@../css/stats.css" text="No Words Yet!" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
                            <font>
-                              <Font size="32.0" />
+                              <Font name="System Bold" size="36.0" />
                            </font>
                            <padding>
                               <Insets bottom="20.0" left="20.0" right="30.0" top="20.0" />
                            </padding>
+                           <styleClass>
+                              <String fx:value="statsLabel" />
+                              <String fx:value="fastestWordLabel" />
+                           </styleClass>
                         </Label>
                         <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.rowIndex="3" />
                      </children>
                   </GridPane>
-                  <VBox fx:id="wordsListPaneBox" prefHeight="617.0" prefWidth="1090.0" styleClass="tabPane" stylesheets="@../css/stats.css" visible="false">
-                     <children>
-                        <ScrollPane hbarPolicy="NEVER" prefHeight="400.0" prefWidth="450.0" style="-fx-fit-to-width: true;" styleClass="tabPane" stylesheets="@../css/stats.css" VBox.vgrow="ALWAYS">
-                           <content>
-                              <VBox fx:id="wordsListBox" alignment="TOP_CENTER" prefHeight="152.0" prefWidth="408.0" spacing="5.0">
-                                 <children>
-                                    <Label alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="17.0" prefWidth="288.0" text="Label" />
-                                 </children>
-                              </VBox>
-                           </content>
-                           <VBox.margin>
-                              <Insets bottom="20.0" left="20.0" right="20.0" />
-                           </VBox.margin>
-                        </ScrollPane>
-                     </children>
-                  </VBox>
                </children>
-            </StackPane>
+               <padding>
+                  <Insets bottom="20.0" left="20.0" />
+               </padding>
+            </VBox>
+            <VBox fx:id="wordsListPaneBox" alignment="TOP_CENTER" prefHeight="617.0" prefWidth="1090.0" styleClass="tabPane" stylesheets="@../css/stats.css">
+               <children>
+                  <Label styleClass="statsLabel" stylesheets="@../css/stats.css" text="Word History">
+                     <font>
+                        <Font size="32.0" />
+                     </font>
+                     <padding>
+                        <Insets bottom="20.0" top="20.0" />
+                     </padding>
+                  </Label>
+                  <ScrollPane hbarPolicy="NEVER" prefHeight="700.0" prefWidth="0.0" style="-fx-fit-to-width: true;" styleClass="tabPane" stylesheets="@../css/stats.css" VBox.vgrow="ALWAYS">
+                     <content>
+                        <VBox fx:id="wordsListBox" alignment="TOP_CENTER" fillWidth="false" prefHeight="152.0" prefWidth="408.0" spacing="5.0">
+                           <children>
+                              <Label alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="17.0" prefWidth="288.0" text="Label" />
+                           </children>
+                        </VBox>
+                     </content>
+                     <VBox.margin>
+                        <Insets bottom="20.0" left="20.0" right="20.0" />
+                     </VBox.margin>
+                  </ScrollPane>
+               </children>
+            </VBox>
          </children>
-      </VBox>
-   </center>
-   <top>
-      <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-         <children>
-            <Button fx:id="backButton" mnemonicParsing="false" onAction="#onBackButton" prefHeight="100.0" prefWidth="140.0" style="-fx-text-fill: #05668D; -fx-background-radius: 0 20 20 0;" styleClass="backButton" text="Back" HBox.hgrow="ALWAYS">
-               <font>
-                  <Font name="System Bold" size="20.0" />
-               </font>
-               <HBox.margin>
-                  <Insets bottom="10.0" right="10.0" top="10.0" />
-               </HBox.margin>
-            </Button>
-            <Label fx:id="titleLabel" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-text-fill: #791E94;" styleClass="titleLabel" stylesheets="@../css/stats.css" text="Stats For: Guest" HBox.hgrow="ALWAYS">
-               <font>
-                  <Font name="System Bold" size="32.0" />
-               </font>
-            </Label>
-         </children>
+         <padding>
+            <Insets bottom="20.0" left="20.0" right="20.0" />
+         </padding>
       </HBox>
-   </top>
-   <padding>
-      <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-   </padding>
-</BorderPane>
+      <HBox alignment="CENTER">
+         <children>
+            <VBox alignment="BOTTOM_RIGHT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="46.0" prefWidth="146.0">
+               <children>
+                  <Button fx:id="backButton" mnemonicParsing="false" onAction="#onBackButton" onMouseClicked="#onButtonClick" onMouseEntered="#onButtonHover" prefHeight="46.0" prefWidth="146.0" styleClass="backStatsButton" stylesheets="@../css/stats.css" />
+               </children>
+            </VBox>
+         </children>
+         <padding>
+            <Insets bottom="40.0" />
+         </padding>
+      </HBox>
+   </children>
+</VBox>
