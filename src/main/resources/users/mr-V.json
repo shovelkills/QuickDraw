@@ -1,0 +1,97 @@
+{
+  "username": "mr-V",
+  "gamesWon": 2,
+  "gamesLost": 0,
+  "wordHistory": [
+    "skull",
+    "bee",
+    "television",
+    "bottlecap",
+    "car",
+    "camel"
+  ],
+  "fastestGame": 3,
+  "fastestWord": "bottlecap",
+  "timeHistory": [
+    6.0,
+    12.0,
+    8.0,
+    3.0,
+    0.0,
+    6.0
+  ],
+  "gameDifficulty": {
+    "accuracyDifficulty": "EASY",
+    "wordsDifficulty": "HARD",
+    "timeDifficulty": "MEDIUM",
+    "confidenceDifficulty": "EASY"
+  },
+  "Badges": {
+    "Accuracy": {
+      "E": true,
+      "M": false,
+      "H": false
+    },
+    "Words": {
+      "E": true,
+      "M": false,
+      "H": true,
+      "MS": false
+    },
+    "Time": {
+      "E": true,
+      "M": true,
+      "H": false,
+      "MS": false
+    },
+    "Confidence": {
+      "E": true,
+      "M": false,
+      "H": false,
+      "MS": false
+    },
+    "All Difficulties": {
+      "E": true,
+      "M": false,
+      "H": false,
+      "MS": false
+    },
+    "Timed Wins": {
+      "30 Seconds": false,
+      "10 Seconds": false,
+      "Last Second": false
+    },
+    "Wins": {
+      "First Win": true,
+      "2 consecutive wins": true,
+      "5 consecutive wins": false
+    },
+    "Misc": {
+      "Draw User Profile": true,
+      "Play Zen Mode": false,
+      "View Stats Page": true,
+      "View Badges Page": true
+    }
+  },
+  "consistentWins": 2,
+  "accuracyDifficultyHistory": [
+    "E",
+    "E"
+  ],
+  "wordDifficultyHistory": [
+    "E",
+    "H"
+  ],
+  "timeDifficultyHistory": [
+    "E",
+    "M"
+  ],
+  "confidenceDifficultyHistory": [
+    "E",
+    "E"
+  ],
+  "winHistory": [
+    true,
+    true
+  ]
+}
