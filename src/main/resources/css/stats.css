@@ -1,3 +1,37 @@
+.statsLabel{
+	-fx-font-family: "Maybe Next";
+}
+
+.statDescriptionLabel{
+	-fx-background-color: #FFDEB0;
+	-fx-background-radius: 20 0 0 20;
+	-fx-text-fill: #323232;
+}
+
+.winsLabel{
+	-fx-background-color: #51B741;
+	-fx-background-radius: 10;
+	-fx-text-fill: white;
+}
+
+.lossesLabel{
+	-fx-background-color: #F45B69;
+	-fx-background-radius: 10;
+	-fx-text-fill: white;
+}
+
+.fastestWordLabel{
+	-fx-background-color: #51D4D0;
+	-fx-background-radius: 10 10 10 0;
+	-fx-text-fill: white;
+}
+
+.fastestTimeLabel{
+	-fx-background-color: #006969;
+	-fx-background-radius: 0 10 10 10;
+	-fx-text-fill: white;
+}
+
 .tabButton{
 	-fx-background-color: linear-gradient(to right, #E299E5 60%, #B57BC7
 	);
@@ -14,30 +48,31 @@
 	-fx-background-color: #B57BC7;
 }
 
-.backButton{
-	-fx-background-color: #CEF3E0;
+.backStatsButton{
+	-fx-background-color: transparent;
+	-fx-background-image: url(../images/buttons/menuButtonDefault.png);
 }
 
-.backButton:hover{
-	-fx-background-color: #EFFBF5;
+.backStatsButton:hover{
+	-fx-background-image: url(../images/buttons/menuButtonHover.png);
 }
 
-.backButton:pressed{
-	-fx-background-color: #1C779B;
+.backStatsButton:pressed{
+	-fx-background-image: url(../images/buttons/menuButtonDown.png);
+	-fx-pref-width: 142;
+	-fx-pref-height: 42;
 }
 
 .titleLabel{
-	-fx-background-color: linear-gradient(to bottom, #FFCAE9, #E7AEE8);
-	-fx-background-radius: 50 50 0 0;
+	-fx-font-family: "Maybe Next";
 }
 
 .tabPane{
-	-fx-background-color: #E7AEE8;
-	-fx-background: #E7AEE8;
-	-fx-background-radius: 0 0 50 0;
+	-fx-background-color: #FCEFE8;
+	-fx-background: #FCEFE8;
+	-fx-background-radius: 30;
 }
 
-.background{
-	-fx-background-color: #3A6171;
-	-fx-background: #3A6171;
+.statsBackground{
+	-fx-background-image: url(../images/SoftPaper.png);
 }
