@@ -211,7 +211,8 @@
 
 .brushSizeSmall:hover{
 	-fx-background-color: transparent;
-	-fx-background-image: url(../images/buttons/brushSmallHover.png);	
+	-fx-background-image: url(../images/buttons/brushSmallHover.png);
+	-fx-cursor: hand;	
 }
 
 .brushSizeSmall:pressed{
@@ -236,6 +237,7 @@
 .brushSizeMedium:hover{
 	-fx-background-color: transparent;
 	-fx-background-image: url(../images/buttons/brushMediumHover.png);	
+	-fx-cursor: hand;
 }
 
 .brushSizeMedium:pressed{
@@ -260,6 +262,7 @@
 .brushSizeLarge:hover{
 	-fx-background-color: transparent;
 	-fx-background-image: url(../images/buttons/brushLargeHover.png);	
+	-fx-cursor: hand;
 }
 
 .brushSizeLarge:pressed{
@@ -286,6 +289,7 @@
 .eraserSizeSmall:hover{
 	-fx-background-color: transparent;
 	-fx-background-image: url(../images/buttons/eraserSmallHover.png);	
+	-fx-cursor: hand;
 }
 
 .eraserSizeSmall:pressed{
@@ -310,6 +314,7 @@
 .eraserSizeMedium:hover{
 	-fx-background-color: transparent;
 	-fx-background-image: url(../images/buttons/eraserMediumHover.png);	
+	-fx-cursor: hand;
 }
 
 .eraserSizeMedium:pressed{
@@ -334,6 +339,7 @@
 .eraserSizeLarge:hover{
 	-fx-background-color: transparent;
 	-fx-background-image: url(../images/buttons/eraserLargeHover.png);	
+	-fx-cursor: hand;
 }
 
 .eraserSizeLarge:pressed{
@@ -351,8 +357,64 @@
 }
 
 .colourPicker{
+	-fx-background-image: url(../images/buttons/colourPickerDefault.png);
+    -fx-background-position: center;
+    -fx-background-repeat: no-repeat;  
 	-fx-background-color: #FCEFE8;
 	-fx-background-radius: 20;
 	-fx-font-family: "Maybe Next";
 	-fx-font-size: 14;
+    -fx-color-label-visible: false;
+	-fx-padding: 0 0 0 -50;
+	-fx-color-rect-width: 15;
+	-fx-color-rect-height: 15;
+}
+
+.colourPicker:hover{
+	-fx-background-color: rgb(200, 200, 200);
+	-fx-cursor: hand;
+}
+.colourPicker:pressed{
+	-fx-background-color: rgb(150, 150, 150);
+}
+
+.voiceAssistantOn{
+	-fx-background-color: transparent;
+	-fx-background-image: url(../images/buttons/voiceAssistOn.png);	
+	-fx-pref-width: 102;
+	-fx-pref-height: 102;
+}
+
+.voiceAssistantOn:hover{
+	-fx-background-color: transparent;
+	-fx-background-image: url(../images/buttons/voiceAssistOnHover.png);	
+	-fx-cursor: hand;
+
+}
+
+.voiceAssistantOn:pressed{
+	-fx-background-color: transparent;
+	-fx-background-image: url(../images/buttons/voiceAssistOnDown.png);
+	-fx-pref-width: 102;
+	-fx-pref-height: 102;
+}
+
+.voiceAssistantOff{
+	-fx-background-color: transparent;
+	-fx-background-image: url(../images/buttons/voiceAssistOff.png);
+	-fx-pref-width: 102;
+	-fx-pref-height: 102;
+}
+
+.voiceAssistantOff:hover{
+	-fx-background-color: transparent;
+	-fx-background-image: url(../images/buttons/voiceAssistOffHover.png);	
+	-fx-cursor: hand;
+}
+
+.voiceAssistantOff:pressed{
+	-fx-background-color: transparent;
+	-fx-background-image: url(../images/buttons/voiceAssistOffDown.png);
+	-fx-pref-width: 102;
+	-fx-pref-height: 102;
 }

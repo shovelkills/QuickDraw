@@ -126,10 +126,9 @@ public class Game extends SoundsController {
                   // When starting speak that its starting (Unless ghost game)
                   if (timer.get() == gameTime - 1 && !hasWon && !isGhostGame) {
                     textToSpeech.speak("Starting");
-                  } else if (timer.get() == (gameTime / 2) + 1) {
+                  } else if (timer.get() == ((int) (gameTime / 2) + 1)) {
                     // When half way speak thats it is halfway
-                    textToSpeech.speak(
-                        String.format("%s Seconds Remaining"), Integer.toString(gameTime / 2));
+                    textToSpeech.speak((gameTime / 2) + " Seconds Remaining");
                   }
                   // Speak if the person has won
                   if (hasWon && !spoken) {
@@ -143,9 +142,9 @@ public class Game extends SoundsController {
                     // Set that it has spoken
                     spoken = true;
                   }
-                  // Sleep for 10 ms
-                  Thread.sleep(10);
                 }
+                // Sleep for 10 ms
+                Thread.sleep(10);
               }
             }
           };

@@ -67,17 +67,28 @@
                         <Insets left="5.0" />
                      </HBox.margin>
                   </Label>
-                  <Button mnemonicParsing="false" onAction="#onToggleTextToSpeech" text="Voice Assistant">
+                  <Label maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="40.0">
                      <HBox.margin>
                         <Insets left="10.0" />
                      </HBox.margin>
-                  </Button>
+                     <graphic>
+                        <Button fx:id="textSpeechButton" mnemonicParsing="false" onAction="#onToggleTextToSpeech" styleClass="voiceAssistantOn" stylesheets="@../css/canvas.css" />
+                     </graphic>
+                  </Label>
                </children>
             </HBox>
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="1384.0">
                <children>
                   <VBox fx:id="drawingToolsBox" alignment="CENTER_RIGHT" prefHeight="400.0" prefWidth="176.0" spacing="5.0">
                      <children>
+                        <ColorPicker fx:id="colourPicker" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#onButtonClick" onMouseEntered="#onButtonHover" prefHeight="40.0" prefWidth="108.0" styleClass="colourPicker" stylesheets="@../css/canvas.css">
+                           <value>
+                              <Color />
+                           </value>
+                           <padding>
+                              <Insets right="20.0" />
+                           </padding>
+                        </ColorPicker>
                         <Label alignment="BOTTOM_RIGHT" minHeight="-Infinity" minWidth="-Infinity" prefHeight="108.0" prefWidth="108.0">
                            <graphic>
                               <Button fx:id="brushButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onBrush" onMouseClicked="#onButtonClick" onMouseEntered="#onButtonHover" prefHeight="108.0" prefWidth="108.0" styleClass="brushButton" stylesheets="@../css/canvas.css">
@@ -122,7 +133,7 @@
                   </StackPane>
                   <StackPane alignment="CENTER_LEFT" prefHeight="400.0" prefWidth="0.0">
                      <children>
-                        <VBox fx:id="rightPanelVBox" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="260.0">
+                        <VBox fx:id="rightPanelBox" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="260.0">
                            <children>
                               <Label fx:id="predictionLabel" prefHeight="35.0" prefWidth="260.0" styleClass="predictionLabel" stylesheets="@../css/canvas.css">
                                  <font>
@@ -151,13 +162,8 @@
                               </GridPane>
                            </children>
                         </VBox>
-                        <VBox fx:id="brushOptionsVBox" alignment="CENTER_LEFT" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="140.0" spacing="5.0">
+                        <VBox fx:id="brushOptionsBox" alignment="CENTER_LEFT" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="140.0" spacing="5.0">
                            <children>
-                              <ColorPicker fx:id="colourPicker" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="108.0" styleClass="colourPicker" stylesheets="@../css/canvas.css">
-                                 <value>
-                                    <Color />
-                                 </value>
-                              </ColorPicker>
                               <Label alignment="BOTTOM_RIGHT" minHeight="-Infinity" minWidth="-Infinity" prefHeight="108.0" prefWidth="108.0">
                                  <graphic>
                                     <Button fx:id="brushSmallButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onSmallBrush" onMouseClicked="#onButtonClick" onMouseEntered="#onButtonHover" prefHeight="108.0" prefWidth="108.0" styleClass="brushSizeSmall" stylesheets="@../css/canvas.css">
@@ -190,11 +196,11 @@
                               <Insets left="10.0" />
                            </padding>
                         </VBox>
-                        <VBox fx:id="eraserOptionsVBox" alignment="CENTER_LEFT" layoutX="10.0" layoutY="10.0" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="140.0" spacing="5.0">
+                        <VBox fx:id="eraserOptionsBox" alignment="CENTER_LEFT" layoutX="10.0" layoutY="10.0" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="140.0" spacing="5.0">
                            <children>
                               <Label alignment="BOTTOM_RIGHT" minHeight="-Infinity" minWidth="-Infinity" prefHeight="108.0" prefWidth="108.0">
                                  <graphic>
-                                    <Button fx:id="eraserSmallButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onSmallEraser" onMouseClicked="#onButtonClick" onMouseEntered="#onButtonHover" prefHeight="108.0" prefWidth="108.0" styleClass="eraserSizeSmall" stylesheets="@../css/canvas.css">
+                                    <Button fx:id="eraserSmallButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onSmallErase" onMouseClicked="#onButtonClick" onMouseEntered="#onButtonHover" prefHeight="108.0" prefWidth="108.0" styleClass="eraserSizeSmall" stylesheets="@../css/canvas.css">
                                        <font>
                                           <Font name="System Bold" size="20.0" />
                                        </font>
@@ -203,7 +209,7 @@
                               </Label>
                               <Label alignment="BOTTOM_RIGHT" minHeight="-Infinity" minWidth="-Infinity" prefHeight="108.0" prefWidth="108.0">
                                  <graphic>
-                                    <Button fx:id="eraserMediumButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onMediumEraser" onMouseClicked="#onButtonClick" onMouseEntered="#onButtonHover" prefHeight="108.0" prefWidth="108.0" styleClass="eraserSizeMedium" stylesheets="@../css/canvas.css">
+                                    <Button fx:id="eraserMediumButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onMediumErase" onMouseClicked="#onButtonClick" onMouseEntered="#onButtonHover" prefHeight="108.0" prefWidth="108.0" styleClass="eraserSizeMedium" stylesheets="@../css/canvas.css">
                                        <font>
                                           <Font name="System Bold" size="20.0" />
                                        </font>
@@ -212,7 +218,7 @@
                               </Label>
                               <Label alignment="BOTTOM_RIGHT" minHeight="-Infinity" minWidth="-Infinity" prefHeight="108.0" prefWidth="108.0">
                                  <graphic>
-                                    <Button fx:id="eraserLargeButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onLargeEraser" onMouseClicked="#onButtonClick" onMouseEntered="#onButtonHover" prefHeight="108.0" prefWidth="108.0" styleClass="eraserSizeLarge" stylesheets="@../css/canvas.css">
+                                    <Button fx:id="eraserLargeButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onLargeErase" onMouseClicked="#onButtonClick" onMouseEntered="#onButtonHover" prefHeight="108.0" prefWidth="108.0" styleClass="eraserSizeLarge" stylesheets="@../css/canvas.css">
                                        <font>
                                           <Font name="System Bold" size="20.0" />
                                        </font>
