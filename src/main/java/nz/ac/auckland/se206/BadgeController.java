@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -14,6 +16,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import nz.ac.auckland.se206.SceneManager.AppUi;
 
 public class BadgeController extends SoundsController {
@@ -21,6 +24,7 @@ public class BadgeController extends SoundsController {
   @FXML private Button menuButton;
 
   @FXML private VBox badgesListBox;
+  @FXML private Label badgeTitleLabel;
 
   /**
    * initialize will load in all the badges
@@ -38,13 +42,18 @@ public class BadgeController extends SoundsController {
    * @throws FileNotFoundException Error if the file location of the badge isn't found
    */
   public void loadBadges() throws FileNotFoundException {
+    badgeTitleLabel.setText("Badges For: " + Users.getUserName());
     badgesListBox.getChildren().clear();
     for (Entry<String, Map<String, Boolean>> category : Users.getBadges().entrySet()) {
       // Creates new JavaFX to store the badges into
       HBox categoryBox = new HBox();
+      categoryBox.setAlignment(Pos.BOTTOM_CENTER);
+      categoryBox.setPadding(new Insets(0, 0, 20, 0));
       Label categoryLabel = new Label();
       // Sets the category of the badges
       categoryLabel.setText(category.getKey());
+      categoryLabel.setStyle("-fx-font-family: 'Maybe Next'; -fx-font-size: 32;");
+      categoryLabel.setTextFill(Color.web("#a55a29"));
       badgesListBox.getChildren().add(categoryLabel);
       // Get each individual badge from the category
       for (Entry<String, Boolean> badges : category.getValue().entrySet()) {
@@ -98,9 +107,16 @@ public class BadgeController extends SoundsController {
 
         // Creates a new VBox to store the badge and label
         VBox vbox = new VBox();
+        vbox.setAlignment(Pos.BOTTOM_CENTER);
+        vbox.setPrefHeight(200);
+        vbox.setMinWidth(180);
+        vbox.setPadding(new Insets(10));
         vbox.getChildren().add(imageView);
         Label badgeLabel = new Label();
         badgeLabel.setText(nameOfBadge);
+        badgeLabel.setStyle("-fx-font-family: 'Maybe Next'; -fx-font-size: 20;");
+        badgeLabel.setTextFill(Color.web("#a55a29"));
+        badgeLabel.setPadding(new Insets(5, 0, 0, 0));
         // Adds the label and the vBox to the overall category
         vbox.getChildren().add(badgeLabel);
         categoryBox.getChildren().add(vbox);

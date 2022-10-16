@@ -8,6 +8,18 @@
 	-fx-text-fill: #323232;
 }
 
+.badgesScrollPane{
+	-fx-background: transparent;
+	-fx-background-color:  #ffd79d;
+	-fx-fit-to-width: true;
+	-fx-fit-to-height: true;
+	-fx-background-radius: 25;
+	-fx-border-color: #ffc26a;
+	-fx-border-radius: 20;
+	-fx-border-width: 5;
+	-fx-effect: dropshadow(gaussian, #a55a29, 10, 1, 5, 5);
+}
+
 .winsLabel{
 	-fx-background-color: #51B741;
 	-fx-background-radius: 10;
