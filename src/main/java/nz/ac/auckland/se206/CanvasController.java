@@ -151,18 +151,7 @@ public class CanvasController extends SoundsController {
   private ArrayList<Integer> wordCharacters = new ArrayList<Integer>();
   private double brushSize;
   private double eraserSize;
-
-  // Task for alternating colour of the title and word label concurrently
-  private Task<Void> alternateColoursTask =
-      new Task<Void>() {
-
-        @Override
-        protected Void call() throws Exception {
-          // Set two labels to alternate between colours
-          alternateColours(titleLabel, Color.web("#006969"), Color.web("#E20F58"));
-          return null;
-        }
-      };
+  private Timeline timeline = new Timeline();
 
   /**
    * JavaFX calls this method once the GUI elements are loaded. In our case we create a listener for
@@ -179,12 +168,7 @@ public class CanvasController extends SoundsController {
     graphic = canvas.getGraphicsContext2D();
     // Load font
     Font.loadFont(App.class.getResourceAsStream("/fonts/Maybe-Next.ttf"), 0);
-    // Create a new thread for the alternating colours task
-    Thread colourThread = new Thread(alternateColoursTask);
-    // Allow the task to be cancelled on closing of application
-    colourThread.setDaemon(true);
-    // Start the colour task
-    colourThread.start();
+
     // Set up the tool tip
     gameToolTip.setShowDelay(Duration.ZERO);
     gameToolTip.setWrapText(true);
@@ -232,9 +216,9 @@ public class CanvasController extends SoundsController {
     onClear();
     // Instantiate a new game object on first opening the scene
     CategorySelector.loadCategories();
-    // Reset the timer bar's css
-    timerBarLabel.getStyleClass().clear();
-    timerBarLabel.getStyleClass().add("timerBarDefault");
+    // Update the timer bar and title styles
+    updateStyle();
+
     colourPicker.setValue(Color.BLACK);
     colourPicker.setVisible(true);
     // Create the game instance
@@ -259,6 +243,7 @@ public class CanvasController extends SoundsController {
       textSpeechButton.setVisible(true);
       Platform.runLater(
           () -> {
+            // set visibility of the UI elements
             cornerLabel.setVisible(true);
             brushOptionsBox.setVisible(false);
             brushOptionsBox.setMouseTransparent(true);
@@ -266,6 +251,7 @@ public class CanvasController extends SoundsController {
             eraserOptionsBox.setMouseTransparent(true);
             drawUserBox.setVisible(false);
             drawUserBox.setMouseTransparent(true);
+            // Update sizes
             rightPanelBox.setPrefWidth(260);
             for (int i = 0; i < CategorySelector.getAccuracy(); i++) {
               predictionGrid.add(createPredictionLine(i), 0, i);
@@ -309,6 +295,40 @@ public class CanvasController extends SoundsController {
           () -> {
             setProfile();
           });
+    }
+  }
+
+  /** updateStyle will update the styles for each game mode for timer bar label and title */
+  private void updateStyle() {
+    // Clear the current styles
+    timerBarLabel.getStyleClass().clear();
+    switch (currentGameMode) {
+      case BLITZ:
+        // Add the blitz styling
+        timerBarLabel.getStyleClass().add("timerBarBlitz");
+        alternateColours(titleLabel, Color.web("#f45b69"), Color.web("#a2224d"));
+        break;
+      case HIDDEN_WORD:
+        // Add the hidden word styling
+        timerBarLabel.getStyleClass().add("timerBarHidden");
+        alternateColours(titleLabel, Color.web("#fbb13c"), Color.web("#d45500"));
+        break;
+      case NORMAL:
+        // Add the normal styling
+        timerBarLabel.getStyleClass().add("timerBarClassic");
+        alternateColours(titleLabel, Color.web("#51d4d0"), Color.web("#006868"));
+        break;
+      case PROFILE:
+        // Alternate colours
+        alternateColours(titleLabel, Color.web("#51d4d0"), Color.web("#006868"));
+        break;
+      case ZEN:
+        // Add the zen styling
+        timerBarLabel.getStyleClass().add("timerBarZen");
+        alternateColours(titleLabel, Color.web("#51b751"), Color.web("#307330"));
+        break;
+      default:
+        break;
     }
   }
 
@@ -606,10 +626,12 @@ public class CanvasController extends SoundsController {
       // Create a formatted String for the prediction label
       String predictionEntry =
           (i + 1) + ". " + predictionList.get(i).getClassName().replaceAll("_", " ");
+      Double predictionPercent = predictionList.get(i).getProbability() * 100;
+      String percentString = String.format("%.2f", predictionPercent);
       // Create and add the prediction label to its cell in the grid, row order is top
       // to bottom :
       // highest to lowest rank
-      predictionGrid.add(createPredictionLabel(predictionEntry, isPrompt, i), 0, i);
+      predictionGrid.add(createPredictionLabel(predictionEntry, percentString, isPrompt, i), 0, i);
       if (i < CategorySelector.getAccuracy()) {
         // Add the prediction line in
         predictionGrid.add(createPredictionLine(i), 0, i);
@@ -644,11 +666,14 @@ public class CanvasController extends SoundsController {
    * @param labelColor The color for the label background
    * @return Label object
    */
-  private Label createPredictionLabel(String labelText, boolean isPrompt, int index) {
+  private Label createPredictionLabel(
+      String labelText, String percentage, boolean isPrompt, int index) {
     // Create new label and configure formatting
     Label label = new Label();
     label.getStyleClass().add("predictionGridLabel");
-    label.setText(labelText);
+    if (percentage != null) {
+      label.setText(String.format("%s %s%%", labelText, percentage));
+    }
     label.setTextFill(predictionTextColor);
     label.setPadding(new Insets(0, 0, 0, 10));
     // Configure special formatting for top and bottom labels in the grid
@@ -674,7 +699,7 @@ public class CanvasController extends SoundsController {
 
     // Fill the GridPane with empty Label nodes
     for (int i = 0; i < predictionGrid.getRowCount(); i++) {
-      predictionGrid.add(createPredictionLabel(" ", false, i), 0, i);
+      predictionGrid.add(createPredictionLabel(" ", null, false, i), 0, i);
       predictionGrid.add(createPredictionLine(i), 0, i);
     }
   }
@@ -849,8 +874,9 @@ public class CanvasController extends SoundsController {
    * @param colour2 the second colour it will become
    */
   private void alternateColours(Label label, Color colour1, Color colour2) {
+    timeline.getKeyFrames().clear();
     // Create a new timeline object
-    Timeline timeline = new Timeline();
+    timeline = new Timeline();
     // Loop three times
     for (int i = 0; i < 3; i++) {
       // Add a new keyframe accordingly
@@ -875,8 +901,7 @@ public class CanvasController extends SoundsController {
   /** resetTimerBar will reset the width and reset the css */
   public void resetTimerBar() {
     // Remove all the styling and set the default one back
-    timerBarLabel.getStyleClass().clear();
-    timerBarLabel.getStyleClass().add("timerBarDefault");
+    updateStyle();
     // Reset the width to 600 (back to default)
     timerBarLabel.setPrefWidth(600.0);
   }
