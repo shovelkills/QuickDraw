@@ -24,16 +24,17 @@ public class GraphController extends SoundsController {
   @FXML private Button menuButton;
   @FXML private Button timeButton;
   @FXML private Button wordButton;
-  @FXML private CategoryAxis xAxis;
+  @FXML private CategoryAxis horizontalAxis;
   @FXML private Label indvidualDifficultyLabel;
   @FXML private LineChart<String, Number> timeLineChart;
-  @FXML private NumberAxis yAxis;
+  @FXML private NumberAxis verticalAxis;
   @FXML private PieChart individualDifficultyPieChart;
   @FXML private PieChart winsLossPieChart;
   @FXML private Tooltip toolTip;
 
   /** JavaFX will call this method to initialize the UI */
   public void initialize() {
+    // load in all the graphs' data
     loadGraphData();
     toolTip.setShowDelay(Duration.ZERO);
     toolTip.setWrapText(true);
@@ -42,15 +43,19 @@ public class GraphController extends SoundsController {
 
   /** Loads the data from the user to the graph */
   public void loadGraphData() {
-    // Loads the data onto the list and disables the x axis
+    // Clear the current graph
     timeLineChart.getData().clear();
     timeLineChart.getData().add(Graph.getLineChartData());
+    // Loads the data onto the list and disables the x axis
     timeLineChart.getXAxis().setTickLabelsVisible(false);
     winsLossPieChart.setData(Graph.getWinsLossPieChart());
-    // Enables the difficulty buttons
+    // Disables the time button
     timeButton.setDisable(true);
+    // Disables the words button
     wordButton.setDisable(true);
+    // Disables the accuracy button
     accuracyButton.setDisable(true);
+    // Disables the confidence button
     confidenceButton.setDisable(true);
     // Makes it so when pressing on the winloss piechart is changes the difficulty piegraph
     winsLossPieChart
@@ -61,6 +66,7 @@ public class GraphController extends SoundsController {
             MouseEvent.MOUSE_PRESSED,
             new EventHandler<MouseEvent>() {
               public void handle(MouseEvent e) {
+                // Shows the wins
                 onShowWins();
               }
             });
@@ -72,6 +78,7 @@ public class GraphController extends SoundsController {
             MouseEvent.MOUSE_PRESSED,
             new EventHandler<MouseEvent>() {
               public void handle(MouseEvent e) {
+                // Show the losses
                 onShowLoss();
               }
             });
@@ -79,12 +86,14 @@ public class GraphController extends SoundsController {
 
   /** onShowWins will show the wins pie chart */
   private void onShowWins() {
+    // Change the game outcome to winning
     gameOutcome = "Win";
     loadIndividualDifficulyPieChart();
   }
 
   /** onShowLoss will show the loss pie chart */
   private void onShowLoss() {
+    // Change the game outcome to losing
     gameOutcome = "Loss";
     loadIndividualDifficulyPieChart();
   }
@@ -138,7 +147,7 @@ public class GraphController extends SoundsController {
    * @param event the event when the button is pressed
    */
   @FXML
-  public void onMenu(ActionEvent event) {
+  private void onMenuReturn(ActionEvent event) {
     // Get the current scene
     Button backButton = (Button) event.getSource();
     Scene currentScene = backButton.getScene();

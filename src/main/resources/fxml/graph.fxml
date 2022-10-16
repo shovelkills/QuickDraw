@@ -17,10 +17,10 @@
       <BorderPane layoutX="-128.0" layoutY="-55.0" prefHeight="200.0" prefWidth="200.0" />
       <LineChart fx:id="timeLineChart" layoutX="36.0" layoutY="31.0" title="Time Taken VS Word">
         <xAxis>
-          <CategoryAxis label="Word" side="BOTTOM" fx:id="xAxis" />
+          <CategoryAxis fx:id="horizontalAxis" label="Word" side="BOTTOM" />
         </xAxis>
         <yAxis>
-          <NumberAxis fx:id="yAxis" label="Time Taken in Seconds" side="LEFT" />
+          <NumberAxis fx:id="verticalAxis" label="Time Taken in Seconds" side="LEFT" />
         </yAxis>
       </LineChart>
       <PieChart fx:id="winsLossPieChart" layoutX="622.0" layoutY="20.0" prefHeight="362.0" prefWidth="469.0" title="Game Outcome" />
@@ -28,7 +28,7 @@
       <Button fx:id="wordButton" layoutX="676.0" layoutY="563.0" mnemonicParsing="false" onAction="#onShowWordDifficulty" text="Word" />
       <Button fx:id="timeButton" layoutX="775.0" layoutY="563.0" mnemonicParsing="false" onAction="#onShowTimeDifficulty" text="Time" />
       <Button fx:id="confidenceButton" layoutX="857.0" layoutY="563.0" mnemonicParsing="false" onAction="#onShowConfidenceDifficulty" text="Confidence" />
-      <Button fx:id="menuButton" layoutX="724.0" layoutY="660.0" mnemonicParsing="false" onAction="#onMenu" text="Menu" />
+      <Button fx:id="menuButton" layoutX="724.0" layoutY="660.0" mnemonicParsing="false" onAction="#onMenuReturn" text="Menu" />
       <Label layoutX="853.0" layoutY="448.0">
          <graphic>
             <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
