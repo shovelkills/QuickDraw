@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Optional;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import nz.ac.auckland.se206.words.CategorySelector.Difficulty;
 
 public class Badges {
@@ -50,6 +52,10 @@ public class Badges {
       alert.setTitle("Won Badge");
       alert.setHeaderText(
           "You have won the " + nameOfBadge + " badge in the " + catergory + " category");
+      // Gets the badge image
+      Image image = new Image(Users.folderDirectory + "/src/main/resources/badges/profile5.png");
+      ImageView imageView = new ImageView(image);
+      alert.setGraphic(imageView);
       Optional<ButtonType> result = alert.showAndWait();
       if (result.get() == ButtonType.OK) {
         return;
