@@ -60,6 +60,9 @@ public class MenuController extends SoundsController {
   @FXML private Button soundButton;
   @FXML private Button musicButton;
   @FXML private Slider musicSlider;
+  
+  private boolean musicOn = true;
+  private boolean soundOn = true;
 
   // This is a task that alternates colours for a label
   private Task<Void> backgroundTask =
@@ -305,6 +308,15 @@ public class MenuController extends SoundsController {
   protected void onSoundToggle(ActionEvent event) {
     // Toggle ALL sound effects
     SoundsController.toggleSoundEffect();
+    if(soundOn) {
+      soundButton.getStyleClass().clear();
+      soundButton.getStyleClass().add("soundOff");
+      soundOn = !soundOn;
+    } else {
+      soundButton.getStyleClass().clear();
+      soundButton.getStyleClass().add("soundOn");
+      soundOn = !soundOn;
+    }
   }
 
   /**
@@ -318,9 +330,13 @@ public class MenuController extends SoundsController {
     if (SoundsController.getMusic()) {
       // Disable the slider
       musicSlider.setDisable(true);
+      musicButton.getStyleClass().clear();
+      musicButton.getStyleClass().add("musicOff");
     } else {
       // Enable the slider
       musicSlider.setDisable(false);
+      musicButton.getStyleClass().clear();
+      musicButton.getStyleClass().add("musicOn");
     }
     // Toggle the background music
     SoundsController.toggleMusic();

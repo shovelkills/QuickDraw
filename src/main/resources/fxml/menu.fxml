@@ -11,27 +11,48 @@
 
 <HBox alignment="BOTTOM_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" styleClass="mainMenuBackground" stylesheets="@../css/menu.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nz.ac.auckland.se206.MenuController">
    <children>
-      <VBox fx:id="profileVBox" alignment="TOP_CENTER" maxWidth="1.7976931348623157E308" prefHeight="400.0" prefWidth="240.0" spacing="10.0">
+      <VBox fx:id="profileVBox" alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="400.0" prefWidth="240.0" spacing="10.0">
          <children>
-            <Button fx:id="selectedUserButton" contentDisplay="CENTER" graphicTextGap="0.0" mnemonicParsing="false" onAction="#onUserSelect" styleClass="profileSelectButton" stylesheets="@../css/menu.css" text=" ">
-               <graphic>
-                  <ImageView fx:id="profileImageView" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" styleClass="profileImageView" />
-               </graphic>
-            </Button>
-            <Label fx:id="usernameLabel" alignment="TOP_CENTER" contentDisplay="TOP" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="200.0" styleClass="userNameLabel" stylesheets="@../css/menu.css" text="Guest" textAlignment="CENTER" textFill="#333333" wrapText="true">
+            <Label fx:id="usernameLabel" alignment="TOP_CENTER" contentDisplay="TOP" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="36.0" prefWidth="230.0" styleClass="userNameLabel" stylesheets="@../css/menu.css" text="Guest" textAlignment="CENTER" textFill="#333333" wrapText="true">
                <VBox.margin>
-                  <Insets top="10.0" />
+                  <Insets bottom="10.0" />
                </VBox.margin>
                <font>
-                  <Font name="System Bold" size="22.0" />
+                  <Font name="System Bold" size="26.0" />
                </font>
                <padding>
                   <Insets left="10.0" right="10.0" />
                </padding>
             </Label>
+            <Button fx:id="selectedUserButton" contentDisplay="CENTER" graphicTextGap="0.0" mnemonicParsing="false" onAction="#onUserSelect" styleClass="profileSelectButton" stylesheets="@../css/menu.css" text=" ">
+               <graphic>
+                  <ImageView fx:id="profileImageView" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" styleClass="profileImageView" />
+               </graphic>
+            </Button>
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="344.0" spacing="50.0">
+               <VBox.margin>
+                  <Insets top="200.0" />
+               </VBox.margin>
+               <children>
+                  <Button fx:id="soundButton" mnemonicParsing="false" onAction="#onSoundToggle" onMouseClicked="#onButtonClick" onMouseEntered="#onButtonHover" prefHeight="50.0" prefWidth="64.0" styleClass="soundOn" stylesheets="@../css/menu.css" />
+                  <Button fx:id="musicButton" mnemonicParsing="false" onAction="#onMusicToggle" onMouseClicked="#onButtonClick" onMouseEntered="#onButtonHover" prefHeight="52.0" prefWidth="81.0" styleClass="musicOn" stylesheets="@../css/menu.css" />
+               </children>
+            </HBox>
+            <HBox alignment="CENTER">
+               <children>
+                  <Slider fx:id="musicSlider" value="50.0" HBox.hgrow="ALWAYS">
+                     <HBox.margin>
+                        <Insets left="10.0" right="10.0" />
+                     </HBox.margin>
+                  </Slider>
+               </children>
+               <padding>
+                  <Insets left="10.0" />
+               </padding>
+            </HBox>
          </children>
          <padding>
-            <Insets bottom="120.0" top="40.0" />
+            <Insets left="30.0" right="30.0" />
          </padding>
       </VBox>
       <VBox alignment="TOP_CENTER" minWidth="-Infinity" prefHeight="600.0" prefWidth="430.0" styleClass="menuBox" stylesheets="@../css/menu.css">
@@ -41,23 +62,16 @@
                   <Font name="System Bold" size="60.0" />
                </font>
             </Label>
-            <VBox prefHeight="476.0" prefWidth="430.0" spacing="10.0">
+            <VBox prefHeight="639.0" prefWidth="430.0" spacing="10.0" VBox.vgrow="ALWAYS">
                <padding>
                   <Insets top="40.0" />
                </padding>
                <children>
                   <Button fx:id="startButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onStartGame" onMouseClicked="#onButtonClick" onMouseEntered="#onButtonHover" prefHeight="75.0" prefWidth="323.0" styleClass="newGameButton" stylesheets="@../css/menu.css" />
                   <Button fx:id="statsButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onMoveToStats" onMouseClicked="#onButtonClick" onMouseEntered="#onButtonHover" prefHeight="75.0" prefWidth="323.0" styleClass="statsMenuButton" stylesheets="@../css/menu.css" />
+                  <Button fx:id="badgesButton" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onShowBadges" onMouseClicked="#onButtonClick" onMouseEntered="#onButtonHover" prefHeight="75.0" prefWidth="323.0" styleClass="badgesMenuButton" stylesheets="@../css/menu.css" />
+                  <Button fx:id="graphButton" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onGraphButton" onMouseClicked="#onButtonClick" onMouseEntered="#onButtonHover" prefHeight="75.0" prefWidth="323.0" styleClass="graphsMenuButton" stylesheets="@../css/menu.css" />
                   <Button fx:id="exitButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onExitGame" onMouseClicked="#onButtonClick" onMouseEntered="#onButtonHover" prefHeight="75.0" prefWidth="323.0" styleClass="quitMenuButton" stylesheets="@../css/menu.css" />
-                  <Button fx:id="graphButton" mnemonicParsing="false" onAction="#onGraphButton" onMouseClicked="#onButtonClick" onMouseEntered="#onButtonHover" prefHeight="26.0" prefWidth="380.0" text="Graph" />
-                  <Button fx:id="badgesButton" mnemonicParsing="false" onAction="#onShowBadges" prefHeight="26.0" prefWidth="382.0" text="Badges" />
-                  <HBox alignment="CENTER" prefHeight="100.0" prefWidth="430.0">
-                     <children>
-                        <Button fx:id="soundButton" mnemonicParsing="false" onAction="#onSoundToggle" onMouseClicked="#onButtonClick" onMouseEntered="#onButtonHover" prefHeight="25.0" prefWidth="125.0" text="Sound Effects" />
-                        <Button fx:id="musicButton" mnemonicParsing="false" onAction="#onMusicToggle" onMouseClicked="#onButtonClick" onMouseEntered="#onButtonHover" prefHeight="26.0" prefWidth="125.0" text="Music" />
-                        <Slider fx:id="musicSlider" orientation="VERTICAL" value="50.0" />
-                     </children>
-                  </HBox>
                </children>
             </VBox>
          </children>
@@ -71,6 +85,6 @@
       <VBox maxWidth="100.0" minWidth="-Infinity" prefHeight="200.0" prefWidth="20.0" />
    </children>
    <padding>
-      <Insets top="150.0" />
+      <Insets top="130.0" />
    </padding>
 </HBox>
