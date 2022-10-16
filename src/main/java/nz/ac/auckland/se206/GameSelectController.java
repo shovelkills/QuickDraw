@@ -98,7 +98,7 @@ public class GameSelectController extends SoundsController {
     // Sets the menus to the defaults
     // Set the local game mode
     setLocalGameMode();
-    gameModeButtonSelect("normalButton");
+    updateGameModeStyle("normalButton");
     for (Tooltip toolTip : toolTips) {
       toolTip.setShowDelay(Duration.ZERO);
       toolTip.setWrapText(true);
@@ -107,6 +107,7 @@ public class GameSelectController extends SoundsController {
 
     CanvasController canvas = App.getCanvasController();
     try {
+      // Set up the pregame
       canvas.setPreGameInterface();
     } catch (IOException
         | CsvException
@@ -270,7 +271,7 @@ public class GameSelectController extends SoundsController {
         confidenceMenu.setValue(Users.getIndividualDifficulty("confidenceDifficulty"));
         timeMenu.setDisable(false);
         timeMenu.setValue(Users.getIndividualDifficulty("timeDifficulty"));
-        gameModeButtonSelect(buttonID);
+        updateGameModeStyle(buttonID);
         // Change the local game mode
         localGameMode = GameMode.NORMAL;
         break;
@@ -284,7 +285,7 @@ public class GameSelectController extends SoundsController {
         confidenceMenu.setValue("N/A");
         timeMenu.setDisable(true);
         timeMenu.setValue("N/A");
-        gameModeButtonSelect(buttonID);
+        updateGameModeStyle(buttonID);
         // Change the local game mode
         localGameMode = GameMode.ZEN;
         break;
@@ -298,7 +299,7 @@ public class GameSelectController extends SoundsController {
         confidenceMenu.setValue(Users.getIndividualDifficulty("confidenceDifficulty"));
         timeMenu.setDisable(false);
         timeMenu.setValue(Users.getIndividualDifficulty("timeDifficulty"));
-        gameModeButtonSelect(buttonID);
+        updateGameModeStyle(buttonID);
         // Change the local game mode
         localGameMode = GameMode.HIDDEN_WORD;
         break;
@@ -312,7 +313,7 @@ public class GameSelectController extends SoundsController {
         confidenceMenu.setValue(Users.getIndividualDifficulty("confidenceDifficulty"));
         timeMenu.setDisable(false);
         timeMenu.setValue(Users.getIndividualDifficulty("timeDifficulty"));
-        gameModeButtonSelect(buttonID);
+        updateGameModeStyle(buttonID);
         localGameMode = GameMode.BLITZ;
         break;
       default:
@@ -320,65 +321,65 @@ public class GameSelectController extends SoundsController {
         localGameMode = GameMode.NORMAL;
         break;
     }
+    // Update the local game mode
     setLocalGameMode();
   }
 
-  private void gameModeButtonSelect(String buttonID) {
+  /**
+   * gameModeButtonSelect will update the styling for each class
+   *
+   * @param buttonID takes in the current button being switched
+   */
+  private void updateGameModeStyle(String buttonID) {
+    // Clear all the buttons styles
+    zenButton.getStyleClass().clear();
+    normalButton.getStyleClass().clear();
+    definitionButton.getStyleClass().clear();
+    blitzButton.getStyleClass().clear();
+    // Set the visibilities of all the buttons to false
+    zenDescription.setVisible(false);
+    normalDescription.setVisible(false);
+    definitionDescription.setVisible(false);
+    blitzDescription.setVisible(false);
     switch (buttonID) {
       case "zenButton":
-        zenButton.getStyleClass().clear();
-        normalButton.getStyleClass().clear();
-        definitionButton.getStyleClass().clear();
-        blitzButton.getStyleClass().clear();
+        // Set zen to be selected
         zenButton.getStyleClass().add("zenButtonSelected");
+        // Update all the other styling
         normalButton.getStyleClass().add("normalButton");
         definitionButton.getStyleClass().add("hiddenButton");
         blitzButton.getStyleClass().add("blitzButton");
+        // Set the zen description's visibility on
         zenDescription.setVisible(true);
-        normalDescription.setVisible(false);
-        definitionDescription.setVisible(false);
-        blitzDescription.setVisible(false);
         break;
       case "normalButton":
-        zenButton.getStyleClass().clear();
-        normalButton.getStyleClass().clear();
-        definitionButton.getStyleClass().clear();
-        blitzButton.getStyleClass().clear();
-        zenButton.getStyleClass().add("zenButton");
+        // Set normal to be selected
         normalButton.getStyleClass().add("normalButtonSelected");
+        // Update all the other styling
+        zenButton.getStyleClass().add("zenButton");
         definitionButton.getStyleClass().add("hiddenButton");
         blitzButton.getStyleClass().add("blitzButton");
-        zenDescription.setVisible(false);
+        // Set the normal description's visibility on
         normalDescription.setVisible(true);
-        definitionDescription.setVisible(false);
-        blitzDescription.setVisible(false);
         break;
       case "definitionButton":
-        zenButton.getStyleClass().clear();
-        normalButton.getStyleClass().clear();
-        definitionButton.getStyleClass().clear();
-        blitzButton.getStyleClass().clear();
+        // Set hidden to be selected
+        definitionButton.getStyleClass().add("hiddenButtonSelected");
+        // Update all the other styling
         zenButton.getStyleClass().add("zenButton");
         normalButton.getStyleClass().add("normalButton");
-        definitionButton.getStyleClass().add("hiddenButtonSelected");
         blitzButton.getStyleClass().add("blitzButton");
-        zenDescription.setVisible(false);
-        normalDescription.setVisible(false);
+        // Set the definition description's visibility on
         definitionDescription.setVisible(true);
-        blitzDescription.setVisible(false);
         break;
       case "blitzButton":
-        zenButton.getStyleClass().clear();
-        normalButton.getStyleClass().clear();
-        definitionButton.getStyleClass().clear();
-        blitzButton.getStyleClass().clear();
+        // Set blitz to be selected
+        blitzButton.getStyleClass().add("blitzButtonSelected");
+        // Update all the other styling
         zenButton.getStyleClass().add("zenButton");
         normalButton.getStyleClass().add("normalButton");
         definitionButton.getStyleClass().add("hiddenButton");
-        blitzButton.getStyleClass().add("blitzButtonSelected");
-        zenDescription.setVisible(false);
-        normalDescription.setVisible(false);
-        definitionDescription.setVisible(false);
+        // Set the blitz description's visibility on
         blitzDescription.setVisible(true);
         break;
       default:
